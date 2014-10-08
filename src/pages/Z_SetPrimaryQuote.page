@@ -1,0 +1,14 @@
+<apex:page Controller="Z_SetPrimaryQuote"  action="{!processQuote}" tabStyle="zqu__Quote__c">
+  
+<apex:sectionHeader title="Quote"/>
+
+    <apex:pageMessages />
+     
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">               
+                <apex:commandButton value="Return to Quote" action="{!cancel}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,294 @@
+<apex:page >
+    <style>        
+       
+        #tile-container
+        {
+          margin-bottom: 10px;   
+        }
+        
+        .request-tile
+        {
+          width: 180px;
+          height: 190px;
+          border: 1px solid #BCBCBC;
+          margin: 10px;
+          margin: 10px;
+          border-radius: 15px;
+          display: block;
+          float: left;
+          padding: 5px
+          
+        }
+        
+        .request-tile-selected
+        {
+          width: 180px;
+          height: 190px;
+          border: 1px solid black;
+          margin: 10px;
+          margin: 10px;
+          border-radius: 15px;
+          display: block;
+          float: left;
+          padding: 5px
+        }
+        
+                 .request-tile-construction
+        {
+          width: 180px;
+          height: 190px;
+          border: 1px solid #BCBCBC;
+          margin: 10px;
+          margin: 10px;
+          border-radius: 15px;
+          display: block;
+          float: left;
+          padding: 5px;
+          background-color: #F0F0F0 ; 
+          color: #909090;
+         }
+         
+        .request-tile:hover
+        {
+          box-shadow: 4px 4px 4px #888;
+        }
+        
+        .request-tile-selected:hover
+        {
+          box-shadow: 4px 4px 4px #888;
+        }
+        
+        .tile-image
+        {
+          margin: auto;
+          display: block;
+          padding:10px;
+        }
+        
+        .tile-title
+        {
+          text-align:center;
+          font-size: 18px;
+          font-weight: bold;
+          margin-top: 5px;
+          margin-bottom:5px;
+          padding:2px;
+          vertical-align:text-bottom;
+        }
+        
+        #view-requests-link
+        {
+          text-align: center;
+          margin:auto;
+          display:block;
+          font-weight:bold;
+        }
+        h2
+        {
+          margin: 5px;
+          font-weight: normal;
+          padding: 5px;
+        }
+    
+        .request-type-link
+        {
+          text-decoration: none;
+        }
+    
+        .request-type-link:hover
+        {
+          text-decoration: none;
+          text-shadow: 1px 1px #AAA;
+        }
+  
+        .request-type-div
+        {
+          text-align:center;
+          margin-top:0px;
+          margin-left:10px;
+          margin-bottom:10px;
+          width: auto;
+          border-radius: 10px;
+          padding: 10px;
+          border: 1px solid #BCBCBC;
+          display: block;
+          float: left;
+        }
+        
+        .request-type-div:hover
+        {
+          box-shadow: 0px 0px 2px 2px #AAA;
+        }
+    
+        .request-type-title
+        {    
+          font-size: 16px;
+          color: black;
+          font-weight: normal;
+          text-decoration: none;
+          text-align:center;
+        }
+    
+        .request-text
+        {
+          float:center;
+        }
+    
+        div.tooltip 
+        {
+          width: 195px;
+        }
+        
+        div.tooltip:hover 
+        {
+          background: #ffffff;
+          text-decoration: none;
+        } 
+  
+        div.tooltip span 
+        {
+          display: none;
+          padding: 0px 0px;
+          margin-left: 10px;
+          width: 160px;
+          font-size: 14px;
+        }
+  
+        div.tooltip:hover span 
+        {
+          display: block;
+          position: relative;
+          border: 2px solid #cccccc;
+          background: #FFC;
+          color: #000000;
+        }
+        
+        div.nofloat
+        {
+          float none;
+        }
+        
+        .topics
+        {color:red
+        }
+        .pbSubheader{
+        color: black !important;
+        }
+        .pbSubheader{
+        color: black !important;
+        }
+        .request-symbol
+        {
+        float:left;
+        display:inline;
+        height: 60px;
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-top: 15px;
+;
+        }    
+        
+        .header-title
+        {
+        font-size: 30px;
+        float:left;
+        display:block;
+        }
+        
+        #header
+        {
+        margin: none;
+        }
+        
+    </style>
+    
+        <div >
+          <img src="{!$Resource.SalesOperationsHelpDesk}" class="request-symbol"/>
+            <p class="header-title">Sales Operations Help Desk</p>
+          <div style="clear:both"/>                    
+           
+        </div>
+ 
+    <div id="tile-container">
+      
+ <!-- Sales OpsTile -->
+    <a href='/apex/sopshd_sops'>
+        <div class="tooltip" style="display:inline">
+        <div class="request-tile">
+          <img src="{!$Resource.SalesOperations}" class="tile-image" width="98" height="98"/>
+          <p class="tile-title">Sales Operations</p>
+          <span>Quote Creation, Deal Booking, Publish Requests, Account Ownership</span>
+        </div>
+        </div>
+    </a>
+
+ <!-- Compensation & Commissions -->
+    <a href='/apex/sopshd_comp'>
+        <div class="request-tile">
+          <img src="{!$Resource.Compensation}" class="tile-image"/>
+          <p class="tile-title">Compensation &amp; Commissions</p>
+        </div>
+    </a>
+
+ <!-- Channel -->
+    <a href='/apex/sopshd_chops'>
+        <div class="tooltip" style="display:inline">
+        <div class="request-tile">
+          <img src="{!$Resource.ChannelOperations}" class="tile-image"/>
+          <p class="tile-title">Channel Operations</p>
+        </div>
+        </div>  
+    </a>
+ 
+ <!-- RevOps -->
+    <a href='/apex/sopshd_revops' >
+        <div class="tooltip" style="display:inline">
+        <div class="request-tile-selected">  
+          <img src="{!$Resource.RevenueOperations}" class="tile-image"/>
+          <p class="tile-title">Revenue Operations (Finance)</p>
+          <!-- <img src="/img/icon/hammer32.png"/> -->
+          <span>Billing, Cancellations, Downgrades, Order Provisioning, Collections, Webtrials, Mergers, Acquisitions, Split EIDS</span> 
+           <!--  Under Construction - Coming Soon  -->
+        </div>
+        </div>
+    </a>
+ 
+ <!-- Deal Desk & Legal -->
+    <a href='/apex/sopshd_dealdesk'>
+        <div class="tooltip" style="display:inline">
+        <div class="request-tile"> 
+          <img src="{!$Resource.DealDesk}" class="tile-image"/>
+          <p class="tile-title">Deal Desk &amp; Legal</p>
+          <span>Add'l Terms, Non-Standard Orders, Legal Agreements, Deal Structures, etc.</span>
+        </div>
+        </div>
+    </a>
+       <div style="clear:both"/>                    
+       </div>
+ <apex:form >
+    <apex:pageBlock >
+       <apex:pageBlockSection title="Revenue Ops Topics" collapsible="false">   
+       </apex:pageBlockSection>
+    </apex:pageBlock>
+ 
+ 
+ <div id="tile-container">
+      <a class="request-type-link" href="https://cloud.box.com/s/3j6vys6voa29ocst542o" target ="_blank">
+        <div class="request-type-div">
+        <div class="request-text">
+        <h2 class="request-type-title">RevOps Cheat Sheet</h2>
+        </div>
+        </div>
+      </a>
+       </div>
+ 
+      </apex:form>
+      
+       <div style="clear:both">                    
+       </div>
+       
+
+    
+    
+
+</apex:page>

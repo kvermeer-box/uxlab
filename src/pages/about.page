@@ -1,0 +1,34 @@
+<apex:page controller="TreasuryController" showHeader="false" sidebar="false" standardStylesheets="false" doctype="html-5.0" applyHtmlTag="false">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+        <head>
+            <c:boxtreasury_scripts_V2 />
+            <title>Box Treasury - About</title>
+            <script>
+
+            </script>
+        </head>
+        <body>
+            <c:boxtreasury_header_V2 />
+            <!-- breadcrumbs
+            <div class="container breadcrumb" style="padding:0px;">
+                <ol class="breadcrumb breadcrumb-boxblue">
+                    <li><a href="http://boxtreasury.force.com">Home</a></li>
+                    <li class="active::before">FAQ</li>
+                </ol>
+            </div> -->
+            
+            <main id="content" class="container treasury-main" role="main"><!-- main page container -->
+                <h1>About</h1>
+                <p><b> What is the Box Treasury?</b></p>
+                <p> The Treasury is the first and last thing you need to sell to your customers.
+           Browse the Demo Templates available, select one or more that resonates with your prospect, and the demo assets will be transferred to your account.
+           The Treasury provides you with the gold you need to close the deal.  </p>
+           
+           <p> Here's how: </p>
+           <apex:iframe src="https://app.box.com/embed_widget/7rwsoy3hlvh8/s/xs0yct7h5uacnnyq1sgg?view=list&sort=name&direction=ASC&theme=blue" height="500" width="800"/>
+            </main><!--./main page container-->
+            
+    
+        </body>
+    </html>    
+</apex:page>

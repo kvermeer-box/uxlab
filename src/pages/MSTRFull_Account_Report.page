@@ -1,0 +1,3 @@
+<apex:page >
+    <apex:iframe height="100%" width="100%" scrolling="true" src="http://biws1001.inside-box.net:8080/MicroStrategy/servlet/mstrWeb?Server=BIINT1001.VE.BOX.NET&Project=Box+BI&port=34952&evt=4001&src=mstrWeb.4001&visMode=0&reportID=0BD6CD024F254F3E79617A963553C83D&reportViewMode=1&hiddensections=header,path,dockTop,dockLeft,footer&uid=sales&pwd=BI&elementsPromptAnswers=BB7941224A3904FE590CE8B254612274;BB7941224A3904FE590CE8B254612274:{!URLENCODE($User.X15_Digit_ID__c)}"></apex:iframe>
+</apex:page>

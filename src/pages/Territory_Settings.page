@@ -1,0 +1,53 @@
+<apex:page standardController="Territory_Stage_1_Assignment_Rule__c" title="Territory Settings">
+    <style>
+        .activeTab {
+            background-color: #236FBD; 
+            color:white;
+            background-image: none;
+            font-size: 13px;    
+            font-family: Tahoma,Arial,Verdana,Helvetica,sans-serif;
+            font-weight: bold;
+            height: 16px;
+        }
+        .inactiveTab {
+            background-color: lightgrey; 
+            color: black;
+            background-image: none;
+            font-size: 13px;    
+            font-family: Tahoma,Arial,Verdana,Helvetica,sans-serif;    
+            font-weight: normal;
+        }        
+        .listHeader {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .yo {
+            color: blue;
+        }
+    </style>
+    <apex:sectionHeader title="Settings" subtitle="Territory Assignment Rules" />
+    <apex:tabPanel activeTabClass="activeTab" inactiveTabClass="inactiveTab" selectedTab="S2" headerSpacing="5px" height="100%" >
+        <apex:tab label="Assignment Rules: Stage 1">
+            <apex:pageBlock >
+                <apex:enhancedList type="Territory_Stage_1_Assignment_Rule__c" height="800" customizable="false" />
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Assignment Rules: Stage 2" name="S2">
+            <apex:pageBlock >
+                <apex:enhancedList type="Territory_Stage_2_Assignment_Rule__c" height="800" customizable="true" />
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Teams">
+            <apex:pageBlock > 
+                <apex:enhancedList type="Territory_Team__c" height="800" customizable="false" />
+            </apex:pageBlock>
+        </apex:tab>    
+        <!--
+        <apex:tab label="Employees">
+            <apex:outputPanel >
+                <apex:enhancedList type="Territory_Employee_Segment_Field_Mapping__c" height="400" customizable="false" />                        
+            </apex:outputPanel>
+        </apex:tab>    
+        -->
+    </apex:tabPanel>    
+</apex:page>

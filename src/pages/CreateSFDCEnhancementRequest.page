@@ -1,0 +1,37 @@
+<apex:page standardController="Sales_Request__c">
+
+  <apex:sectionHeader title="Sales Request Creation" subtitle="New SFDC Enhancement Request"/>
+  <apex:form >
+      <apex:pageBlock title="Sales Request Edit" mode="edit" id="pageBlock">
+      
+          <!-- Buttons -->
+          <apex:pageBlockButtons >
+              <apex:commandButton value="Create" action="{!save}"/>
+              <apex:commandButton value="Cancel" action="{!cancel}"/>
+          </apex:pageBlockButtons>
+          
+          <!-- Main Info -->
+          <apex:pageBlockSection title="Main Information" columns="2">
+              <apex:inputField value="{!Sales_Request__c.Summary__c}" required="true"/>
+              <apex:inputField value="{!Sales_Request__c.Status__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Request_Type__c}" required="true"/>
+              <apex:inputField value="{!Sales_Request__c.Dominator__c}"/>
+              <apex:inputField value="{!Sales_Request__c.How_can_we_help__c}" required="true"/>
+              <apex:inputField value="{!Sales_Request__c.Next_Steps_Comments__c}"/>
+          </apex:pageBlockSection>         
+          
+          <!-- Additional Info -->
+          <apex:pageBlockSection title="Additional Information" columns="2">
+              <apex:inputField value="{!Sales_Request__c.Additional_CC__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Severity__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Story__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Backlog_Type__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Ease_of_Fix__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Project__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Attachment_URL__c}"/>
+          </apex:pageBlockSection>
+          
+      </apex:pageBlock>
+  </apex:form>
+  
+</apex:page>

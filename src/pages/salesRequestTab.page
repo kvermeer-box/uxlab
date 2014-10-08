@@ -1,0 +1,218 @@
+<apex:page standardController="Sales_Request__c" showHeader="true">
+    <style>        
+        .linky {
+            color: rgb(0, 91, 197);
+            text-decoration: none;
+        }
+        .linky:hover {
+            text-decoration: underline;
+        }
+        
+        #tile-container
+        {
+          margin-bottom: 10px;   
+        }
+        
+        .request-tile
+        {
+          width: 180px;
+          height: 190px;
+          border: 1px solid #BCBCBC;
+          margin: 10px;
+          border-radius: 15px;
+          padding: 5px;
+          display: block;
+          float: left;
+        }
+        
+        .request-tile:hover
+        {
+          box-shadow: 4px 4px 4px #888;
+        }
+        
+        .tile-image
+        {
+          width: 130px;
+          height: 130px;
+          margin: auto;
+          display: block;
+          padding-top:10px;
+        }
+        
+        .tile-title
+        {
+          text-align:center;
+          font-size: 18px;
+          font-weight: bold;
+          margin-top: 10px;
+          vertical-align:bottom;
+        }
+        
+        #view-requests-link
+        {
+          text-align: center;
+          margin:auto;
+          display:block;
+          font-weight:bold;
+        }
+
+    </style>
+    <apex:sectionHeader title="Create New Sales Request" subtitle="Select a Department" />
+    <div id="tile-container">
+      <!-- Sales Engineer Tile -->
+      <a href='/a1H/e?RecordType=012600000009VN9&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile">
+          <img src="{!URLFOR($Resource.SalesRequestImages,'sales-engineering.jpg')}" class="tile-image"/>
+          <p class="tile-title">Sales Engineering</p>
+        </div>
+      </a>
+      <!-- Sales Ops & Billing -->
+      <a href='/a1H/e?RecordType=012600000009VZP&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile">
+          <img src="{!URLFOR($Resource.SalesRequestImages,'salesops.png')}" class="tile-image"/>
+          <p class="tile-title">Sales Ops &amp; Billing</p>
+        </div>
+      </a>
+      <!-- Legal -->
+      <a href='/apex/LegalRequestSelection'>
+        <div class="request-tile">
+          <img src="{!URLFOR($Resource.SalesRequestImages,'legal.jpg')}" class="tile-image"/>
+          <p class="tile-title">Deal Desk &amp; Legal</p>
+        </div>  
+      </a>
+      <!-- Compliance -->
+      <a href='/a1H/e?RecordType=012600000009YAI&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile">    
+          <img src="{!URLFOR($Resource.SalesRequestImages,'compliance.png')}" class="tile-image"/>
+          <p class="tile-title">Compliance</p>
+        </div>
+      </a>
+      <!-- SFDC -->
+      <a href='/a1H/e?RecordType=012600000009VZU&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile"> 
+          <img src="{!URLFOR($Resource.SalesRequestImages,'salesforce-logo.jpg')}" class="tile-image"/>
+          <p class="tile-title">SFDC Enhancements</p>
+        </div>
+      </a>
+      <!-- Executive Engagement -->
+      <a href='/apex/EERSelect'>
+        <div class="request-tile">          
+          <img src="{!URLFOR($Resource.SalesRequestImages,'ecc-request.png')}" class="tile-image"/>
+          <p class="tile-title">Executive Engagement</p>
+        </div>
+      </a>
+      <!-- Box Feature Request
+      <a href='/a1H/e?RecordType=012600000009VNT&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>      
+        <div class="request-tile">
+          <img src="{!URLFOR($Resource.SalesRequestImages,'box-feature.jpg')}" class="tile-image"/>
+          <p class="tile-title">Box Feature Requests</p>
+        </div>
+      </a>
+      -->
+      <!-- BD -->
+      <a href='/a1H/e?RecordType=012600000009Yf6&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile"> 
+          <img src="{!URLFOR($Resource.SalesRequestImages,'business-dev.jpg')}" class="tile-image"/>
+          <p class="tile-title">Business Development</p>
+        </div>
+      </a>
+      <!-- TCO -->
+      <a href='/a1H/e?RecordType=012600000009ZSZ&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile">
+          <img src="{!URLFOR($Resource.SalesRequestImages,'TCO.png')}" class="tile-image"/>
+          <p class="tile-title">TCO Request</p>
+        </div>
+      </a>
+      <!-- Gap -->
+      <!-- Only viewable by some profiles -->
+      <apex:outputPanel rendered="{!IF($Profile.Name == 'Box: System Administrator' || $Profile.Name == 'Box: Sales Engineer' || $Profile.Name == 'Box: Sales Engineer Manager', true, false)}">
+      <a href='/a1H/e?RecordType=012600000009ZCH&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile"> 
+          <img src="{!URLFOR($Resource.SalesRequestImages,'Gap.png')}" class="tile-image"/>
+          <p class="tile-title">Gap</p>
+        </div>
+      </a>
+      </apex:outputPanel>
+      <!-- BoxOut -->
+      <a href='/apex/BoxOut?retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile">
+          <img src="{!$Resource.boxout}" class="tile-image"/>
+          <p class="tile-title">BoxOut</p>
+        </div>
+      </a>
+      <!-- Box Consulting -->
+      <a href='/a2Y/e?&retURL=apex%2FsalesRequestTab%3Fsfdc.tabName%3D01r60000000EGw7'>
+        <div class="request-tile">
+          <img src="{!URLFOR($Resource.BoxConsultingLogo)}" class="tile-image"/>
+          <p class="tile-title">Box Consulting Request</p>
+        </div>
+      </a>
+      <!-- Publish -->
+      <!-- Only viewable by some profiles -->
+      <apex:outputPanel rendered="{!IF($Profile.Name == 'Box: System Administrator' || $Profile.Name == 'Box: Sales Engineer' || $Profile.Name == 'Box: Sales Engineer Manager' || $Profile.Name == 'Box: Sales Ops' ||
+$Profile.Name == 'Box: Sales Productivity' || $Profile.Name == 'Box: Sales' || $Profile.Name == 'Box: Sales (EMEA)' || $Profile.Name == 'Box: Sales (Gov)' || $Profile.Name == 'Box: National Inside Rep' || $Profile.Name == 'Box: Channel Rep' , true, false)}">
+      <a href='/a1H/e?RecordType=012600000009aJL&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+        <div class="request-tile"> 
+          <img src="{!URLFOR($Resource.SalesRequestImages,'publish.png')}" class="tile-image"/>
+          <p class="tile-title">Publish</p>
+        </div>
+      </a>
+      </apex:outputPanel>
+      <!-- Box Optimization Program -->
+      <a href='/a1H/e?RecordType=012600000009b94&retURL=apex/salesRequestTab?sfdc.tabName=01r60000000EGw7'>
+       
+        <div class="request-tile"> 
+          <img src="{!URLFOR($Resource.BVA)}" class="tile-image"/>
+          <p class="tile-title">Box Value Assessment</p>
+        </div>
+
+      </a> 
+      <!-- Used because we're floating the other components -->
+      <div style="clear:both"></div>                        
+    </div>
+    
+    
+    <div id="view-requests-link">
+      <div>
+      ( <a class="linky" href="/a1H/o">View All Sales Requests</a> )
+      </div>
+      <div>
+        <a class="linky" href="/a1n">BoxOut Admin page</a>
+      </div>
+      <div>
+      <apex:outputPanel rendered="{!IF($Profile.Name == 'Box: System Administrator' 
+            || $Profile.Name == 'Box: CSM Manager' 
+            || $Profile.Name == 'Box: Sales Ops' 
+            || $Profile.Name == 'Box: CSM' 
+            || $Profile.Name == 'Box: CSM (APAC)' 
+            || $Profile.Name == 'Box: Sales Engineer' 
+            || $Profile.Name == 'Box: Sales Engineer Manager' 
+            || $Profile.Name == 'Box: Sales (EMEA)' 
+            || $Profile.Name == 'Box: Sales (APAC)' 
+            || $Profile.Name == 'Box: Renewal' 
+            || $Profile.Name == 'Box: Renewal Manager' 
+            || $Profile.Name == 'Box: National Inside Rep' 
+            || $Profile.Name == 'Box: Channel Rep' , true, false)}">
+      <a class="linky" href='/a2Y' >
+        View All Box Consulting Requests
+      </a>
+      
+      </apex:outputPanel>
+      <a class="linky" href='/a6I' >
+        View all Executive Engagements
+      </a>
+      </div>
+    </div>
+    
+     
+    
+    <!-- Unused
+    <apex:outputPanel rendered="true">
+        <b>
+            <div style="padding-left: 557px;">
+                ( <a class="linky" href="/apex/SCRUM_SecretAdminTab">Secret Admin Page</a> )                
+            </div>
+        </b>        
+    </apex:outputPanel>
+    -->
+</apex:page>

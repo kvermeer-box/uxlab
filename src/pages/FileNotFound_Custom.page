@@ -1,0 +1,8 @@
+<apex:page showheader="false" title="{!$Label.site.file_not_found}" cache="false">
+
+<apex:panelGrid columns="2" width="100%">
+    <apex:image value="{!$Resource.PartnerLogo}" height="50px;"/>
+    <apex:pagemessage severity="fatal" summary="{!$Label.Default_404_Message}"/>
+</apex:panelGrid>
+
+</apex:page>

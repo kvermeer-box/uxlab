@@ -1,0 +1,95 @@
+<apex:page standardController="Quote" extensions="QuoteMachine_UpsellCreatorController_v2">
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.7.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.7.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, 'css/ui-lightness/jquery-ui-1.8.18.custom.css')}"/>
+    <style>
+    .confidenceBar {
+        background-image: url('http://drupal.org/files/issues/ms-passport.png');
+        background-repeat: no-repeat;
+        height: 30px;
+        width: 266px;
+        border: 1px solid black;
+        box-shadow: 2px 2px 3px black;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5px;
+    }
+    .confidenceBarWeak {
+        background-position: -125px -27px;
+    }
+    .confidenceBarMed {
+        background-position: -125px -53px;
+    }
+    .confidenceBarStr {
+        background-position: -125px -77px;
+    }        
+    .estimateAudit {
+        position: absolute;
+        border: 1px solid black;
+        padding: 8px;
+        min-width: 400px;
+        background-color: white;
+        box-shadow: 2px 2px 4px black;
+        text-align: left;
+    }
+    .subsequentSource {
+        padding-left: 148px;
+    }
+    </style>
+    <apex:form id="all">        
+        <apex:sectionHeader title="Quote" subtitle="Generate New Upsell" />   
+        <apex:pageBlock title="Quote Edit" tabStyle="Product2" mode="edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!customSave}" reRender="all" value=" Save "/>
+                <apex:commandButton action="{!Cancel}" value="Cancel"/>
+                <apex:commandButton action="{!copyEstimatedValues}" reRender="all" value="Copy Estimated Values"/>                
+            </apex:pageBlockButtons>
+            <apex:pageMessages ></apex:pageMessages>   
+            <apex:pageBlockSection title="Quote Information" columns="2">
+                <apex:inputField value="{!q.Name}" />
+                <apex:pageBlockSectionItem labelStyle="text-align: left;">
+                    <apex:outputPanel styleClass="estimateAudit">
+                        <div style="text-align: center;">
+                            <apex:outputLabel value="Estimated Subscription Data Confidence Level" />
+                        </div>
+                        <apex:outputPanel rendered="{!OR(ISBLANK(q.Confidence_Level__c), q.Confidence_Level__c == 'Weak')}"><div class="confidenceBar confidenceBarWeak" /></apex:outputPanel>
+                        <apex:outputPanel rendered="{!q.Confidence_Level__c == 'Medium'}"><div class="confidenceBar confidenceBarMed" /></apex:outputPanel>
+                        <apex:outputPanel rendered="{!q.Confidence_Level__c == 'Strong'}"><div class="confidenceBar confidenceBarStr" /></apex:outputPanel>             
+                        <br />                           
+                        <apex:outputLabel style="text-align: left; padding-left: 70px;" value="Data Sources: "></apex:outputLabel>
+                        <apex:repeat value="{!upsellDataSources}" var="u" rows="1">
+                            <apex:outputLink value="{!u.url}" target="_blank">
+                                <apex:outputText value="{!u.name}"></apex:outputText><br />
+                            </apex:outputLink>
+                        </apex:repeat>                        
+                        <apex:repeat value="{!upsellDataSources}" var="u" first="1">
+                            <apex:outputLink styleClass="subsequentSource" value="{!u.url}" target="_blank">
+                                <apex:outputText value="{!u.name}"></apex:outputText><br />
+                            </apex:outputLink>
+                        </apex:repeat>                        
+                    </apex:outputPanel>
+                    <br />
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!q.Order_Start_Date__c}" />       
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!q.Payment_Method__c}" />                                
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!q.Payment_Terms__c}" />                                       
+                <apex:pageBlockSectionItem />
+            </apex:pageBlockSection><br />
+            <apex:pageBlockSection showHeader="true" columns="2">
+                <apex:outputText style="font-weight:bold;" value="Enter the customer's original subscription terms:" />
+                <apex:outputText style="font-weight:bold;" value="Estimated Original Subscription Terms:" />
+            </apex:pageBlockSection><br />
+            <apex:pageBlockSection showHeader="true" columns="2">
+                <apex:inputField value="{!q.Original_Product_Tier__c}" />
+                <apex:outputField value="{!guessedQuote.Original_Product_Tier__c}" label="Product Tier"/ > 
+                <apex:inputField value="{!q.Original_Payment_Frequency__c}" />
+                <apex:outputField value="{!guessedQuote.Original_Payment_Frequency__c}" label="Payment Frequency" />   
+                <apex:inputField value="{!q.Original_Contract_Renewal_Date__c}" label="Renewal Date" />   
+                <apex:outputField value="{!guessedQuote.Original_Contract_Renewal_Date__c}" label="Renewal Date" />
+                <apex:inputField value="{!q.Pricebook2Id}" />
+            </apex:pageBlockSection>                
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,327 @@
+<apex:page standardController="QuoteLineItem" extensions="QuoteMachine_AddProductsController" docType="html-5.0">
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.7.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.7.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, 'css/ui-lightness/jquery-ui-1.8.18.custom.css')}"/>
+    <style>
+        .productPanel {
+            display: block;
+            float: left;
+            text-align: center;
+            height: 210px;
+            width: 160px;
+            margin: 20px 0 0 20px;
+        }
+        .productImage {
+            text-align: center;
+            border: 1px solid #BCBCBC;
+            border-radius: 15px;
+            height: 125px;
+            width: 125px;
+            padding: 10px;
+            box-shadow: 4px 4px 4px #888;
+            cursor: pointer;
+            margin-bottom: 10px;
+            opacity: 0;
+            background: white;
+        }
+        .productImage:hover {
+            box-shadow: 3px 3px 3px 3px rgb(26, 116, 186);
+            color: rgb(26, 116, 186);
+        }
+        .selectedProductImage {
+            text-align: center;
+            border: 1px solid #BCBCBC;
+            border-radius: 15px;
+            height: 125px;
+            width: 125px;
+            padding: 10px;
+            box-shadow: 0px 0px 3px 4px rgb(26, 116, 186);
+            margin: 3px 0 7px 8px;
+            background: white;
+        }
+        .productLabel {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .overlap {
+            position: absolute;
+            z-index: 1;
+            right: 100px;
+            top: 20px;
+        }
+        .inputCol {
+            margin-left: 100px;
+        }
+        .productsType {
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 25px;
+        }
+        .fakeDisabled {
+            background-color: #EBEBE4;
+            border: 1px solid darkgray;
+            border-spacing: 2px;
+            padding: 1px 1px 2px 1px;
+        }
+
+        #orId {
+            margin-left: 145px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .salespriceNoteForActionsPackage {
+            margin-left: 10px;
+        }
+    </style>
+    <apex:form id="all" >
+        <apex:sectionHeader title="Quote Line Item" subtitle="Select a Product" />
+        <!-- Products Panel -->
+        <apex:pageBlock tabStyle="Product2" mode="edit" id="productsPanel" ><br />
+            <apex:outputText styleClass="productsType" value="Box Standard Products" />
+            <apex:outputPanel rendered="{!AND(q.Purchase_Type__c != 'New Agreement', q.Business_Ent_Unlimited_Subtotal__c <= 0)}">
+                <apex:actionRegion >
+                    <apex:actionFunction id="refreshProducts" action="{!vforceRefreshProducts}" oncomplete="fadeInProducts(); hideNullPicklistOption();" name="refreshProductsList" reRender="productsPanel" />
+                    <apex:inputField styleClass="productTierList" style="margin-right: 50px; float:right;" onchange="refreshProductsList()" value="{!q.Product_Tier__c}" />
+                    <apex:outputText style="float:right; font-size:18px; font-weight:bold; margin-right: 5px;" value="Product Tier: "></apex:outputText>
+                </apex:actionRegion>
+            </apex:outputPanel>
+            <apex:panelGrid style="padding-bottom: 10px;">
+                <apex:repeat value="{!productsList}" var="p">
+                    <apex:outputPanel styleClass="productPanel" rendered="{!p.UnitPrice <> 0}">
+                        <apex:commandLink action="{!setProductId}" reRender="inputPanel" immediate="true" oncomplete="slideOpen()">
+                            <apex:param name="selectedProductId" value="{!p.Id}" assignTo="{!selectedProductId}" />
+                            <apex:image styleClass="productImage" onclick="selected(this)" height="100" width="100" value="{!defaultImage}" rendered="{!ISBLANK(p.Product2.Image_URL__c)}" />
+                            <apex:image styleClass="productImage" onclick="selected(this)" height="100" width="100" value="{!p.Product2.Image_URL__c}" rendered="{!NOT(ISBLANK(p.Product2.Image_URL__c))}" /><br />
+                        </apex:commandLink>
+                        <apex:outputText style="visibility:hidden; position: absolute;" styleClass="productLabel" value="{!p.Id}" />
+                        <apex:outputText styleClass="productLabel" value="{!p.Name}" />
+                    </apex:outputPanel>
+                </apex:repeat>
+                <apex:outputText styleClass="productsType" value="Freebie Products" rendered="{!freebieProductsListSize <> 0}" />
+                <apex:repeat value="{!productsList}" var="p">
+                    <apex:outputPanel styleClass="productPanel" rendered="{!p.UnitPrice = 0}">
+                        <apex:commandLink action="{!setProductId}" reRender="inputPanel" immediate="true" oncomplete="slideOpen()">
+                            <apex:param name="selectedProductId" value="{!p.Id}" assignTo="{!selectedProductId}" />
+                            <apex:image styleClass="productImage" onclick="selected(this)" height="100" width="100" value="{!defaultImage}" rendered="{!ISBLANK(p.Product2.Image_URL__c)}" />
+                            <apex:image styleClass="productImage" onclick="selected(this)" height="100" width="100" value="{!p.Product2.Image_URL__c}" rendered="{!NOT(ISBLANK(p.Product2.Image_URL__c))}" /><br />
+                        </apex:commandLink>
+                        <apex:outputText styleClass="productLabel" value="{!p.Name}" />
+                    </apex:outputPanel>
+                </apex:repeat>
+
+              <apex:outputPanel rendered="{!OR(CONTAINS($UserRole.Name, 'Platform'), CONTAINS($Profile.Name, 'Box: System Admin'), CONTAINS($Profile.Name, 'Box: Sales Ops'))}">
+                <apex:outputText styleClass="productsType" value="Box Platform" />
+                <br/>
+                <div>
+                <apex:repeat value="{!boxPlatformPbes}" var="b">
+                    <apex:outputPanel styleClass="productPanel">
+                        <apex:commandLink action="{!setProductId}" reRender="inputPanel" immediate="true" oncomplete="slideOpen()">
+                            <apex:param name="selectedProductId" value="{!b.Id}" assignTo="{!selectedProductId}" />
+                            <apex:image styleClass="productImage" onclick="selected(this)" height="100" width="100" value="{!defaultImage}" rendered="{!ISBLANK(b.Product2.Image_URL__c)}" />
+                            <apex:image styleClass="productImage" onclick="selected(this)" height="100" width="100" value="{!b.Product2.Image_URL__c}" rendered="{!NOT(ISBLANK(b.Product2.Image_URL__c))}" /><br />
+                        </apex:commandLink>
+                        <apex:outputText styleClass="productLabel" value="{!b.Name}" />
+                    </apex:outputPanel>
+                </apex:repeat>
+                </div>
+              </apex:outputPanel>
+                <br/>
+
+                <!-- View API -->
+              <apex:outputPanel rendered="{!OR(CONTAINS($UserRole.Name, 'Platform'), CONTAINS($Profile.Name, 'Box: System Admin'), CONTAINS($Profile.Name, 'Box: Sales Ops'))}">
+                <apex:outputText styleClass="productsType" value="View API" />
+                <br/>
+                <div>
+                    <apex:repeat value="{!viewAPIProducts}" var="b">
+                        <apex:outputPanel styleClass="productPanel">
+                            <apex:commandLink action="{!setProductId}" reRender="inputPanel" immediate="true" oncomplete="slideOpen()">
+                                <apex:param name="selectedProductId" value="{!b.Id}" assignTo="{!selectedProductId}" />
+                                <apex:image styleClass="productImage" onclick="selected(this)" height="100" width="100" value="{!defaultImage}" rendered="{!ISBLANK(b.Product2.Image_URL__c)}" />
+                                <apex:image styleClass="productImage" onclick="selected(this)" height="100" width="100" value="{!URLFOR($Resource.ViewAPIImages,b.Product2.Image_URL__c)}" rendered="{!NOT(ISBLANK(b.Product2.Image_URL__c))}" /><br />
+                            </apex:commandLink>
+                            <apex:outputText styleClass="productLabel" value="{!b.Name}" />
+                        </apex:outputPanel>
+                    </apex:repeat>
+                </div>
+              </apex:outputPanel>
+              
+
+            </apex:panelGrid>
+            <!-- Form -->
+            <apex:outputPanel styleClass="inputPanel" id="inputPanel" style="visibility: hidden; opacity: 0;">
+                <!-- Title and Description -->
+                <apex:pageBlockSection id="inputSectionTitle" title="Product Details" columns="1" rendered="{!NOT(ISBLANK(selectedPriceBookEntry.Name))}" >
+                    <apex:pageMessages ></apex:pageMessages>
+                    <apex:outputText styleClass="selectedProduct" value="{!selectedPriceBookEntry.Name}"></apex:outputText>
+                    <apex:outputText value="{!selectedPriceBookEntry.Product2.Description}" rendered="{!NOT(qli.PricebookEntry.Product2.Default_Product__c)}"  />
+                    <apex:outputText style="font-weight: bold;" value="{!selectedPriceBookEntry.Product2.Description}" rendered="{!AND(qli.PricebookEntry.Product2.Default_Product__c, NOT(isUpsell))}" />
+                </apex:pageBlockSection>
+                <!-- Input Fields -->
+                <apex:pageBlockSection id="inputFields" columns="2" rendered="{!AND(NOT(ISBLANK(selectedPriceBookEntry.Name)))}">
+                    <apex:pageBlockSection id="inputCol" columns="1" >
+                        <!-- Non View API -->
+                        <apex:pageBlockSection id="non-view-API" columns="1" rendered="{!NOT(isViewAPIProduct)}">
+                            <apex:outputField value="{!selectedPriceBookEntry.UnitPrice}" styleClass="listPrice" rendered="{!AND(showListPrice, NOT(isViewAPIProduct))}"/>
+                            <apex:selectList value="{!qli.Quantity}" size="1" label="Monthly Actions" rendered="{!AND(showActionsPackage, NOT(isViewAPIProduct))}">
+                                <apex:selectOptions value="{!actionPackageOptions}"/>
+                            </apex:selectList>
+                            <apex:inputField id="unitpriceInput" label="Sales Price (Monthly)" value="{!qli.UnitPrice}" styleClass="priceInput" onkeydown="clickSave()" onmousedown="enable(this); disable('discountInput'); disable('totalPriceOverride');" required="false" rendered="{!AND(OR(lockSalesprice, AND(selectedPriceBookEntry.UnitPrice <> 0, qli.PricebookEntry.Product2Id != premierSupportId)), NOT(isViewAPIProduct))}">
+                                <apex:outputPanel styleClass="salespriceNoteForActionsPackage" rendered="{!showActionsPackage}">Price Per 10,000 Actions</apex:outputPanel>
+                            </apex:inputField>
+                            <script>j$('[id$="unitpriceInput"]').prop('disabled', {!lockSalesprice});</script>
+                            <div id="orId" class="{!IF(AND(NOT(qli.PricebookEntry.Product2.Id = '01t60000004L1gdAAC'),NOT(qli.PricebookEntry.Product2.Id = '01t60000004L1gOAAS'),  OR(qli.PricebookEntry.Product2.Id = '01t60000004L1gOAAS', qli.PricebookEntry.Product2.Id = '01t60000004L1gdAAC', AND(selectedPriceBookEntry.UnitPrice <> 0, qli.PricebookEntry.Product2Id != premierSupportId, NOT(isBoxPlatform)), AND(showDiscount, isBoxPlatform))), '', 'hide')}">-- OR --
+                            </div>
+                            <apex:inputField value="{!qli.Discount__c}" styleClass="discountInput" onmousedown="enable(this); disable('priceInput'); disable('totalPriceOverride');" required="false" rendered="{!AND(OR(AND(selectedPriceBookEntry.UnitPrice <> 0, qli.PricebookEntry.Product2Id != premierSupportId, NOT(isBoxPlatform)), AND(showDiscount, isBoxPlatform)), NOT(qli.PricebookEntry.Product2.Id = '01t60000004L1gOAAS'), NOT(qli.PricebookEntry.Product2.Id = '01t60000004L1gdAAC'))}" />
+                            <apex:inputField value="{!qli.Quantity}" required="true" rendered="{!AND(NOT(isBoxPlatform), NOT(ISBLANK(qli.PricebookEntry.Product2.NumberOfRevenueInstallments)),ISBLANK(qli.PricebookEntry.Product2.Percentage_of_Contract_Price__c))}" />
+                            <apex:inputField value="{!qli.Quantity}" required="true" rendered="{!AND(NOT(isBoxPlatform), OR(qli.PricebookEntry.Product2.Id = consultingId, qli.PricebookEntry.Product2.Id = '01t60000004J0nJAAS',qli.PricebookEntry.Product2.Id = '01t60000004L1gOAAS', qli.PricebookEntry.Product2.Id = '01t60000004J1S5AAK', qli.PricebookEntry.Product2.Id = '01t60000004L1gOAAS'))}" />
+                            <apex:inputText value="{!annualLicensePriceOverride}" styleClass="totalPriceOverride" onmousedown="enable(this); disable('discountInput'); disable('priceInput');" label="Annual Total License Price Override" rendered="{!selectedPriceBookEntry.Product2.Default_Product__c}" />
+                            <apex:inputField value="{!qli.Number_of_GB__c}" required="false" rendered="{!qli.PricebookEntry.Product2.Id = contentMigrationId}" />
+                            <apex:inputField value="{!qli.Percentage_of_Contract_Price__c}" required="false" rendered="{!qli.PricebookEntry.Product2.Id = premierSupportId}" />
+                        </apex:pageBlockSection>
+                        <!-- /Non View API -->
+                        <!-- View API -->
+                        <apex:pageBlockSection id="view-API-inputs" columns="1" rendered="{!isViewAPIProduct}">
+                            <apex:inputField label="{!documentConversionLabel}" value="{!qli.Quantity}" required="true" rendered="{!OR(isViewAPILicense, isBulkConversion)}" styleClass="documentsNumber" >
+                                <apex:actionSupport event="onchange" action="{!recalculateViewAPIPrice}" reRender="view-API-inputs" status="recalculateStatus"/>
+                                <apex:actionStatus startText="Recalculating Price..." stopText="" id="recalculateStatus"/>
+                            </apex:inputField>
+                            <apex:inputField id="listpriceInputViewAPI" label="Monthly Price" value="{!qli.View_API_Sales_Price__c}" styleClass="priceInput" required="false" rendered="{!OR(isViewAPILicense, isBulkConversion)}"/>
+                            <apex:inputField id="overageCost" label="Overage Cost Per Document" value="{!qli.Overage_Cost__c}" required="false" rendered="{!isViewAPILicense}"/>
+                            <apex:inputField label="Percent of Viewer Cost" value="{!qli.Percentage_of_Contract_Price__c}" rendered="{!isViewAPIPremierSupport}" required="true"/>
+                        </apex:pageBlockSection>
+                        <!-- /View API -->
+                        
+                    </apex:pageBlockSection>
+                    <apex:panelGrid columns="2">
+                        <apex:pageBlockSection columns="1">
+                            <apex:outputLabel styleClass="labelCol" value="Discounted Unit Price: " rendered="{!OR(isBoxPlatform, AND(NOT(ISBLANK(qli.PricebookEntry.Product2.NumberOfRevenueInstallments)),ISBLANK(qli.PricebookEntry.Product2.Percentage_of_Contract_Price__c)), qli.PricebookEntry.Product2.Id = consultingId)}" />
+                            <apex:outputLabel styleClass="labelCol" value="Subtotal: " />
+                            <apex:outputLabel styleClass="labelCol" value="Discount: " />
+                            <apex:outputLabel styleClass="labelCol" value="Total: " />
+                            <apex:outputLabel styleClass="labelCol" value="Annual Total: " rendered="{!OR(isBoxPlatform, AND(NOT(ISBLANK(qli.PricebookEntry.Product2.NumberOfRevenueInstallments)),ISBLANK(qli.PricebookEntry.Product2.Percentage_of_Contract_Price__c)), qli.PricebookEntry.Product2.Id = consultingId)}" />
+                            <apex:outputLabel styleClass="labelCol" value="Days Until Renewal: " rendered="{!NOT(ISBLANK(q.Order_End_Date__c))}" />
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection columns="1" >
+                            <apex:outputText styleClass="labelCol" value="{0, number, .00}" rendered="{!OR(AND(NOT(ISBLANK(qli.PricebookEntry.Product2.NumberOfRevenueInstallments)),ISBLANK(qli.PricebookEntry.Product2.Percentage_of_Contract_Price__c)), qli.PricebookEntry.Product2.Id = consultingId)}" >
+                                <apex:param value="{!discountedUnitPrice}" />
+                            </apex:outputText>
+                            <apex:outputText styleClass="labelCol" value="{0, number, .00}" >
+                                <apex:param value="{!subtotal}" />
+                            </apex:outputText>
+                            <apex:outputText styleClass="labelCol" value="{0, number, .00}" >
+                                <apex:param value="{!discount}" />
+                            </apex:outputText>
+                            <apex:outputText styleClass="labelCol" value="{0, number, .00}" >
+                                <apex:param value="{!total}" />
+                            </apex:outputText>
+                            <apex:outputText styleClass="labelCol" value="{0, number, .00}" rendered="{!OR(AND(NOT(ISBLANK(qli.PricebookEntry.Product2.NumberOfRevenueInstallments)),ISBLANK(qli.PricebookEntry.Product2.Percentage_of_Contract_Price__c)), qli.PricebookEntry.Product2.Id = consultingId)}" >
+                                <apex:param value="{!annualTotal}" />
+                            </apex:outputText>
+                            <apex:outputText styleClass="labelCol" value="{!q.Order_End_Date__c - q.Order_Start_Date__c}" />
+                        </apex:pageBlockSection>
+                    </apex:panelGrid><br />
+                </apex:pageBlockSection>
+                <!-- Buttons -->
+                <apex:outputPanel styleClass="inputButtons" rendered="{!NOT(ISBLANK(selectedPriceBookEntry.Name))}">
+                    <apex:commandButton style="margin-left: 35%;" reRender="inputPanel" value=" Save " styleClass="saveButton" oncomplete="slideOpen()" action="{!specialSave}" >
+                        <apex:param name="return" value="true" assignTo="{!returnToQuote}" />
+                    </apex:commandButton>&nbsp;
+                    <apex:commandButton value=" Save and Add Another " reRender="inputPanel" oncomplete="slideOpen()" action="{!specialSave}">
+                        <apex:param name="another" value="false" assignTo="{!returnToQuote}" />
+                    </apex:commandButton>&nbsp;
+                    <apex:commandButton value="Discount Double Check" action="{!calculateTotal}" styleClass="discountDoubleCheck" oncomplete="disableLast();" reRender="inputFields" rendered="{!showDiscount}"/>&nbsp;
+                    <apex:commandButton value=" Cancel " action="{!Cancel}" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <br /><br />
+        </apex:pageBlock>
+    </apex:form>
+    <script>
+        var j$ = jQuery.noConflict();
+        var selectedObj;
+        var productPanelIsOpen = false;
+        var safeMode = false;
+        var lastDisabledField;
+
+        j$(document).ready(function(){
+            fadeInProducts();
+            hideNullPicklistOption();
+            safeMode = false;
+            detectBrowser();
+            if (("{!q.Purchase_Type__c}" == "Upgrade" && {!q.Business_Ent_Unlimited_Subtotal__c} <= 0) || {!isEdit}) {
+                j$(".productLabel:contains('{!selectedProductId}')").prev().children().addClass("selectedProductImage");
+                slideOpen();
+            }
+        });
+
+        function hideNullPicklistOption() {
+            j$('.productTierList [value=""]').remove();
+        }
+
+        function disableLast() {
+            disable(lastDisabledField);
+        }
+
+        function disable(classSelector) {
+            j$("." + classSelector).addClass("fakeDisabled");
+            j$("." + classSelector).val(null);
+            if (classSelector == 'priceInput') {
+                var listPrice = j$("td.labelCol:contains('List Price')").next().children().first().html();
+                var listPriceNoCurrency = listPrice.split(' ')[1];
+                j$("." + classSelector).val(listPriceNoCurrency);
+            } else if (classSelector == 'discountInput') {
+                j$("." + classSelector).val(null);
+            }
+            lastDisabledField = classSelector;
+        }
+
+        function enable(obj) {
+            j$(obj).removeClass("fakeDisabled");
+        }
+
+        function detectBrowser() {
+            if (navigator.userAgent.indexOf("Mozilla") != -1 || navigator.userAgent.indexOf("MSIE") != -1) {
+                if (navigator.userAgent.indexOf("Chrome") == -1) {
+                    safeMode = true;
+                }
+            }
+        }
+
+        function slideOpen() {
+            if (safeMode) {
+                j$('.inputPanel').css('width','100%');
+                j$('.inputPanel').css("opacity", "0");
+                j$('.inputPanel').css("visibility", "visible");
+                j$('.inputPanel').animate({"opacity": "1"}, 600);
+            } else {
+                j$('.inputPanel').css('width','100%');
+                j$('.inputPanel').css("opacity", "0");
+                j$('.inputPanel').css("visibility", "visible");
+                if (productPanelIsOpen) {
+                    j$('.inputPanel').slideToggle(1);
+                } else {
+                    j$('.inputPanel').slideToggle(300);
+                }
+                j$('.inputPanel').animate({"opacity": "1"}, 600);
+                productPanelIsOpen = true;
+            }
+            j$(".discountDoubleCheck").focus();
+            disable('discountInput');
+            disable('totalPriceOverride');
+        }
+
+        function fadeInProducts() {
+            j$('.productImage').animate({"opacity": "1"}, 600);
+            productPanelIsOpen = false;
+        }
+
+        function selected(obj) {
+            if (selectedObj) selectedObj.className = 'productImage';
+            obj.className = 'selectedProductImage';
+            selectedObj = obj;
+        }
+    </script>
+</apex:page>

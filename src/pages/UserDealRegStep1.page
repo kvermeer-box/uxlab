@@ -1,0 +1,100 @@
+<apex:page controller="DealRegController" showheader="true" sidebar="true">
+    <apex:pageMessages />
+    <apex:sectionHeader title="Submit New Deal Registration" subtitle="Step 1: Customer Identification"/>
+
+    <apex:form >
+        <script type="text/javascript">
+            function validate(element){
+                var email = element.value;
+                if( email == '{!$User.Email}' ){
+                    alert('Please Enter a Valid Customer Contact Email.');
+                }
+            }
+        </script>
+        <apex:pageBLock title="Partner Sales Rep & Customer Information" id="pBlock">
+                    
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Next" action="{!UserStep2}"/>
+            </apex:pageBlockButtons>                    
+            
+            <apex:pageBlockSection title="Partner Sales Rep Information:" id="salesRepInfo">
+                
+                <apex:pageBlockSectionItem >
+                     <apex:outputLabel value="Partner Rep Full Name"/>      
+                     <apex:inputField value="{!opp.Partner_Submitter_Name__c}"  required="true"/>
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem helpText="This Email address is used to communicate important registration-related information direcly to you." >
+                     <apex:outputLabel value="Partner Rep Email"/>       
+                     <apex:inputField value="{!opp.Partner_Submitter_Email__c}" required="true"/>
+                 </apex:pageBlockSectionItem>                
+    
+                 <apex:pageBlockSectionItem >
+                     <apex:outputLabel value="Partner Rep Phone"/>       
+                     <apex:inputField id="phone" value="{!opp.Partner_Submitter_Phone__c}" onchange="setPhoneValidation()" required="true"/>
+                 </apex:pageBlockSectionItem>                                
+                 
+            </apex:pageBlockSection>     
+            
+            <apex:pageBlockSection title="Customer Contact & Business Information:">     
+                
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Customer Company Name"/>       
+                    <apex:inputField value="{!a.Name}" tabOrderHint="1"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Contact Title"/>     
+                    <apex:inputField value="{!c.Title}" required="true" tabOrderHint="4"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Contact First Name"/>        
+                    <apex:inputField value="{!c.FirstName}" required="true" tabOrderHint="2"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Contact Email"/>     
+                    <apex:inputField value="{!c.Email}" id="contactEmail" required="true" onblur="validate(this);" tabOrderHint="5"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Contact Last Name"/>     
+                    <apex:inputField value="{!c.LastName}" required="true" tabOrderHint="3"/>
+                </apex:pageBlockSectionItem>                                
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Contact Work Phone"/>        
+                    <apex:inputField value="{!c.Phone}" required="true" tabOrderHint="6"/>
+                </apex:pageBlockSectionItem>                
+                
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Customer Company Profile Information:">        
+                <apex:inputField value="{!a.BillingStreet}" required="true" style="width:60%;" tabOrderHint="7"/>          
+                <apex:inputField value="{!a.BillingCity}" required="true" tabOrderHint="8"/>
+                <apex:inputField value="{!a.BillingState}" required="true" tabOrderHint="9"/>                                           
+                <apex:inputField value="{!a.BillingPostalCode}" required="true" tabOrderHint="10"/>                     
+                <apex:inputField value="{!a.BillingCountry}" required="true" tabOrderHint="11"/>
+                <apex:inputField value="{!a.No_Employees__c}" label="# of Employees" required="true" tabOrderHint="13"/>
+                <apex:inputField value="{!a.Customer_Region__c}" required="true" tabOrderHint="12"/>    
+                
+            </apex:pageBlockSection>
+                        
+        </apex:pageBLock>
+    
+    <script type="text/javascript">
+        function setPhoneValidation() {
+            var raw_number = document.getElementById('j_id0:j_id8:j_id35:j_id38:j_id48:phone').value;
+            var regex1 =  /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;  
+            if(!regex1.test(raw_number)) {
+                alert('Invalid Phone Number');
+            } 
+        }
+    </script>
+    
+    </apex:form>
+
+
+</apex:page>

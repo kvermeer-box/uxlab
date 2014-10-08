@@ -1,0 +1,19 @@
+<apex:page standardController="zqu__Quote__c" extensions="Z_DeleteQuoteExtension" action="{!processQuote}">
+       
+<apex:sectionHeader title="Quote" subtitle="{!zqu__Quote__c.Name}" />
+
+    <apex:pageMessages />
+    <apex:outputPanel rendered="false">
+		{!zqu__Quote__c.Live_Quote__c}
+		{!zqu__Quote__c.zqu__Opportunity__c}
+		{!zqu__Quote__c.Delete_Quote__c}
+   </apex:outputPanel>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">               
+                <apex:commandButton value="Delete" action="{!deleteQuote}" rendered="{!allowDelete}" />
+                <apex:commandButton value="Cancel" action="{!cancel}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

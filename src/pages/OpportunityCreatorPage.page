@@ -1,0 +1,8 @@
+<apex:page standardController="Opportunity" recordSetVar="opportunities" tabStyle="Opportunity" extensions="OpportunityCreatorExtension" >
+<script>
+var newurl = "{!URLFOR( $Action.Opportunity.New , NULL, NULL, false)}";
+var newloc = newurl ;
+document.location = newloc + "{!ParamQuerySTring}";
+//document.write(newloc + "{ParamQueryString}");
+</script>
+</apex:page>

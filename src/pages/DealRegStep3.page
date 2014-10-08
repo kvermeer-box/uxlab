@@ -1,0 +1,100 @@
+<apex:page controller="DealRegController" tabStyle="Account" showheader="true" sidebar="false" cache="false" action="{!PopulateisATT}" >
+
+    <!-- Suppress header & footer - need it on the page to display help text hovers  -->
+    <style>
+        .bPageHeader{   display:none;   }   
+        .bPageFooter{   display:none;   }
+    </style>
+    
+
+
+    <apex:sectionHeader title="Submit Deal Registration" subtitle="Step 3: Deal Identification"/>
+    <div style="text-align: right; padding: 0 20px 2px 0;"><apex:outputLink value="/">Return Home</apex:outputLink></div>    
+    <apex:outputPanel rendered="{!CurrentStep != 3}">
+        <apex:pageMessage strength="3" severity="fatal" summary="Please start at step 1">
+            <apex:outputLink value="{!$Page.DealRegStep1}">Step 1</apex:outputLink>     
+        </apex:pageMessage>     
+    </apex:outputPanel>
+    
+    <apex:form rendered="{!CurrentStep == 3}" id="theform">
+    
+     <apex:pageMessages />
+        
+        <apex:pageBLock title="Deal Identification" rendered="{!opp.id == null}">
+                    
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Previous" action="{!Step2}" immediate="true"/>
+                <apex:commandButton value="Submit Deal Registration" action="{!submit}" status="status"  onclick="this.style.display='none'"/>
+                <apex:actionStatus id="status">             
+                    <apex:facet name="start">
+                        <apex:image value="/img/loading.gif"/>                  
+                    </apex:facet>                                                                                   
+                </apex:actionStatus>                
+            </apex:pageBlockButtons>                    
+            
+            <apex:pageBlockSection title="Please enter the sales details" collapsible="false">   
+                
+                <apex:inputField styleClass="boxProducts" value="{!opp.Box_Products__c}" taborderhint="1" required="true"/>
+               <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Estimated Order Date" />
+                    <apex:inputField value="{!opp.CloseDate}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Date of initial discussion with customer regarding this opportunity.">
+                    <apex:outputLabel value="Opportunity Discussion Date" />
+                    <apex:inputField value="{!opp.Date_of_First_Meeting__c}"/>
+                </apex:pageBlockSectionItem>                
+                <apex:pageBlockSectionItem helpText="Provide the estimated number of licenses to be ordered for this specific opportunity.">
+                    <apex:outputLabel value="# Estimated Licenses" />
+                    <apex:inputField label="# Estimated Licenses" value="{!opp.Seats_Sold__c}" required="true" />
+                </apex:pageBlockSectionItem>    
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel value="I am requesting to add more Box SOCs to an existing Box from AT&T customer" />
+                	<apex:selectRadio value="{!typeCheck}" >
+				    <apex:selectOption itemValue="true" itemLabel="Yes" />
+				    <apex:selectOption itemValue="false" itemLabel="No" />
+				    </apex:selectRadio>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="Main reason customer is buying Box from AT&T">
+                    <apex:outputLabel value="Why Box?"/>
+                    <apex:inputField value="{!opp.Why_Box__c}" required="false" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel value="Primary Competitor" />
+                	<apex:inputField value="{!opp.Competitor_We_Lost_To__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Hide Me" style="visibility:hidden" />
+                    <apex:inputField value="{!opp.isATT__c}" style="visibility:hidden"/>
+                </apex:pageBlockSectionItem>
+                 
+                <!-- Removing <apex:inputField value="{!opp.Deal_Registration_Source__c}"/> -->
+            </apex:pageBlockSection>
+                        
+        </apex:pageBLock>
+    
+        <apex:pageBLock title="Deal Registration Submitted" rendered="{!opp.id != null}">
+        
+            <apex:pageMessage severity="Confirm" summary="Thank you for submitting your deal registration to Box!  You will receive an email shortly as confirmation of your submission." strength="3"/>
+        
+        </apex:pageBLock>
+    
+    </apex:form>
+    <script type="text/javascript">
+        // Prevent onload conflicts
+        var originalOnLoad = window.onload;
+        window.onload = workaround;
+        
+        // Override SFDC function
+        function setFocusOnLoad() {}
+        
+        function workaround() {       
+            originalOnLoad();
+            focusField();                    
+        }
+    
+        function focusField() {
+            document.getElementsByClassName("boxProducts")[0].focus();
+        }        
+    </script>
+
+</apex:page>

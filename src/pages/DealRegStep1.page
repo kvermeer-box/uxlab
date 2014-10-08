@@ -1,0 +1,72 @@
+<apex:page controller="DealRegController" tabStyle="Account" showheader="true" sidebar="false" cache="false">
+
+    <!-- Suppress header & footer - need it on the page to display help text hovers  -->
+    <style>
+        .bPageHeader{   display:none;   }   
+        .bPageFooter{   display:none;   }
+    </style>
+    
+    <apex:outputPanel >
+    	<apex:sectionHeader title="Submit Deal Registration" subtitle="Step 1: AT&T Seller Identification" />
+    	Note: Please do not use the browser's previous button, use the previous button on the page instead.
+    	<div style="text-align: right; padding: 0 20px 2px 0;"><apex:outputLink value="/">Return Home</apex:outputLink></div>    
+    </apex:outputPanel>
+    
+    <apex:form >
+    
+     <apex:pageMessages id="messages"/>
+     
+     <!-- Only display the panel if a valid partner ID was provided -->
+     <apex:outputPanel rendered="{!!ISBLANK(PartnerID)}">
+          
+	     <apex:pageBLock title="AT&T Seller Identification"> 
+	                                
+	         <apex:pageBlockButtons >
+	             <apex:commandButton value="Next" action="{!Step2}"/>
+	         </apex:pageBlockButtons>                    
+	         
+	         <apex:pageBlockSection >
+	             
+	             <apex:pageBlockSectionItem >
+	                 <apex:outputLabel value="Your Full Name"/>      
+	                 <apex:inputField value="{!opp.Partner_Submitter_Name__c}"  required="true"/>
+	             </apex:pageBlockSectionItem>
+	             
+	             <apex:pageBlockSectionItem helpText="This Email address is used to communicate important registration-related information direcly to you.">
+	                 <apex:outputLabel value="Email (attuid@att.com)"/>       
+	                 <apex:inputField value="{!opp.Partner_Submitter_Email__c}" required="true"/>
+	             </apex:pageBlockSectionItem>                
+	
+	             <apex:pageBlockSectionItem >
+	                 <apex:outputLabel value="ATTUID" />     
+	                 <apex:inputField value="{!opp.ATTUID__c}" required="true"/>                      
+	             </apex:pageBlockSectionItem>
+	             
+	             <!--<apex:inputField value="{!opp.ATTUID__c}" required="true"/>-->
+	             
+	             <apex:pageBlockSectionItem >
+	                 <apex:outputLabel value="Phone"/>       
+	                 <apex:inputField id="phone" value="{!opp.Partner_Submitter_Phone__c}" onchange="setPhoneValidation()" />
+	             </apex:pageBlockSectionItem>                	             
+	             
+	         </apex:pageBlockSection>
+	         
+	     </apex:pageBLock>
+
+	</apex:outputPanel>
+	    
+    <script type="text/javascript">
+	    function setPhoneValidation() {
+	    	var raw_number = document.getElementById('j_id0:j_id8:j_id35:j_id38:j_id48:phone').value;
+	    	var regex1 =  /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;  
+		    if(!regex1.test(raw_number)) {
+	    	    alert('Invalid Phone Number');
+	        } 
+	    }
+    </script>
+
+    
+    </apex:form>
+    
+    
+</apex:page>

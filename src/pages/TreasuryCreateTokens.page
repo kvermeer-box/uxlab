@@ -1,0 +1,2 @@
+<apex:page controller="TreasuryCreateTokens" action="{!createTokens}">
+</apex:page>

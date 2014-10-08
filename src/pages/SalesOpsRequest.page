@@ -1,0 +1,250 @@
+<apex:page showHeader="true" sidebar="false" controller="SalesRequest_Controller" title="Sales Request">
+
+<style>
+
+    .noSidebarCell {
+        padding: 0px !important;
+    }
+
+    .outerNoSidebar {
+        padding: 0px !important;
+    }
+
+    #main-container {
+        width: 100%;
+        height: 100%;
+        min-height: 800px;
+        background-image: -o-radial-gradient(50% 146%, #615275 0%, #D9D0D0 0%, #0081CA 100%);
+        background-image: -moz-radial-gradient(50% 146%, #615275 0%, #D9D0D0 0%, #0081CA 100%);
+        background-image: -ms-radial-gradient(50% 146%, #615275 0%, #D9D0D0 0%, #0081CA 100%);
+        background-image: radial-gradient(50% 146%, #615275 0%, #D9D0D0 0%, #0081CA 100%);
+        font-family: Avenir, sans-serif;
+    }
+
+    #title-banner {
+        padding-top: 20px;
+    }
+
+    #main-title {
+        font-family: Avenir, sans-serif;
+        font-size: 72px;
+        color: #FFFFFF;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    #tile-container {
+        margin: auto;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    @media (max-width:1099px) {
+        #tile-container {
+            width: 825px;
+        }
+    }
+
+    @media (min-width: 1400px) {
+        #tile-container {
+            width: 1375px;
+        }
+    }
+
+    @media (min-width: 1100px) and (max-width: 1399px) {
+        #tile-container {
+            width: 1100px;
+        }
+    }
+
+    #tile-centerer {
+        text-align:left;
+        display: inline-block;
+    }
+
+    .tile {
+        display: inline-block;
+        width: 270px;
+        height: 180px;
+        border-radius: 2px;
+        background: #FFFFFF;
+        -moz-box-shadow:    0px 3px 3px 0px rgba(0,0,0,0.20);
+        box-shadow:         0px 3px 3px 0px rgba(0,0,0,0.20);
+        margin-bottom: 3px;
+        margin-right: 1px;
+        position: relative;
+        vertical-align: top;
+    }
+
+    .tile:hover {
+        background-image: -o-radial-gradient(50% 100%, #FFFFFF 0%, #EFEFEF 100%);
+        background-image: -moz-radial-gradient(50% 100%, #FFFFFF 0%, #EFEFEF 100%);
+        background-image: -ms-radial-gradient(50% 100%, #FFFFFF 0%, #EFEFEF 100%);
+        background-image: radial-gradient(50% 100%, #FFFFFF 0%, #EFEFEF 100%);
+        cursor: pointer;
+    }
+
+    .info-box {
+        text-align: right;
+        width:100%;
+        height:30px;
+    }
+
+    .info-sign {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        color: #CBCBCB;
+        border: 1px solid #CBCBCB;
+        border-radius: 20px;
+        display: inline-block;
+        text-align: center;
+        margin-right: 5px;
+        margin-top: 5px;
+        position: relative;
+        z-index: 1000;
+    }
+
+    .info-sign:hover {
+
+    }
+
+    .info-letter {
+        font-size: 15px;
+        display: block;
+        text-align: center;
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+    }
+
+    .tile-title {
+        font-family: Avenir;
+        font-size: 22px;
+        color: #008CBA;
+        text-align: center;
+        margin-top: 30px;
+        font-weight: 600;
+    }
+
+    .info-text-box {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background: rgb(5,94,144);
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+
+    .info-text {
+        font-size: 18px;
+        color: #FFFFFF;
+        padding: 15px;
+        display: inline-block;
+    }
+
+    .link, .link:hover {
+        text-decoration: none;
+    }
+
+    .back-button-text {
+        color: #FFFFFF;
+        font-size: 18px;
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        vertical-align: top;
+        margin-left: 10px;
+    }
+
+    .back-button-image {
+        display: inline-block;
+    }
+
+    .back-button-container {
+        margin-left: 30px;
+    }
+    
+</style>
+
+<div id="main-container">
+    <div id="title-banner">
+        <div id="main-title">Sales Ops &amp; Revenue Ops</div>
+    </div>
+    <div id="tile-container">
+        <div id="tile-centerer">
+            <apex:repeat value="{!requestViews}" var="requestView">
+                <a href="{!requestView.link}" class="link">
+                    <div class="tile">
+                        <div class="info-box">
+                            <div class="info-sign">
+                                <span class="info-letter">i</span>
+                            </div>
+                        </div>
+                        <div class="tile-title">
+                            {!requestView.requestName}
+                        </div>
+                        <div class="info-text-box">
+                            <span class="info-text">
+                                {!requestView.infoText}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </apex:repeat>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="{!$Resource.JQuery2}"></script>
+<script>
+    $(document).ready( function() {
+        // Possibly populate the back-button
+        if ( '{!oppName}' != '' ) {
+            createBackButton('{!oppName}', '{!opportunityId}');
+        }
+        else if ( '{!riskName}' != '') {
+            createBackButton('{!riskName}', '{!riskId}');
+        } 
+        else if ( '{!accountName}' != '' ) {
+            createBackButton('{!accountName}', '{!accountId}');
+        }
+        else if ( '{!leadName}' != '' ) {
+            createBackButton('{!leadName}', '{!leadId}');
+        }
+        else if ( '{!contactName}' != '' ) {
+            createBackButton('{!contactName}', '{!contactId}');
+        }
+        
+        // Set up info-sign mouse listeners
+        $(".info-sign").mouseenter( function() {
+            var me = this;
+            var infoTextBox = $(me).parents('.tile').find('.info-text-box');
+            infoTextBox.stop();
+            $(me).stop();
+            infoTextBox.fadeIn();
+            $(me).animate({ opacity : 0} );
+        }).mouseleave( function() {
+            var me = this;
+            var infoTextBox = $(me).parents('.tile').find('.info-text-box');
+            infoTextBox.stop();
+            $(me).stop();
+            infoTextBox.fadeOut();
+            $(me).animate({ opacity : .9} );
+        })
+    });
+
+    function createBackButton(backText, recordId) {
+        $("#title-banner").after('<div class="back-button-container">' +
+                                    '<a href="/' + recordId + '">' +
+                                        '<img class="back-button-image" src="{!$Resource.BackArrow}" />' + 
+                                        '<span class="back-button-text">' + backText + '</span>' +
+                                    '</a>' +
+                                 '</div>');
+    }
+</script>
+
+    
+</apex:page>

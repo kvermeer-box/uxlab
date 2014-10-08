@@ -1,0 +1,115 @@
+<apex:page controller="BoxOutControllerRisk" >
+  
+  <style>
+    #main-content {
+      margin: auto;
+      width: 1000px;
+      left:-200px;
+    }
+    
+    #main-image {
+      display:block;
+      height: 300px;
+      margin: auto;
+      margin-top: 30px;
+    }
+    
+    #reqs-table {
+      width: 100%;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      font-size: 14px;
+    }
+    
+    #reqs-table td {
+      width:50%;
+      padding-bottom: 20px;
+    }
+    
+    #reqs-table td.label {
+      text-align: right;
+      padding-right: 50px;
+    }
+    
+    #reqs-table td.value {
+      text-align: left;
+    }
+    
+    .center {
+      text-align: center;
+    }
+    
+    .bottom-space {
+      margin-bottom: 20px;
+    }
+    
+    #submit-button {
+      background-color: {!IF(isValidRisk, '#22AA22', '#FF2222')};
+      color: #FFFFFF;
+      border-radius: 10px;
+      width: 100px;
+      height: 30px;
+      text-align:center;
+      padding-top:15px;
+      margin: auto;
+      margin-top: 20px;
+      box-shadow: 3px 3px 1px #888;
+      cursor:{!IF(isValidRisk, 'pointer', 'not-allowed')};
+    }
+    
+    .amountReq {
+      color:{!IF(amountReqPassed, '#22AA22', IF (salesRequest.Risk__c == null, '#000000', '#FF2222'))};
+    }
+    
+    .churnReasonReq {
+      color:{!IF(churnReasonReqPassed, '#22AA22', IF (salesRequest.Risk__c == null, '#000000', '#FF2222'))};
+    }
+    
+    .churnSubReasonReq {
+      color:{!IF(churnSubReasonReqPassed, '#22AA22', IF (salesRequest.Risk__c == null, '#000000', '#FF2222'))};
+    }
+    
+    p {
+      margin: 0px;
+      padding: 0px;
+    }
+    
+    #button-link {
+      text-decoration: none;
+    }
+  </style>
+  <div id="main-content">
+    <img id="main-image" src="{!$Resource.boxout}"/>
+    <p class="center">To qualify for help from the BoxOut team please make sure you have</p>
+    <table id="reqs-table">
+      <tr id="reqOne">
+        <td class="amountReq label">ARR at Risk</td>
+        <td class="value amountReq">
+          <p>$15K + </p>
+        </td>
+      </tr>
+      <tr>
+        <td class="churnReasonReq label">Potential Post Churn Solution</td>
+        <td class="value churnReasonReq">Competitor</td>
+      </tr>
+      <tr>
+        <td class="label churnSubReasonReq">Potential Post Churn Solution Sub-reason</td>
+        <td class="value churnSubReasonReq">{!validCompetitors}</td>
+      </tr>
+    </table>
+    <p class="center bottom-space">Select your Risk</p>
+    <apex:form >
+      <div class="center">
+        <apex:ActionRegion >
+          <apex:inputField required="true" style="margin:auto" value="{!salesRequest.Risk__c}">
+            <apex:actionSupport event="onchange" action="{!validateRisk}"/>
+          </apex:inputField>
+        </apex:ActionRegion>
+      </div>
+    </apex:form>
+    <a id='button-link' href="{!url}">
+      <div id="submit-button">{!IF(isValidRisk, 'Submit!', IF (salesRequest.Risk__c == null, 'No Risk!', 'Invalid Opp'))}</div>
+    </a>
+  </div>
+
+</apex:page>

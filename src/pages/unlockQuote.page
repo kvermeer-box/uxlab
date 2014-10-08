@@ -1,0 +1,5 @@
+<apex:page controller="ParallelQuoteApprovalController" action="{!unlockQuote}" >
+  
+  <apex:messages />
+
+</apex:page>

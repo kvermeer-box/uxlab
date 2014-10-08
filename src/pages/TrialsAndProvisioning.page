@@ -1,0 +1,51 @@
+<apex:page showheader="true" sidebar="false" controller="TrialsAndProvisioningController">
+
+    <!-- Suppress header & footer - need it on the page to display help text hovers  -->
+    <style>
+        .bPageHeader{   display:none;   }   
+        .bPageFooter{   display:none;   }
+    </style>
+ 
+    <apex:sectionHeader title="Trial Provisioning" subtitle="Provision a Customer Trial"/>
+    <div style="text-align:right; padding: 0 20px 2px 0;"><apex:outputLink value="{!URLFOR($Page.partnerportal)}">Return Home</apex:outputLink></div>
+            
+    <apex:form >
+        <apex:pageBLock title="Partner Identification">
+                    
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Previous" action="{!previous}" />            
+                <apex:commandButton value="Submit" action="{!FindDeal}" rerender="results"/>
+            </apex:pageBlockButtons>                    
+                        
+            <apex:pageBlockSection >
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="ATTUID"/>      
+                    <apex:inputText value="{!searchATT}" />                                        
+                </apex:pageBlockSectionItem>                                
+                
+                <apex:pageBlockSectionItem helpText="Deal Registration ID is located on your approved deal registration confirmation email.">
+                    <apex:outputLabel value="Deal Registration ID"/>        
+                    <apex:inputText value="{!searchDeal}" />
+                </apex:pageBlockSectionItem>                
+
+            </apex:pageBlockSection>
+            
+            
+            <apex:outputPanel id="results">
+                <!-- FOR DEBUGGING -->
+                <apex:pageMessages /> 
+                <apex:pageBlockSection rendered="{!opp != null}">                   
+                    <apex:outputText value="{!opp.id}"/>
+                    <apex:outputText value="{!opp.Name}"/>  
+                    <apex:outputText value="{!ocr.ContactId}"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBLock>
+    
+    
+    
+    </apex:form>
+
+
+</apex:page>

@@ -1,0 +1,34 @@
+<apex:page id="pg" standardcontroller="zqu__Quote__c"  extensions="Z_DisplayQuoteLinesExtension">
+
+ <apex:form >
+      
+        <apex:pageblock id="pb">
+ 
+            <apex:pageBlockTable value="{!quoteLineItemList}" var="quoteLineItem">
+
+				<apex:column headerValue="Product" value="{!quoteLineItem.quoteLineItem.Quote_Display_Name__c}"  />              
+
+				<apex:column headerValue="Charge Type" value="{!quoteLineItem.quoteLineItem.zqu__Type__c}"  />   
+ 
+                  <apex:column headerValue="Unit Price">
+                    <apex:outputText value="{0, number, ###,##0.00}" style="float: right;">
+                        <apex:param value="{!quoteLineItem.quoteLineItem.zqu__EffectivePrice__c}" />
+                    </apex:outputText>
+                </apex:column>
+			 
+				<apex:column headerValue="Quantity" value="{!quoteLineItem.quoteLineItem.zqu__Quantity__c}" style="text-align:right;" />   
+
+				<apex:column headerValue="Discount" value="{!quoteLineItem.quoteLineItem.Quote_Discount__c}" style="text-align:right;" />   
+
+				<apex:column headerValue="Recurring Amount" rendered="{!quote.Deal_Type__c<>'Short Term'}" 
+								value="{!quoteLineItem.quoteLineItem.Quote_Total_Price__c}" style="text-align:right;"/>     
+
+				<apex:column headerValue="Order Amount" value="{!quoteLineItem.quoteLineItem.Order_Amount__c}" style="text-align:right;"/>     
+						
+ 
+			</apex:pageBlockTable>
+ 
+		</apex:pageblock>
+	</apex:form>
+ 
+</apex:page>

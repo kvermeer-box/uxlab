@@ -1,0 +1,102 @@
+<apex:page controller="DealRegController" showheader="true" sidebar="true">
+    
+    <apex:sectionHeader title="Submit New Deal Registration" subtitle="Step 2: Deal Identification"/>
+    <apex:outputPanel rendered="{!CurrentStep != 2}">
+        <apex:pageMessage strength="3" severity="fatal" summary="Please start at step 1">
+            <apex:outputLink value="{!$Page.UserDealRegStep1}">Step 1</apex:outputLink>     
+        </apex:pageMessage>     
+    </apex:outputPanel>
+    
+    <apex:form rendered="{!CurrentStep == 2}" id="theform">
+    
+        <apex:pageMessages />
+        
+        <apex:pageBlock title="Please enter the sales details:" rendered="{!opp.id == null}">
+                    
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Previous" action="{!UserStep1}"/>
+                <apex:commandButton value="Submit Deal Registration" action="{!AuthUserSubmit}" status="status" rerender="theform" onclick="this.style.display='none'"/>
+                <apex:actionStatus id="status">             
+                    <apex:facet name="start">
+                        <apex:image value="/img/loading.gif"/>                  
+                    </apex:facet>                                                                                   
+                </apex:actionStatus>                
+            </apex:pageBlockButtons>                    
+            
+            <apex:pageBlockSection columns="1" title="Please enter the Product and Estimated Close Date details" >      
+
+                <apex:inputField value="{!opp.Box_Products__c}" tabOrderHint="1" required="true"/>
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Deal Currency"/>
+                    <apex:inputField value="{!opp.CurrencyIsoCode}" required="true"/>
+                 </apex:pageBlockSectionItem>
+                <apex:inputField value="{!opp.CloseDate}" tabOrderHint="2"/>
+                                    
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Please enter the sales details" >              
+            
+                <apex:inputField value="{!opp.Date_of_First_Meeting__c}" tabOrderHint="3" required="true"/>
+                
+                <apex:inputField value="{!opp.Box_Sales_Rep_Name__c}" tabOrderHint="4"/>
+
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="# Potential Licenses For This Opportunity"/>
+                    <apex:inputField value="{!opp.Seats_Sold__c}" tabOrderHint="5" required="true"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem helpText="Please enter the portion of expected revenue for this deal that will be non-recurring/non-license related, such as professional services & support package fees.">
+                    <apex:outputLabel value="Non-Recurring Revenue"/>
+                    <apex:inputField value="{!opp.NRR__c}" tabOrderHint="6"/>
+                </apex:pageBlockSectionItem>
+                 
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel value="Is this an add on order to an existing customer?" />
+                	<apex:inputCheckbox value="{!typeCheck}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel value="Primary Competitor" />
+                	<apex:inputField value="{!opp.Competitor_We_Lost_To__c}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel value="Deal Code" />
+                	<apex:inputField value="{!opp.Deal_Code__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:Pageblocksection columns="1" title="Please enter final qualification notes & comments">
+            
+                
+                <apex:inputField value="{!opp.Why_Box__c}" tabOrderHint="7" style="width:50%;" required="true"/>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Partner Contribution"/>
+                    <apex:inputField value="{!opp.Partner_Contribution__c}" tabOrderHint="8" required="true"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Additional Deal Information"/>
+                    <apex:inputField value="{!opp.Thanks_Due__c}" tabOrderHint="9" style="width:90%;" required="true"/>
+                </apex:pageBlockSectionItem>
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Hide Me" style="visibility:hidden" />
+                    <apex:inputField value="{!opp.isATT__c}" style="visibility:hidden" />
+                </apex:pageBlockSectionItem>
+                
+            </apex:Pageblocksection>
+                        
+        </apex:pageBLock>
+    
+        <apex:pageBLock title="Sales Information" rendered="{!opp.id != null}">
+        
+            <apex:pageMessage severity="Confirm" summary="Thank you for submitting your deal registration to Box!  You will receive an email shortly as confirmation of your submission." strength="3"/>
+            <apex:actionPoller action="{!URLFOR('/home/home.jsp')}" interval="5"/>
+        </apex:pageBLock>
+    
+    </apex:form>
+
+
+</apex:page>

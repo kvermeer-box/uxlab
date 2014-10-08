@@ -1,0 +1,72 @@
+<apex:page standardController="Sales_Request__c">
+<script type="text/javascript">
+
+  function scrollToID(input,id) {
+    //console.log("Called with id: " + id);
+    var select_input_index = input.selectedIndex;
+    var selected_value = input.options[select_input_index].value;
+    
+    if (selected_value === "Completed" || selected_value === "In Progress")
+    {
+        var document_location = String(document.location);
+        // Remove everything after old fragment identifier ('#'), if it exists
+        var index_of_old_hash = document_location.lastIndexOf('#');
+        console.log(index_of_old_hash);
+        if (index_of_old_hash !== -1)
+        {
+          document_location = document_location.substring(0,index_of_old_hash);
+        }
+
+        // Add new fragment identifier
+        document.location = document_location + "#" + id;
+        console.log(document.location);
+    }
+
+  }
+  
+</script>
+
+  <apex:sectionHeader title="Sales Request Edit" subtitle="#{!Sales_Request__c.name}"/>
+  <apex:form >
+      <apex:pageBlock title="Sales Request Edit" mode="edit" id="pageBlock">
+          <apex:pageBlockButtons >
+              <apex:commandButton value="Save" action="{!save}"/>
+              <apex:commandButton value="Cancel" action="{!cancel}"/>
+          </apex:pageBlockButtons>
+          
+          <apex:actionRegion >
+          <apex:pageBlockSection title="Main Information" columns="2">
+              <apex:outputField value="{!Sales_Request__c.Name}"/>
+              <apex:inputField value="{!Sales_Request__c.Status__c}">
+                  <apex:actionSupport event="onchange" rerender="completed-container" focus="completed-section" oncomplete="scrollToID(this,'hello')"/>
+              </apex:inputField>
+              <apex:inputField value="{!Sales_Request__c.Summary__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Dominator__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Request_Type__c}"/>
+              <apex:inputField value="{!Sales_Request__c.How_can_we_help__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Next_Steps_Comments__c}"/>
+          </apex:pageBlockSection>
+          </apex:actionRegion>          
+          
+          <apex:pageBlockSection title="Additional Information" columns="2">
+              <apex:inputField value="{!Sales_Request__c.Additional_CC__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Severity__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Story__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Backlog_Type__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Ease_of_Fix__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Project__c}"/>
+              <apex:inputField value="{!Sales_Request__c.Attachment_URL__c}"/>
+          </apex:pageBlockSection>
+          
+          <apex:outputPanel id="completed-container" >
+          <apex:pageBlockSection title="Completed Information" rendered="{!Sales_Request__c.Status__c == 'Completed' || Sales_Request__c.Status__c == 'In Progress'}" id="completed-section" columns="1">
+             <apex:inputField value="{!Sales_Request__c.Category__c}"/>
+             <apex:inputField value="{!Sales_Request__c.Completed_Comments__c}"/>
+             <span id="hello"/>
+          </apex:pageBlockSection>
+          </apex:outputPanel>
+          
+      </apex:pageBlock>
+  </apex:form>
+  
+</apex:page>

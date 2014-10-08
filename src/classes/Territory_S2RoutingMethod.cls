@@ -1,0 +1,7 @@
+public enum Territory_S2RoutingMethod {
+
+	CONTACT,
+	ACCOUNT_WITH_REASSIGNMENT,
+	ACCOUNT_WITHOUT_REASSIGNMENT
+
+}

@@ -1,0 +1,434 @@
+<apex:page showHeader="true" sidebar="false" controller="RestTestingTool">
+	
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic|Varela+Round' rel='stylesheet' type='text/css'/>
+    <script src="{!$Resource.JQuery2}"></script>
+    <script src="{!$Resource.SpinJS}"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/prettify.js"></script>
+    <style>
+        /* Page attributes */
+        /* FIGHTING SALESFORCE */
+
+        .noSidebarCell {
+            padding: 0px !important;
+        }
+
+        .outerNoSidebar {
+            padding: 0px !important; 
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .main-header {
+            font-size: 35px;
+            font-weight: 700;   
+        }
+
+        .subheader {
+            font-size: 20px;
+            font-weight: 400;
+        }
+
+        /* Header */
+
+        #main-content {
+            width: 100%;
+            min-height: 600px;
+            min-width: 1300px;
+            font-family: 'Lato', sans-serif;
+            margin-top: 20px;
+        }
+
+        /* Input Form */
+
+        .json-tool {
+            width: 1100px;
+            margin: auto;
+        }
+
+        .section-title {
+            display: block;
+            font-weight: 700;
+            font-size: 23px;
+            margin-bottom: 15px;
+        }
+
+        .tool-section {
+            width: 750px;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+
+        .target-info {
+            font-size: 18px;
+        }
+
+        .input-form {
+            margin-bottom: 10px;
+        }
+
+        .input-field {
+            font-size: 19px;
+            line-height: 20px;
+            border-top: 1px solid #BBBBBB;
+            padding: 10px 5px;
+        }
+
+        .input-field-titles {
+            padding-left: 5px;
+            padding-bottom: 2px;
+            color: #666666;
+            font-size: 16px;
+        }
+
+        .input-label-title {
+            width: 250px;
+            float: left;
+        }
+
+        .input-label {
+            text-align: left;
+            width: 250px;
+            height: 30px;
+            float: left;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 30px;
+        }
+
+        .input-value-title {
+            width: 265px;
+            margin-left: 20px;
+            float: left;
+        }
+
+        .input-value {
+            width: 260px;
+            height: 24px;
+            border: 1px solid #888888;
+            white-space: nowrap;
+            overflow: hidden;
+            float: left;
+            margin-left: 20px;
+            padding: 1px;
+            padding-left: 3px;
+            font-size: 16px;
+        }
+
+        .input-info-title {
+            margin-left: 20px;
+            float: left;
+        }
+
+        .info {
+            margin-left: 20px;
+            float: left;
+        }
+
+        .input-type {
+            font-size: 16px;
+        }
+
+        .input-data-type {
+            font-weight: 700;
+        }
+
+        /* json-renderer */
+
+        .space-holder {
+            clear:both;
+        }
+
+        .rest-verb {
+            font-weight: 700;
+        }
+
+        .endpoint {
+            font-style: italic;
+        }
+
+        pre {
+            margin: 0px;
+        }
+
+        /* Send Request Button */
+
+        #sendRequestButton {
+            margin: auto;
+            font-size: 20px;
+            width: 200px;
+            height: 60px;
+            border: 1px solid #3C3C3C;
+            border-radius: 10px;
+            cursor: pointer;
+            line-height: 60px;
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        /* Response Panel */
+
+        #responsePanel {
+            margin: auto;
+            border: 1px solid #DDDDDD;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        /* Pretty printing styles. Used with prettify.js. */
+        /* Vim sunburst theme by David Leibovic */
+
+        pre .str, code .str { color: #d14; }
+        pre .key, code .key { color: #008080; }
+        pre .kwd, code .kwd { color: #E28964; } /* keyword - dark pink */
+        pre .com, code .com { color: #AEAEAE; font-style: italic; } /* comment - gray */
+        pre .typ, code .typ { color: #89bdff; } /* type - light blue */
+        pre .lit, code .lit { color: #3387CC; } /* literal - blue */
+        pre .pun, code .pun { color: #000; } /* punctuation - white */
+        pre .pln, code .pln { color: #000; } /* plaintext - white */
+        pre .tag, code .tag { color: #89bdff; } /* html/xml tag    - light blue */
+        pre .atn, code .atn { color: #bdb76b; } /* html/xml attribute name  - khaki */
+        pre .atv, code .atv { color: #65B042; } /* html/xml attribute value - green */
+        pre .dec, code .dec { color: #3387CC; } /* decimal - blue */
+
+        pre.prettyprint, code.prettyprint {
+                background-color: #f5f5f5;
+                -moz-border-radius: 8px;
+                -webkit-border-radius: 8px;
+                -o-border-radius: 8px;
+                -ms-border-radius: 8px;
+                -khtml-border-radius: 8px;
+                border-radius: 8px;
+                border: 1px solid #DDDDDD;
+        }
+
+        pre {
+            font-size: 13px;
+        }
+
+        pre.prettyprint {
+                padding: 1em;
+                white-space: pre-wrap;
+        }
+
+
+        /* Specify class=linenums on a pre to get line numbering */
+        ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE; } /* IE indents via margin-left */
+        li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 { list-style-type: none }
+        /* Alternate shading for lines */
+        li.L1,li.L3,li.L5,li.L7,li.L9 { }
+
+        @media print {
+          pre .str, code .str { color: #d14; }
+          pre .key, code .key { color: #008080; }
+          pre .kwd, code .kwd { color: #006; font-weight: bold; }
+          pre .com, code .com { color: #600; font-style: italic; }
+          pre .typ, code .typ { color: #404; font-weight: bold; }
+          pre .lit, code .lit { color: #044; }
+          pre .pun, code .pun { color: #440; }
+          pre .pln, code .pln { color: #000; }
+          pre .tag, code .tag { color: #006; font-weight: bold; }
+          pre .atn, code .atn { color: #404; }
+          pre .atv, code .atv { color: #060; }
+        }
+    </style>
+
+    <div id="main-content">
+
+        <div class="header">
+            <div class="main-header">
+                REST Testing Tool
+            </div>
+        </div>
+        
+
+        <div class="json-tool">
+            <div class="tool-section">
+                <span class="section-title">Target</span>
+                <span class="target-info">
+                    <p class="rest-verb">POST</p>
+                    <p>Pointed at: <span class="endpoint">{!$Label.API_URL}{!endpoint.Endpoint_Path__c}</span></p>
+                </span>
+            </div>
+            <div class="tool-section">
+                <span class="section-title">Parameters</span>
+                <div class="input-form">
+                    <div class="input-field-titles">
+                        <div class="input-label-title">
+                            Name
+                        </div>
+                        <div class="input-value-title">
+                            Value
+                        </div>
+                        <div class="input-info-title">
+                            Info
+                        </div>
+                        <div class="space-holder"></div>
+                    </div>
+                    <apex:repeat value="{!fields}" var="currentField">
+                        <div class="input-field">
+                            <div class="input-label">{!currentField.Name}</div>
+                            <input class="input-value" value="{!currentField.Default_Value__c}" data="{!currentField.Field_Data_Type__c}"/>
+                            <div class="info">
+                                <div class="input-type">Type: <span class="input-data-type">{!currentField.Field_Data_Type__c}</span></div>
+                            </div>
+                            <div class="space-holder"></div>
+                        </div>
+                    </apex:repeat>
+                </div>
+            </div>
+            <div class="tool-section">
+                <span class="section-title">Rendered Request</span>
+                <pre class="prettyprint json-renderer"></pre>
+                <div id="sendRequestButton">Send Request</div>
+            </div>
+            <div class="tool-section">
+                <span class="section-title">Response</span>
+                <pre id="responsePanel" class="prettyprint">
+                </pre>
+            </div>
+            <div class="space-holder"></div>
+        </div>
+    </div>
+
+    <script>
+
+        var jsonObject = {}
+        var opts = {
+              lines: 13, // The number of lines to draw
+              length: 20, // The length of each line
+              width: 10, // The line thickness
+              radius: 30, // The radius of the inner circle
+              corners: 1, // Corner roundness (0..1)
+              rotate: 0, // The rotation offset
+              direction: 1, // 1: clockwise, -1: counterclockwise
+              color: '#000', // #rgb or #rrggbb or array of colors
+              speed: 1, // Rounds per second
+              trail: 60, // Afterglow percentage
+              shadow: false, // Whether to render a shadow
+              hwaccel: false, // Whether to use hardware acceleration
+              className: 'spinner', // The CSS class to assign to the spinner
+              zIndex: 2e9, // The z-index (defaults to 2000000000)
+              top: '50%', // Top position relative to parent
+              left: '50%' // Left position relative to parent
+            };
+        var spinner = new Spinner(opts);
+
+        $(document).ready(function() {
+            
+            $('.input-value').attr('contentEditable', 'true');
+            $('.input-value').bind('input', loadLiveJSONObject);
+            loadLiveJSONObject(null);
+            $('#sendRequestButton').click(function() {
+                startSpinner();
+                sendRequestThroughController(JSON.stringify(jsonObject), '{!$Label.API_URL}{!endpoint.Endpoint_Path__c}');
+            })
+        });
+
+        function startSpinner() {
+            spinner.spin();
+            $('#sendRequestButton').append(spinner.el);
+        }
+
+        function stopSpinner() {
+            spinner.stop();
+            $('.spinner').remove();
+        }
+
+        function loadLiveJSONObject(event) {
+            console.log('Loading JSON Object!');
+            console.log('jsonObject: ');
+            console.log(jsonObject);
+            $('.input-field').each(function() {
+                var fieldName = $(this).find('.input-label').text().trim();
+                var fieldDataType = $(this).find('.input-value').attr('data');
+                var fieldValue = $(this).find('.input-value').val();
+                if (fieldDataType.toLowerCase() == 'string') {
+                    // Field value is fine as a string
+                    if( fieldValue === '' ) {
+                        fieldValue = null;
+                    }
+                }
+                else if (fieldDataType.toLowerCase() == 'integer') {
+                    if( fieldValue === '' ) {
+                        fieldValue = null;
+                    }
+                    else {
+                       fieldValue = Number(fieldValue); 
+                    }
+                }
+                else if (fieldDataType.toLowerCase() == 'boolean') {
+                    if (fieldValue === 'true') {
+                        fieldValue = true;
+                    }
+                    else {
+                        fieldValue = false;
+                    }
+                }
+                else if (fieldDataType.toLowerCase() == 'array') {
+                    var regex = new RegExp(', *');
+                    fieldValue = fieldValue.split(regex);
+                }
+                jsonObject[fieldName] = fieldValue;
+            });
+            console.log('jsonObject: ');
+            console.log(jsonObject)
+            $('.json-renderer').removeClass('prettyprinted').text(JSON.stringify(jsonObject, null, '\t'));
+            myPrettyPrint();
+        }
+
+        function myPrettyPrint() {
+            prettyPrint();
+            $(".pun:contains(':')").prev('.str').removeClass('str').addClass('key');
+        }
+
+        function sendRequestThroughController(request, endpoint) {
+            console.log('Sending request: ');
+            console.log(request);
+            console.log('Endpoint: ');
+            console.log(endpoint);
+            /*
+            Visualforce.remoting.timeout = 120000; 
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.RestTestingTool.sendRequest}',
+                request,
+                endpoint,
+                handleResponse
+            );
+*/
+            RestTestingTool.sendRequest(request, endpoint, handleResponse, { timeout: 120000 });
+        }
+
+        function sendRequest(request, endpoint) {
+            $.ajax({
+                type: "POST",
+                url: endpoint,
+                data: request,
+                success: handleResponse,
+                beforeSend: function(xhr) {
+                    console.log("Session Id: {!$API.session_Id}");
+                    xhr.setRequestHeader('Authorization', 'Bearer {!$API.session_Id}');
+                    console.log(xhr);
+                }
+            });
+        }
+
+        function handleResponse(result, event) {
+            console.log('Result: ');
+            console.log(result);
+            console.log('Event: ');
+            console.log(event);
+            stopSpinner();
+            $('#responsePanel').removeClass('prettyprinted').html(result);
+            myPrettyPrint();
+        }
+
+        function htmlDecode(value) {
+
+        }
+
+    </script>
+
+</apex:page>

@@ -1,0 +1,7 @@
+public enum LicenseTier {
+
+	BUSINESS,
+	ENTERPRISE,
+	ENTERPRISE_UNLIMITED
+
+}

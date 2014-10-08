@@ -1,0 +1,68 @@
+<apex:page standardController="Sales_Request__c">
+<apex:pageMessages /> 
+
+   
+    <apex:composition template="{!$Page.PetersVisualForcePageTemplate}">
+        <apex:define name="Header">
+            <apex:sectionHeader title="{!$ObjectType.Sales_Request__c.label}" subtitle="EnterSubtitleHere"/>
+        </apex:define>
+        <apex:define name="Column1">
+        <chatter:feed entityId="{!Sales_Request__c.id}" rendered="true"/>
+            <apex:form >
+                <apex:pageBlock mode="detail">
+                
+                    <apex:pageBlockButtons location="top">
+                        <apex:commandButton action="{!edit}" value="Edit"/>
+                        <apex:commandButton action="{!delete}" value="Delete"/>
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="1" title="SalesRequestInformation">
+                        <apex:outputField value="{!Sales_Request__c.name}"/>
+                        <apex:outputField value="{!Sales_Request__c.Status__c}"/>
+                        <apex:outputField value="{!Sales_Request__c.dominator__r.name}"/>
+                        <apex:outputField value="{!Sales_Request__c.Summary__c}"/>
+                        <apex:outputField value="{!Sales_Request__c.Createdby.name}"/>
+                                              
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:form>
+        </apex:define>
+        <apex:define name="Column2">
+          <apex:form >
+                <apex:pageBlock mode="detail">
+               
+                    <apex:pageBlockButtons location="top">
+                        <apex:commandButton action="{!edit}" value="Edit"/>
+                        <apex:commandButton action="{!delete}" value="Delete"/>
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="1" title="SalesRequestInformation">
+                        <apex:outputField value="{!Sales_Request__c.name}"/>
+                        <apex:outputField value="{!Sales_Request__c.Status__c}"/>
+                        <apex:outputField value="{!Sales_Request__c.dominator__r.name}"/>
+                        <apex:outputField value="{!Sales_Request__c.Summary__c}"/>
+                        <apex:outputField value="{!Sales_Request__c.Createdby.name}"/>
+                                              
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:form>
+        </apex:define>
+        <apex:define name="Column3">
+            <apex:form >
+                <apex:pageBlock mode="detail">
+                
+                    <apex:pageBlockButtons location="top">
+                        <apex:commandButton action="{!edit}" value="Edit"/>
+                        <apex:commandButton action="{!delete}" value="Delete"/>
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="1" title="SalesRequestInformation">
+                        <apex:outputField value="{!Sales_Request__c.name}"/>
+                        <apex:outputField value="{!Sales_Request__c.Status__c}"/>
+                        <apex:outputField value="{!Sales_Request__c.dominator__r.name}"/>
+                        <apex:outputField value="{!Sales_Request__c.Summary__c}"/>
+                        <apex:outputField value="{!Sales_Request__c.Createdby.name}"/>
+                                              
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

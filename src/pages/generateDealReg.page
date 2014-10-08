@@ -1,0 +1,82 @@
+<apex:page controller="Box_TestDealRegGenerator" tabStyle="Opportunity">
+    <apex:form id="all">
+        <apex:sectionHeader title="PRM Testing Utility" subtitle="Deal Reg Generator" />
+        <apex:pageBlock title="Create a Random Deal Registration" tabStyle="Tenant__c" mode="edit" >       
+            <!-- Errors -->
+            <apex:pageMessages />
+            <!-- Main Panel -->
+            <apex:pageBlockSection id="dealReg" title="Select Your Preferred IDs" columns="2">
+                <!--
+                <!-- Input: partner_id
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="partner_id" title="partner_id" />
+                    <apex:inputText value="{!partner_id}" />
+                </apex:pageBlockSectionItem>
+                <!-- Output: Partner Account
+                <apex:pageBlockSectionItem id="partner">
+                    <apex:outputLabel value="Partner Account"></apex:outputLabel>
+                    <apex:actionStatus id="mario" startStyle="position:absolute;">
+                        <apex:facet name="stop">
+                            <apex:outputLink value="{!$Site.domain + '/' + partner.Id}" target="_blank"><apex:outputText value="{!partner.Name}" /></apex:outputLink>
+                        </apex:facet>
+                        <apex:facet name="start">
+                            <apex:image style="height: 83px; width: 83px;" value="http://fc04.deviantart.net/fs71/f/2012/195/7/4/dancing_luigi_by_legoman824-d578zrq.gif" >
+                                <apex:image value="http://fc03.deviantart.net/fs27/f/2008/137/1/6/mario_dance_by_minimariodrawer.gif" />
+                            </apex:image>
+                        </apex:facet>
+                    </apex:actionStatus>
+                </apex:pageBlockSectionItem>
+                -->
+                <!-- Input: external_account_id -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="external_account_id" title="external_account_id" />
+                    <apex:inputText value="{!account_id}" />
+                </apex:pageBlockSectionItem>
+                <!-- Output: Account -->
+                <apex:pageBlockSectionItem id="account">
+                    <apex:outputLabel value="Customer Account"></apex:outputLabel>
+                    <apex:actionStatus id="mario" startStyle="position:absolute;">
+                        <apex:facet name="stop">
+                            <apex:outputLink value="{!$Site.domain + '/' + account.Id}" target="_blank"><apex:outputText value="{!account.Name}" /></apex:outputLink>
+                        </apex:facet>
+                        <apex:facet name="start">
+                            <apex:image style="height: 60px; width: 60px;" value="http://fc04.deviantart.net/fs71/f/2012/195/7/4/dancing_luigi_by_legoman824-d578zrq.gif" >
+                                <apex:image style="height: 60px; width: 60px;" value="http://fc03.deviantart.net/fs27/f/2008/137/1/6/mario_dance_by_minimariodrawer.gif" />
+                            </apex:image>
+                        </apex:facet>
+                    </apex:actionStatus>                    
+                </apex:pageBlockSectionItem>
+                <!-- Help Text -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel style="padding-left: 20%;" value="* Leave fields blank to generate objects with random IDs."></apex:outputLabel>
+                </apex:pageBlockSectionItem>
+                <!-- Output: Deal Reg Opportunity -->
+                <apex:pageBlockSectionItem id="opportunity">
+                    <apex:outputLabel value="Deal Reg Opportunity"></apex:outputLabel>
+                    <apex:outputLink value="{!$Site.domain + '/' + opportunity.Id}" target="_blank"><apex:outputText value="{!opportunity.Name}" /></apex:outputLink>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>           
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Generate Deal Registration" action="{!generateDealReg}" reRender="dealReg" status="mario" />                 
+                <apex:commandButton value="Clear" action="{!clear}" rerender="dealReg" />&nbsp;&nbsp;&nbsp;&nbsp;                
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:pageBlock tabStyle="Tenant__c">
+            <!-- Instructions --><br />
+            <apex:pageBlockSection title="How Deal Reg Works" columns="1" collapsible="true">
+                <apex:pageBlockSectionItem ><br />
+                    1. When the API is called, it will first search for a valid Deal Registration (initiate calls only!):<br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;a. Search Salesforce Accounts for a match on the <b>external_account_id</b> (BAN) field.<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;b. Find a valid deal reg opportunity on the Account.<br />                   
+                    &nbsp;&nbsp;&nbsp;&nbsp;c. If no deal reg opportunity could be found, the API will return an error.<br /><br />                                        
+                    2. The API queries for partner specific settings, such as Price Per Seat:<br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;a. Search Salesforce partner Accounts for a match on the running user's Reseller_ID__c field. <b>(Thanks Huff!)</b><br />                                        
+                    &nbsp;&nbsp;&nbsp;&nbsp;b. If no match is found, search by the optional partner_id field.<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;c. If no partner account is found, the API will return an error.<br /><br />             
+                    3. The API forwards the request to the Box Reseller API.<br /><br />                    
+                    4. The API closes the deal reg opportunity in Salesforce, then creates a quote and quote line items for revenue tracking.                                           
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

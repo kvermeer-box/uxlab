@@ -1,0 +1,111 @@
+<apex:page controller="WebTrialUpsell_page">
+  <style>
+  
+    #display-container
+    {
+      font-size: 45px;
+      text-align: center;
+      margin-top: 200px;
+    }
+    
+  </style>
+
+  <div id="display-container">
+    <span id="main-message">Creating Opp</span><span id="ellipse">...</span>
+    <p id="detail"></p>
+  </div>
+  
+  <!-- Scripts -->
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  
+  <script type="text/javascript">
+  
+    var MAX_PERIODS_IN_ELLIPSE = 3;
+    var ellipse_interval = setInterval(animateEllipse,500);
+  
+    Visualforce.remoting.timeout = 120000;
+    var opp_id = getUrlParameters("id",true);
+    if (opp_id === false) opp_id = null;
+    console.log("Opp id:" + opp_id)
+    
+    function createWebTrialUpsell()
+    {
+      Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.WebTrialUpsell_page.createTrialUpsellOpp}',
+        opp_id,
+        handleResult
+      );
+    }
+    
+    function handleResult(result,event)
+    {
+      clearInterval(ellipse_interval);
+      jQuery("#ellipse").html("");
+      console.log(result);
+      var decoded = jQuery("<div/>").html(result).text();
+      console.log(decoded);
+      var response_object = JSON.parse(decoded);
+      console.log(response_object);
+      if (response_object.success == false) {
+        jQuery("#main-message").html(response_object.error_string);
+        setTimeout(function(){
+          if (opp_id != null)
+            window.open('/' + opp_id,'_top',false);
+        },3000);
+      } else{
+        jQuery("#main-message").html("Success! Redirecting to new opp!");
+        setTimeout(function() {
+          window.open('/' + response_object.new_opp_id,'_top',false);
+        },2000);
+      } 
+    }
+    
+    function getUrlParameters(parameter, decode)
+    {
+      var currLocation = window.location.search,
+      parArr = currLocation.split("?")[1].split("&"),
+      returnBool = true;
+   
+      for(var i = 0; i < parArr.length; i++)
+      {
+        parr = parArr[i].split("=");
+        if(parr[0] == parameter){
+            return (decode) ? decodeURIComponent(parr[1]) : parr[1];
+            returnBool = true;
+        }else{
+            returnBool = false;            
+        }
+      }
+   
+      if(!returnBool) return false;  
+    }
+    
+    createWebTrialUpsell();
+    
+    function animateEllipse()
+    {
+      var ellipse_text = jQuery("#ellipse").text();
+      console.log(ellipse_text);
+      var new_number_of_periods = 0;
+      var number_of_periods = ellipse_text.length;
+      if (number_of_periods >= MAX_PERIODS_IN_ELLIPSE)
+      {
+        new_number_of_periods = 0;
+      } else
+      {
+        new_number_of_periods = number_of_periods + 1;
+      }
+      var ellipse_string = "";
+      for (var i=0; i < new_number_of_periods; i++)
+      {
+        ellipse_string += ".";
+      }
+      
+      jQuery("#ellipse").html(ellipse_string);
+    }
+  </script>
+  
+  <!-- /Scripts -->
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page standardController="Opportunity">
+  <head> Use The Contact Record to Create Opportunities</head>
+  <body>
+  <p>Please go to the Primary contact for this Opportunity and create the opportunity there (not here and not off of the Account record).  You should know who the primary contact is before you create an opportunity.</p>
+  </body>
+</apex:page>

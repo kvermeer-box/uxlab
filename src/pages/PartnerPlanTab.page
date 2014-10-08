@@ -1,0 +1,3 @@
+<apex:page standardController="Partner_Plan__c">
+<apex:listViews type="Partner_Plan__c"/>
+</apex:page>

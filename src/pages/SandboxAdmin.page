@@ -1,0 +1,528 @@
+<apex:page docType="html-5.0" showHeader="true" controller="SandboxAdmin_Controller" sidebar="false" >
+
+<style>
+
+    /* Fight Salesforce */
+
+    [name = skiplink]
+    {
+        display: none;
+    }
+
+    .noSidebarCell {
+        padding: 0px !important;
+    }
+
+    .outerNoSidebar {
+        padding: 0px !important;
+    }
+
+    /* /END Fight Salesforce */
+
+
+    #main-page {
+        font-family: Avenir, 'Source Sans Pro', sans-serif;
+        background-color: #344A5F;
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+        display: inline-block;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    header {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 42px;
+        background-color: #2f2f2f;
+    }
+
+    #header-title-block {
+        background-color: #000000;
+        display: inline-block;
+        height: 100%;
+        width: 100%;
+    }
+
+    #header-title {
+        color: #FFFFFF;
+        text-align: center;
+        width:;
+    }
+
+    #main-content {
+        margin-top: 30px;
+        margin-left: 15px;
+        margin-right: 15px;
+        
+    }
+
+    #page-header {
+       margin-bottom: 30px;
+       width: 100%;
+       text-align: center;
+    }
+
+    #page-header-text {
+        font-size: 60px;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+
+    .sandbox-entry {
+        display: block;
+        width: 1000px;
+        margin: auto;
+        margin-bottom: 20px;
+    }
+
+    .sandbox-info {
+        background-color: #F0F1F2;
+        padding: 5px;
+        padding-bottom: 10px;
+        border-radius: 10px;
+        width: 100%;
+        position: relative;
+    }
+
+    .sandbox-meta {
+        width: 600px;
+        display: inline-block;
+    }
+
+    .sandbox-entry-name {
+        display: block;
+        font-size: 20px;
+        font-weight: bold;
+        padding-bottom: 10px;
+        padding-left: 5px;
+        padding-top: 5px;
+        color: #2A94D6;
+    }
+
+    .sandbox-entry-description {
+        display: block;
+        padding-bottom: 10px;
+        margin-left: 15px;
+        color: #344A5F;
+    }
+
+    .sandbox-entry-users {
+        display: block;
+        padding-bottom: 5px;
+        margin-left: 15px;
+    }
+
+    .sandbox-entry-last-refresh-date {
+        display: block;
+        margin-left: 15px;
+        color: #344A5F;
+    }
+
+    .sandbox-member-list {
+        margin-left:  0px;
+    }
+
+    .sandbox-member {
+        position: relative;
+        display: block;
+        background-color: #4EB1CB;
+        width: 800px;
+        border-top: 1px solid #344A5F;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 15px;
+        margin-left: 0px;
+    }
+
+    .sandbox-member-name {
+        font-size: 15px;
+        color: #344A5F;
+        display: inline-block;
+        height: 100%;
+        max-width: 70%;
+    }
+
+    .sandbox-member-photo {
+        position: absolute;
+        top: 8px;
+        right: 5px;
+        display: inline-block;
+    }
+
+    .add-a-member {
+        cursor : pointer;
+        font-size: 15px;
+        color: #344A5F;
+    }
+
+    .add-a-member:hover {
+        background-color: #3EA1BB;
+        color: #FFFFFF;
+
+    }
+
+    input {
+        width:50%;
+        height:40%;
+        font-size: 20px;
+        border: none;
+    }
+
+    .name-input {
+    }
+
+    .input-div {
+        margin-bottom: 10px;
+        display: inline-block;
+        width: 600px;
+    }
+
+    .input-label {
+        text-align: left;
+        width: 130px;
+        display: inline-block;
+        font-size: 15px;
+        color: #344A5F;
+    }
+
+    .input-button {
+        float: right;
+        height: 58px;
+        line-height: 58px;
+        text-align: center;
+        border: 1px solid #000000;
+        width: 150px;
+        margin-right: 10px;
+        background: #4AB471;
+        color: #FFF;
+        font-size: 15px;
+    }
+
+    .input-button:hover {
+        cursor: pointer;
+        background: #3AA461;
+    }
+
+    .auto-complete-option {
+        background-color: #FFFFFF;
+        line-height: 24px;
+    }
+
+    .auto-complete-option:not(:first-child) {
+        border-bottom: 1px solid #CCCCCC;
+    }
+
+    .auto-complete-option:hover {
+        background-color: #3EA1BB;
+        color: #FFFFFF;
+        cursor: pointer;
+    }
+
+    .spaceholder {
+        clear: both;
+    }
+
+    .input-fields {
+        display: inline-block;
+        float: left;
+        width: 600px;
+        margin-left: 5px;
+    }
+
+    .sandbox-button {
+        width: 100px;
+        height: 37px;
+        border: 1px solid #000;
+        display: inline-block;
+        float: right;
+        text-align: center;
+        font-size: 15px;
+        padding: 5px;
+        vertical-align: bottom;
+    }
+
+    .sandbox-button:hover {
+        cursor: pointer;
+    }
+
+    .send-refresh-warning-email-button {
+        background-color: #F3AE4E;
+        color: #FFF;
+        margin-right: 10px;
+        position: absolute;
+        bottom: 10px;
+        right: 120px;
+    }
+
+    .send-refresh-warning-email-button:hover {
+        background-color: #D39E3E;
+    }
+
+    .refresh-button {
+        background-color: #CF5C60;
+        color: #FFF;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .refresh-button:hover {
+        background-color: #BF4C50;
+    }
+</style>
+
+<div id ="main-page">
+<!--
+    <header>
+        <div id="header-title-block">
+            <div id="header-title">
+                Enterprise Systems Site
+            </div>
+        </div>
+    </header>
+-->
+
+    <div id="main-content">
+        <div id="page-header">
+            <div id="page-header-text">
+                Sandbox Occupancy
+            </div>
+        </div>
+
+        <div class="sandbox-list-container">
+            <ul class="sandbox-list">
+                <apex:repeat value="{!sandboxes}" var="currentSandbox">
+                    <li class="sandbox-entry" entityId='{!currentSandbox.Id}'>
+                        <div class="sandbox-info">
+                            <div class="sandbox-meta">
+                                <div class="sandbox-entry-name">
+                                    {!currentSandbox.name}
+                                </div>
+                                <div class="sandbox-entry-description">
+                                    {!currentSandbox.description}
+                                </div>
+                                <div class="sandbox-entry-last-refresh-date">
+                                    Last Refresh Date: <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                                            <apex:param value="{!currentSandbox.lastRefreshDate}" /> 
+                                                       </apex:outputText>
+                                </div>
+                            </div>
+                            <div class="refresh-button sandbox-button">
+                                Refresh Sandbox
+                            </div>
+                            <div class="send-refresh-warning-email-button sandbox-button">
+                                Send Refresh Warning
+                            </div>
+                            <div class="spaceholder"/>
+                        </div>
+                        <ul class="sandbox-member-list">
+                            <apex:repeat value="{!currentSandbox.sandboxMembers}" var="currentMember">
+                                <li class="sandbox-member">
+                                    <div class="sandbox-member-name">
+                                        {!currentMember.displayName}
+                                    </div>
+                                    <div class="sandbox-member-photo">
+                                        <img src="{!currentMember.photoURL}" alt="" />
+                                    </div>
+                                </li>
+                            </apex:repeat>
+                            <li class="sandbox-member add-a-member">
+                                + Add A Member
+                            </li>
+                        </ul>
+                    </li>
+                </apex:repeat>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="{!$Resource.JQuery2}"></script>
+<script>
+    $(document).ready(function() {
+        $('.add-a-member').click(function() {
+            console.log($('#page-header'));
+            expandToAddMemberForm(this);
+            $(this).off('click');
+            $(this).removeClass('add-a-member').addClass('add-a-member-selected');
+        });
+        $('.send-refresh-warning-email-button').click(function() {
+            var sandboxId = $(this).parents('.sandbox-entry').first().attr('entityId');
+            sendWarningEmail(sandboxId);
+        });
+        $('.refresh-button').click(function() {
+            var  sandboxId = $(this).parents('.sandbox-entry').first().attr('entityId');
+            refreshSandbox(sandboxId);
+        });
+    });
+
+    function sendWarningEmail(sandboxId) {
+        SandboxAdmin_Controller.sendWarningEmail(sandboxId, function(result, event) {
+            var decoded = $('<div/>').html(result).text();
+            result = jQuery.parseJSON(decoded);
+            console.log('Result:');
+            console.log(result);
+            if (result['success']) {
+                alert('Email was sent successfully!');
+            }
+            else {
+                alert('Email send failed.');
+            }
+        });
+    }
+
+    function refreshSandbox(sandboxId) {
+        SandboxAdmin_Controller.refreshSandbox(sandboxId, function(result, event) {
+            var decoded = $('<div/>').html(result).text();
+            result = jQuery.parseJSON(decoded);
+            console.log(result);
+            if (result['success']) {
+                location.reload();
+            }
+            else {
+                alert('Refresh failed!');
+            }
+        });
+    }
+
+    function expandToAddMemberForm(addMember) {
+        $(addMember).html('<form class="add-a-member-form">' +
+                                '<div class="input-fields">' +
+                                    '<div class="input-div"><span class="input-label user">Name:</span><input class="name-input auto-complete" type="text"/></div>' +
+                                    '<div class="input-div"><span class="input-label ">Non-User email:</span><input class="email-input" type="text"/></div>' +
+                                '</div>' +
+                                '<div class="input-button">Create!</div>' +
+                                '<div class="spaceholder"/>' +
+                          '</form>');
+        $('.input-button').click(function() {
+            var sandboxId = null
+            var nonUserEmail = null;
+            var userId = null;
+            // FIRST: get the input fields div
+            var button = $(this);
+            var inputFields = button.prevAll('.input-fields');
+            // Then get the non-user email
+            var nonUserEmailInput = inputFields.find('.email-input').first();
+            if( nonUserEmailInput.val() != null ) {
+                nonUserEmail = nonUserEmailInput.val();
+            }
+            // Then get the user Id
+            var userIdInput = inputFields.find('#user-id-input');
+            if( userIdInput != null && userIdInput != undefined ) {
+                userId = userIdInput.val();
+                if (userId == undefined) {
+                    userId = null;
+                }
+            }
+            // Finally get the sandbox id
+            sandboxId = button.parents('.sandbox-entry').attr('entityId');
+            // userid, email, sandboxId
+            var inputs = userId + ';' + nonUserEmail + ';' + sandboxId;
+            console.log(inputs);
+            SandboxAdmin_Controller.createSandboxMember(inputs, function(result, event) {
+                var decoded = $('<div/>').html(result).text();
+                result = jQuery.parseJSON(decoded);
+                console.log('Result: ');
+                console.log(result);
+                console.log('Event: ');
+                console.log(event);
+                if( result['success'] ) { // Success!
+                    var member = result['sandboxMember'];
+                    if( member['photoURL'] == null) {
+                        member['photoURL'] = 'http://www.artifacting.com/blog/wp-content/uploads/2010/11/Batman-150x126.jpg';
+                    }
+                    button.parents('.sandbox-member-list').append('<li class="sandbox-member">' +
+                                                                  '   <div class="sandbox-member-name">' + member['name'] + '</div>' +
+                                                                  '   <div class="sandbox-member-photo">' +
+                                                                  '       <img height="45" width="45" src="' + member['photoURL'] + '" alt="" />' +
+                                                                  '   </div>' +
+                                                                  '</li>');
+                    button.parents('.sandbox-member-list').append('<li class="sandbox-member add-a-member">+ Add A Member</li>');
+                    $('.add-a-member').click(function() {
+                        expandToAddMemberForm(this);
+                        $(this).off('click');
+                        $(this).removeClass('add-a-member').addClass('add-a-member-selected');
+                    });
+                    $('.add-a-member-form').parents('.sandbox-member').remove();
+                    $('.add-a-member-form').remove();
+                }
+                else {
+                    alert( result['error'] );
+                }
+            });
+        });
+        $('.auto-complete').on('input', function() {
+            value = this.value;
+            var me = this;
+            var inputObject = $(me);
+
+            console.log('Value: ' + value);
+            SandboxAdmin_Controller.getUsers(value, function(result, event) {
+                var decoded = $('<div/>').html(result).text();
+                result = jQuery.parseJSON(decoded);
+                console.log('Result: ');
+                console.log(result);
+                console.log('Value from outer function: ' + value);
+                console.log('Value from result: ' + result['search_value']);
+                console.log('Event: ');
+                console.log(event);
+
+                /* Sanity check... make sure we only return results for the most recent check */
+                if (value === result['search_value']) {
+                    $('.auto-complete-option').remove();
+                    // if the query is blank, only remove the options then end
+                    if (result['search_value'] === '') {
+                        return;
+                    }
+                    // Only do this if it is the relevant result
+                    var autoCompleteResults = result.results;
+                    for (var i = 0; i < 5; i++) {
+                        if (autoCompleteResults.length <= i) {
+                            break;
+                        }
+                        var autoCompleteOption = autoCompleteResults[i];
+                        var option = $('<div class="auto-complete-option" userId="' + autoCompleteOption.Id + '">' + autoCompleteOption.Name + '</div>');
+                        option.css({
+                            position: "absolute",
+                            top: (inputObject.position().top + ((i+1)* inputObject.height())) + 'px',
+                            left: (inputObject.position().left) + 'px',
+                            width: inputObject.width() + 'px',
+                            height: inputObject.height() + 'px'
+                        });
+                        inputObject.after(option);
+                    }
+                    $('.auto-complete-option').click(function() {
+                        var autoCompleteOption = $(this);
+                        selectAutoCompleteOption(autoCompleteOption);
+                    });
+                }
+            });
+        });
+    }
+
+    /**
+     * Performs actions neccessary to select an auto-compelete option
+     *
+     * @param autoCompleteOption JQuery object representing option selected
+     */
+    function selectAutoCompleteOption(autoCompleteOption) {
+        // First find the input of the selected option
+        var nameInput = autoCompleteOption.prevAll('.name-input');
+        // Then fill in the value based on selected
+        nameInput.val(autoCompleteOption.text());
+        // Then add a hidden input representing the selection
+        $('#user-id-input').remove();
+        var hiddenInput = '<input id="user-id-input" type="hidden" value="' + autoCompleteOption.attr('userId') + '"/>';
+        nameInput.after($(hiddenInput));
+        // Remove all auto-complete options
+        $('.auto-complete-option').remove();
+    }
+</script>
+
+</apex:page>

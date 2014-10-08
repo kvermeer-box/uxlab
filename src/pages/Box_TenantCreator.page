@@ -1,0 +1,91 @@
+<apex:page standardController="Tenant__c" tabStyle="Tenant__c" extensions="Box_TenantCreatorExtension" >    
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+
+    <apex:sectionHeader title="Tenant Edit" subtitle="New Tenant" rendered="{!isAuthenticated}" />    
+    <apex:sectionHeader title="Customer Trial Information" subtitle="Create Box Trial" rendered="{!NOT(isAuthenticated)}" />       
+    <apex:form id="form">     
+        <!-- Helper Text -->   
+        <apex:outputText value="Create a Box trial for your customer by filling out the information below. Once the fields are complete, hit Save and your customer will instantly be invited to a new Box account to try for a limited time." /><br /><br />
+        <!-- Home Link -->
+        <apex:outputPanel rendered="{!NOT(isAuthenticated)}">
+            <div style="text-align:right; padding: 0 20px 2px 0;"><apex:outputLink value="{!URLFOR($Page.partnerportal)}">Return Home</apex:outputLink></div>        
+        </apex:outputPanel>
+        <apex:pageBlock title="{!IF(isAuthenticated, 'New Tenant', 'Customer Trial Information')}" mode="edit" id="block">
+            <apex:pageMessage severity="confirm" summary="Your customer's trial account has been provisioned. You and the customer will receive a confirmation email shortly." title="Success" strength="3" rendered="{!showSuccess}" />
+            <apex:pageMessages />
+            <apex:outputPanel rendered="{!NOT(showSuccess)}">
+                <!-- General Information -->
+                <apex:pageBlockSection title="General Information" columns="1" rendered="{!NOT(showSuccess)}">
+                    <!-- Tenant Name -->
+                    <apex:inputField value="{!tenant.Name}" required="true" rendered="{!ISBLANK(name)}"/>
+                    <!-- Account field(s) -->
+                    <apex:inputField value="{!tenant.Account__c}" required="true" rendered="{!ISBLANK(tenant.Account__c)}"/>
+                    <apex:outputField value="{!tenant.Account__c}" rendered="{!NOT(ISBLANK(tenant.Account__c))}"/>
+                    <!-- Reg ID field(s) -->
+                    <apex:inputField value="{!tenant.Registration_ID__c}" required="true" rendered="{!AND(ISBLANK(tenant.Registration_ID__c), NOT(isAuthenticated))}"/>
+                    <apex:outputField value="{!tenant.Registration_ID__c}" rendered="{!NOT(ISBLANK(tenant.Registration_ID__c))}" />
+                    <apex:inputField value="{!tenant.Account_Type__c}" rendered="{!isAuthenticated}" />                                
+                    <!-- <apex:inputField value="{!tenant.Billing_Cycle__c}" /> -->               
+                </apex:pageBlockSection>
+                <!-- Box Account Administrator -->
+                <apex:pageBlockSection title="Box Account Administrator" columns="1">
+                    <apex:inputField id="adminId" value="{!tenant.Admin__c}" required="true" rendered="{!ISBLANK(contactId)}" onchange="getAdminEmail(document.getElementById('{!$Component.adminId}_lkid').value.substring(0,15));" />
+                    <apex:outputField value="{!tenant.Admin__c}" rendered="{!NOT(ISBLANK(contactId))}"/>
+                    <apex:pageBlockSectionItem helpText="Please contact Box at dealregistration@box.com if the email address shown is incorrect.">
+                        <apex:outputText value="Admin Email" />
+                        <apex:outputText id="adminEmail" value="{!adminEmail}" />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>       
+                <!-- Provisioning Information -->
+                <apex:pageBlockSection title="Provisioning Information" columns="1" rendered="{!AND(isAuthenticated, ISPICKVAL($User.UserType, 'Standard'))}">
+                    <apex:inputField value="{!tenant.Deal_Status__c}" />
+                </apex:pageBlockSection>        
+                <!-- Trial Allocations -->
+                <apex:pageBlockSection title="Trial Allocations" columns="1" rendered="{!NOT(isAuthenticated)}">
+                    <apex:inputField value="{!tenant.Seats_Allocated__c}" />
+                </apex:pageBlockSection>                                           
+                <!-- Usage Details -->
+                <apex:pageBlockSection title="Usage Details" columns="1" rendered="{!isAuthenticated}">
+                    <apex:inputField value="{!tenant.Seats_Allocated__c}" />
+                    <apex:inputField value="{!tenant.Space_Allocated__c}" />                
+                </apex:pageBlockSection>                                           
+            </apex:outputPanel>
+            <!-- Buttons -->
+            <apex:pageBlockButtons rendered="{!NOT(showSuccess)}">
+                <apex:commandButton value="Previous" action="{!previous}" immediate="true" rendered="{!NOT(isAuthenticated)}" />                            
+                <apex:commandButton value="Save" action="{!syncSave}" oncomplete="create()" />
+                <!-- <apex:commandButton value="Save & New" action="{!syncSave}" oncomplete="createAndNew()" /> -->
+                <apex:commandButton value="Cancel" action="{!cancel}" rendered="{!isAuthenticated}" />      
+            </apex:pageBlockButtons>
+            <!-- Functions -->
+            <apex:actionFunction name="create" action="{!createSingle}" />            
+            <apex:actionFunction name="createAndNew" action="{!createMultiple}" />
+            <apex:actionFunction name="getAdminEmail" action="{!setAdminEmail}" immediate="true" reRender="adminEmail" >
+                <apex:param name="adminEmail" value="" assignTo="{!adminId}" />
+            </apex:actionFunction>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script>
+        function hideHeader() {
+            var showHeader = {!showHeader};
+            if (!showHeader) {
+                // Hiding this makes help text icons work
+                document.getElementById('AppBodyHeader').className='hide';
+            }
+        }
+        
+        // Prevent onload conflicts
+        var originalOnLoad = window.onload;
+        window.onload = workaround;
+        
+        function workaround() {              
+            originalOnLoad();
+            hideHeader();                    
+        }
+    </script>
+</apex:page>

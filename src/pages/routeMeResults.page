@@ -1,0 +1,134 @@
+<apex:page >
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.7.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.7.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, 'css/ui-lightness/jquery-ui-1.8.18.custom.css')}"/>
+    <style>
+        .header{
+            font-size: 2em;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            margin: 16px 16px 16px 10px;            
+        }
+        .leadSprite {
+            background-image: url(/img/sprites/master.png);
+            background-position: 0px -1165px;
+            width: 32px;
+            height: 32px;    
+            margin: -5px 10px 0 0;        
+        }
+        .left {
+            float: left;
+        }
+        .debugTable {
+            border: 1px solid black;            
+        }
+        .debugHeader {
+            text-align: center;
+            padding: 5px 10px 5px 10px;
+        }
+        .debugTd {
+            text-align: center;            
+        }
+        .perfect {
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+    <apex:form >
+        <div class="header">
+            <div class="left leadSprite" />
+            <apex:outputText value="Converted Lead"></apex:outputText>
+        </div>
+        <apex:pageBlock title="Congratulations!" tabStyle="Lead">     
+            <apex:pageBlockSection columns="2">
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >
+                        <apex:outputText value="This lead was converted on {!TODAY()}"></apex:outputText>.<br /><br />
+                        <apex:outputText value="Routed To: {!$CurrentPage.parameters.owner}"></apex:outputText><br />
+                        <apex:outputPanel rendered="{!CONTAINS($Profile.Id,'00e60000000inKk')}">
+                            <apex:outputText value="Tenure: {!$CurrentPage.parameters.tenure} days"></apex:outputText><br />
+                        </apex:outputPanel>
+                        <apex:outputText value="Type: {!$CurrentPage.parameters.type}"></apex:outputText><br />                
+                        <apex:outputText value="Segment: {!$CurrentPage.parameters.segment}"></apex:outputText><br />
+                        <apex:outputText value="Employees ({!$CurrentPage.parameters.empField}): {!$CurrentPage.parameters.employees}"></apex:outputText><br />
+                        <apex:outputText value="Tier: {!$CurrentPage.parameters.tier}"></apex:outputText><br /><br />                
+                        <apex:outputText value="Contact: "></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.contactId}">{!$CurrentPage.parameters.contact}</apex:outputLink><br />
+                        <apex:outputText value="Account: "></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.accountId}">{!$CurrentPage.parameters.account}</apex:outputLink><br />
+                        <apex:outputText value="Opportunity: "></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.opportunityId}">{!$CurrentPage.parameters.opportunity}</apex:outputLink><br />
+                        <apex:outputText value="Upsell Opportunity: " rendered="{!NOT(ISBLANK($CurrentPage.parameters.upsellId))}"></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.upsellId}" rendered="{!NOT(ISBLANK($CurrentPage.parameters.upsellId))}">{!$CurrentPage.parameters.upsell}<br /></apex:outputLink>
+                        <apex:outputText value="Qual Note: " rendered="{!AND(NOT(ISBLANK($CurrentPage.parameters.qualNoteId)),$CurrentPage.parameters.qualNoteId != 'null')}"></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.qualNoteId}" rendered="{!AND(NOT(ISBLANK($CurrentPage.parameters.qualNoteId)),$CurrentPage.parameters.qualNoteId != 'null')}">{!$CurrentPage.parameters.qualNote}<br /></apex:outputLink><br />               
+                        <apex:outputText value="Routed Lead Object: " rendered="{!NOT(ISBLANK($CurrentPage.parameters.routedLeadId))}"></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.routedLeadId}" rendered="{!NOT(ISBLANK($CurrentPage.parameters.routedLeadId))}">{!$CurrentPage.parameters.routedLeadId}<br /></apex:outputLink><br />                                
+                        <apex:outputText value="An email notification has been sent to {!$CurrentPage.parameters.owner}."></apex:outputText>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel styleClass="debug">   
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <script>        
+        var j$ = jQuery.noConflict(); 
+        var totalRoutedLeads;
+        var content;
+        var buckets;        
+        var perfectSegmentation = new Boolean();
+                                                                                            
+        j$(document).ready(function(){   
+            if ("{!$Profile.Id}".indexOf('00e60000000inKk') != -1) {
+                buckets = {!$CurrentPage.parameters.buckets};  
+                buckets.reverse();
+                totalRoutedLeads = new Number({!$CurrentPage.parameters.candidatesListSize}) + 1;
+                generateBucketTable();   
+                generatePerfectSegmentation();        
+            }
+        });                
+        
+        function generatePerfectSegmentation() {
+            var newContent = '';
+            if (perfectSegmentation) {
+                newContent += '<div class="perfect">Congratulations, you\'ve created perfect lead segmentation!</div>';
+                newContent += '<img src="http://i209.photobucket.com/albums/bb37/BigG504/ironman-super.gif" />';
+                j$('.debug').append(newContent);
+            }
+        }
+        
+        function generateBucketTable() {
+            var tmpActualPercentage;
+            perfectSegmentation = true;        
+            content = '';
+            content += '<table class="debugTable">';
+            content +=   '<tr><td colspan="3" class="debugHeader">Route Me! v2 button statistics for the past ' + totalRoutedLeads + ' leads in this queue</td></tr>';
+            content +=   '<tr>';
+            content +=    '<td class="debugHeader">';
+            content +=    'Rep Tenure<br>Min Bucket';
+            content +=    '</td>';
+            content +=    '<td class="debugHeader">';
+            content +=    'Optimal Percentage<br>of Leads';            
+            content +=    '</td>';      
+            content +=    '<td class="debugHeader">';
+            content +=    'Actual Percentage<br>of Leads';            
+            content +=    '</td>';                                          
+            for (var i = 0; i < buckets.length; i++) {
+                tmpActualPercentage = ((buckets[i].numberOfRoutedLeads / totalRoutedLeads) * 100).toFixed(2);
+                content += '<tr>';
+                content += '<td class="debugTd">' + buckets[i].minTenure + ' days</td>';
+                content += '<td class="debugTd">' + buckets[i].percentage + '%</td>';                
+                content += '<td class="debugTd">' + tmpActualPercentage + '%</td>';                                
+                content += '</tr>';
+                if (buckets[i].percentage != tmpActualPercentage) {
+                    perfectSegmentation = false;
+                }
+            }
+            content += '</table><br>';
+            j$('.debug').append(content);
+        }
+
+    </script>
+</apex:page>

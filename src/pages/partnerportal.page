@@ -1,0 +1,24 @@
+<apex:page showheader="false" controller="DealRegController" cache="false">
+
+<apex:panelGrid columns="2" width="100%">
+    <apex:image value="{!$Resource.PartnerLogo_new}" height="50px;"/>
+    <apex:pagemessage Title="Welcome to the Box Partner Sales Center" severity="info" summary="Please select from the options below to enter a deal registration or provision a Box trial for an existing registration:"/>
+</apex:panelGrid>
+
+<apex:form > 
+    <apex:pageblock title="Options">
+        
+        <apex:pageMessages />
+        
+        <!-- Only display the panel if a valid partner ID was provided -->
+        <apex:outputPanel rendered="{!!ISBLANK(PartnerID)}">
+            <apex:commandButton action="{!step1}" value="Register New AT&T Deal" style="width:200px;"/>
+            <apex:commandButton action="{!URLFOR($Page.TrialsAndProvisioning)}" value="Provision Customer Trial" style="width:200px;"/>
+                        <apex:commandButton action="{!URLFOR($Page.DealRegDataUpdate)}" value="View/Edit Existing Registration" style="width:200px;"/>            
+
+        </apex:outputPanel>
+    
+    </apex:pageblock>
+</apex:form>
+
+</apex:page>

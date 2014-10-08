@@ -1,0 +1,121 @@
+<apex:page controller="TreasuryController" action="{!doGetTemplateDetails}" showHeader="false" sidebar="false" standardStylesheets="false" >
+  <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <c:boxtreasury_scripts_V2 />
+        <title>The Treasury - Product Page</title>
+        
+        <script>    
+           $j = jQuery.noConflict();
+           $j(document).ready(function(){
+           });
+       </script>
+       
+       <style>
+.tbl {
+    border: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.tbl td {
+    width: 50%;
+    border: none !important;
+    margin: 0;
+    padding: 0;
+}
+</style>
+        
+    </head>
+    <body>
+      <c:boxtreasury_header_V2 />
+       <div class="container breadcrumb" style="padding:0px;">
+            <ol class="breadcrumb breadcrumb-boxblue">
+                    <li><a href="https://box.my.salesforce.com/apex/home">Home</a></li>
+                    <li><a href="https://box.my.salesforce.com/apex/listings?listing={!demoTemp.Related_to_Category__r.Name}">{!demoTemp.Related_to_Category__r.Name}</a></li>
+                    <li class="active:before">{!demoTemp.Name}</li>
+            </ol>
+      </div>
+
+       <main id="content" class="container treasury-main" role="main"><!-- main page container -->
+           <div class="row"><!--product header-->
+               <div class="col-sm-8 col-md-6 product-title"><!--title -->
+                    <h1><apex:outputText value="{!demoTemp.Name}"/></h1>
+                    <apex:image url="{!demoTemp.Icon_Image_Location__c}" width="200" height="200" styleClass="visible-md visible-lg"/>
+                    
+                    <p><b><apex:outputText value="{!demoTemp.Description_Summary__c}"/></b></p>
+                    <p><apex:outputText value="{!demoTemp.Description__c}"/></p> 
+               </div><!-- ./title-->
+           
+           
+               <div class="col-md-6 visible-md visible-lg treasury-embed" id="embed"><!--embed -->
+                   <apex:iframe src="{!demoTemp.Link_to_Embed__c}" width="500" height="400" frameborder="false"  />
+               </div> <!--./embed-->
+           
+               <div class="col-sm-4 visible-sm product-photo"><!--photo (tablet only)-->
+                   <apex:image url="{!demoTemp.Icon_Image_Location__c}" width="200" height="200"/>
+               </div>  <!--./photo-->
+               <!--clearfix for spacing -->
+               <div class="clearfix visible-sm visible-md visible-lg"/>
+               <p class="product-specs">
+                  Content Creator: <apex:outputText value=" {!demoTemp.Box_Owner__c} "/>    
+                  | Last Updated: 
+               </p>  
+          </div><!--./row with product header-->
+
+          <apex:form ><!-- apex form: related folders, submit -->
+          <apex:pageBlock >
+              <div class="row">  <!-- row with table -->
+                      <apex:pageBlockTable value="{!UseCases}" var="c" id="table" styleClass="table table-bordered">
+                        
+                          <apex:column >
+                              <apex:inputCheckbox value="{!c.selected}"/>
+                          </apex:column>
+                          <apex:column headerValue="Select Related Folders">
+                              <table class="tbl"><tr id="{!c.con.Name}-row"><td>
+                              <apex:outputField value="{!c.con.Name}"/></td><td class="visible-md visible-lg">
+                              <apex:outputField value="{!c.con.Description__c}" styleClass="visible-md visible-lg"/></td>                              
+                              </tr></table>
+                          </apex:column>                         
+                          <apex:column value="{!c.con.Link_to_Resources__c}" headerValue="More Info"/>
+                     </apex:pageBlockTable>
+                  
+              </div><!--./table row-->
+            
+            <div class="row" id="submit-row"><!--go for gold -->
+              <h3> Go for gold! </h3>
+              <h4> Make sure you enter the correct email address and have Custom Terms of Service Turned <b> OFF </b> in your account</h4>
+             
+                <div class="col-xs-12 col-sm-6 " >
+              <div style="float:left">
+                  <apex:inputText value="{!loginInvitee}" required="true" size="65" styleclass="form-control" label="Email" html-placeholder="Email" />
+              </div>
+              <div style="float:left">   
+                 
+                  <apex:outputText style="color: #FF0000" value="*"/>
+                         
+                 </div>
+              </div>
+            
+         <div class="col-xs-18 col-sm-6" >
+            <div style="float:left"> 
+                  <apex:inputText value="{!loginInviteeConfirm}" required="true" size="65" styleclass="form-control" label="Email Confirm" html-placeholder="Confirm Email" />
+                 </div>
+               
+               <div style="float:left">  
+                  <apex:outputText style="color: #FF0000" value="*"/>
+                 </div>
+              </div>  
+              <apex:commandButton value="Submit" action="{!processSelected}" styleClass="btn btn-default btn-lg product-submit"/>
+              
+              
+              
+              <!--************* link to next page ****-->      
+            </div><!--./go for gold-->
+
+            
+        </apex:pageBlock>
+        </apex:form>
+      </main><!--./main page container-->      
+    </body>
+  </html>
+</apex:page>

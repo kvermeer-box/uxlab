@@ -1,0 +1,90 @@
+<apex:page showHeader="true" sidebar="false" controller="SalesRequest_Controller" title="Sales Request">
+    
+    <link rel="stylesheet" type="text/css" href="{!$Resource.salesRequestCSS}"/>
+
+    <!-- Page content -->
+    <div id="main-container">
+        <div id="title-banner">
+            <div id="main-title">{!title}</div>
+            <div id="subtitle">
+                {!subtitle}
+                <a href="{!subtitleLink}">{!subtitleLinkAnchor}</a>
+            </div>
+        </div>
+        <div id="tile-container">
+            <div id="tile-centerer">
+                <apex:repeat value="{!requestViews}" var="requestView">
+                    <a href="{!requestView.link}" class="link">
+                        <div class="tile">
+                            <div class="info-box">
+                                <div class="info-sign">
+                                    <span class="info-letter">?</span>
+                                </div>
+                            </div>
+                            <div class="tile-title">
+                                <p>{!requestView.requestName}</p>
+                            </div>
+                            <div class="info-text-box">
+                                <span class="info-text">
+                                    {!requestView.infoText}
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </apex:repeat>
+            </div>
+        </div>
+    </div>
+
+    <!-- /Page Content -->
+
+    <!-- Page scripts -->
+    <script type="text/javascript" src="{!$Resource.JQuery2}"></script>
+    <script>
+        $(document).ready( function() {
+            // Possibly populate the back-button
+            if ( '{!oppName}' != '' ) {
+                createBackButton('{!oppName}', '{!opportunityId}');
+            }
+            else if ( '{!riskName}' != '') {
+                createBackButton('{!riskName}', '{!riskId}');
+            } 
+            else if ( '{!accountName}' != '' ) {
+                createBackButton('{!accountName}', '{!accountId}');
+            }
+
+            $('.tile-title p').html(function() {
+                var me = this;
+                return $(this).text();
+            });
+            
+            // Set up info-sign mouse listeners
+            $(".info-sign").mouseenter( function() {
+                var me = this;
+                var infoTextBox = $(me).parents('.tile').find('.info-text-box');
+                infoTextBox.stop();
+                $(me).stop();
+                infoTextBox.fadeIn();
+                $(me).animate({ opacity : 0} );
+            }).mouseleave( function() {
+                var me = this;
+                var infoTextBox = $(me).parents('.tile').find('.info-text-box');
+                infoTextBox.stop();
+                $(me).stop();
+                infoTextBox.fadeOut();
+                $(me).animate({ opacity : .9} );
+            })
+        });
+
+        function createBackButton(backText, recordId) {
+            $("#title-banner").after('<div class="back-button-container">' +
+                                        '<a href="/' + recordId + '">' +
+                                            '<img class="back-button-image" src="{!$Resource.BackArrow}" />' + 
+                                            '<span class="back-button-text">' + backText + '</span>' +
+                                        '</a>' +
+                                     '</div>');
+        }
+    </script>
+
+    <!-- Page scripts -->
+</apex:page>

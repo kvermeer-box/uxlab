@@ -1,0 +1,260 @@
+<apex:page standardController="zqu__Quote__c"
+        extensions="NewQuoteController">
+        
+    <!-- Add the jQuery library -->
+    <apex:includeScript value="{!$Resource.zqu__JQuery142}" />
+
+    <!-- Disable all input field right after editing one -->
+    <script>
+    var j$ = jQuery.noConflict();
+
+    // Disable all text input (when editing a charge)
+    function disableAllInput() {
+        j$("input[type=text]").attr('disabled', 'disabled');
+    }
+
+    // Re-enable all intpus
+    function enableAllInput() {
+        j$("input[type=text]").removeAttr('disabled');
+    }
+    </script>        
+        
+        <apex:form Id="quoteForm">
+                <apex:pageMessages id="pageErrors"/>
+                <apex:pageBlock title="New Quote ({!quoteType})"  id="quoteblock">
+                <!--  
+	                <apex:pageBlockButtons >
+	                        <apex:commandButton value="Create" 
+	                        					reRender="pageErrors" 
+	                        					disabled="{!initFailed}" 
+	                        					action="{!save}" />
+	                        <apex:commandButton value="Cancel" action="{!cancel}" />
+	                </apex:pageBlockButtons>
+                        
+				-->
+	                <apex:pageBlockButtons location="bottom">
+	
+	                    <apex:actionStatus id="creatingQuote" onStart="disableAllInput();" onStop="enableAllInput();">
+	
+	                        <apex:facet name="stop">
+	
+	                            <apex:outputPanel >
+	
+	                                <apex:commandButton value="Create"
+	                                                    action="{!save}"
+	                                                    disabled="{!initFailed}"                                                     
+	                                                    status="creatingQuote"
+	                                                    reRender="pageErrors" />
+	
+	                                <apex:commandButton value="Cancel"
+	                                                    action="{!cancel}"
+	                                                    status="creatingQuote"
+	                                                    reRender="pageErrors" />
+	
+	                            </apex:outputPanel>
+	
+	                        </apex:facet>
+	
+	                        <apex:facet name="start">
+	
+	                            <apex:outputPanel >
+	
+	                                <apex:image value="/img/loading32.gif" style="height: 12px" />
+	
+	                                <apex:commandButton value="Processing..."
+	                                                    status="creatingQuote"
+	                                                    disabled="true" />
+	
+	                            </apex:outputPanel>
+	
+	                        </apex:facet>
+	
+	                    </apex:actionStatus>
+	
+	                </apex:pageBlockButtons>                        
+                        
+                        
+                        <apex:outputPanel id="basicinfo">
+                               <!-- <apex:actionRegion > -->
+                                
+                                        <apex:actionRegion >
+                                            <apex:pageBlockSection title="Quote Information" columns="1"
+                                                    collapsible="false" rendered="{!quoteType!='Renew'}">
+                                                    <apex:outputField value="{!quote.zqu__Opportunity__c}"
+                                                            id="opportunity"  style="width:300px"  />
+                                                    <apex:inputField value="{!quote.Name}" id="name" 
+                                                    		required="true"  style="width:300px"  />
+                                                    <apex:inputField value="{!quote.zqu__StartDate__c}" id="startDate"
+                                                            required="true" />
+                                                    <apex:inputField value="{!quote.zqu__ValidUntil__c}" id="validUntil"
+                                                            required="true" />
+                                                    
+                                                        <apex:inputField value="{!quote.Deal_Type__c}" id="dealType"
+                                                                required="true" label="Deal Type" >
+                                                                <apex:actionSupport action="{!setDealType}" event="onchange" reRender="xat"/>
+                                                        </apex:inputField>
+                                           
+                                                    
+                                            </apex:pageBlockSection>
+                                        </apex:actionRegion>
+
+
+
+                                        <!-- ELA -->
+                                        <apex:outputPanel id="xat" >
+                                            <apex:pageBlockSection title="ELA Information" columns="1"
+                                                collapsible="false" rendered="{!isELA}">
+                                                <apex:inputField value="{!quote.Enterprise_wide_Deployment__c}" 
+                                                           id="enterpriseWideDeployment"    />
+                                                <div>
+                                                    ELA Requirements:
+                                                    <ul>
+                                                        <li>Enterprise-wide deployment - available to vast majority of knowledge workers</li>
+                                                        <li>Contract Term of 24 or 36 months (or longer)</li>
+                                                        <li>At least 250 (Business, Business Plus, Enterprise, or Elite) Licenses</li>
+                                                    </ul>
+
+                                                </div>
+                                            </apex:pageBlockSection>
+                                        </apex:outputPanel>
+     
+
+
+                                        <apex:pageBlockSection title="Quote Information" columns="1"
+                                                collapsible="false" rendered="{!quoteType=='Renew'}">
+                                                <apex:outputField value="{!quote.zqu__Opportunity__c}"
+                                                        id="opportunity"  style="width:300px"  />
+                                                <apex:inputField value="{!quote.Name}" id="name" 
+                                                		required="true"  style="width:300px"  />
+                                                    <apex:inputField value="{!quote.zqu__StartDate__c}" id="startDate"
+                                                            required="true" />
+                                                <apex:outputField value="{!quote.zqu__ValidUntil__c}" id="validUntil"
+                                                        />
+												<apex:outputField value="{!quote.Renewal_Term__c}"
+                                                        id="renewalTerm"  /> 
+                                                        
+                                                 <apex:inputField value="{!quote.Deal_Type__c}" id="dealType"
+                                                         required="true" label="Deal Type" >
+                                                         <apex:actionSupport action="{!setDealType}" event="onchange" reRender="xat"/>
+                                                 </apex:inputField>
+                                                        
+                                        </apex:pageBlockSection>
+
+                                        <apex:actionRegion >
+                                            <apex:pageBlockSection title="Product Changes" columns="1"
+                                                    collapsible="false" rendered="{!OR(quoteType=='Amend', quoteType=='Renew')}" >
+                                            	        
+                                                <apex:outputLabel value="Please select changes to the subscription:"/>
+                                            
+                                                <apex:inputField value="{!quote.Change_License_Product__c}" id="changeLicenseProduct"  />
+
+    											<apex:inputField value="{!quote.Add_Premier_Support_Cloud_Connect__c}" id="addPremierSupportCloudConnect" />
+                                                  
+                                                <apex:inputField value="{!quote.Change_Contract_Term__c}" id="changeContractTerm" >
+                                                    <apex:actionSupport event="onchange" reRender="subTerms,subTerms2"/>
+                                                </apex:inputField>
+                                                <apex:inputField value="{!quote.Change_Payment_Frequency__c}" id="changePaymentFrequency" >
+                                                    <apex:ActionSupport event="onchange" reRender="subTerms,subTerms2"/>
+                                                </apex:inputField>
+                                                
+                                                                                    
+                                            </apex:pageBlockSection>
+                                        </apex:ActionRegion>
+ 
+
+ 
+                                        <apex:pageBlockSection title="Account Details" columns="1"
+                                                collapsible="false">
+                                                
+                                                <apex:outputField value="{!quote.zqu__Opportunity__r.Account.Name}" 
+                                                		style="width:300px"  />
+                                                <apex:inputField value="{!quote.zqu__BillToContact__c}"
+                                                        required="true" />
+                                                <apex:inputField value="{!quote.zqu__SoldToContact__c}"
+                                                        required="true" />
+                                                        
+                                        </apex:pageBlockSection>
+                                             
+                                        
+                                        <apex:pageBlockSection title="Subscription Terms" columns="2"
+                                                collapsible="false" id="subTerms" rendered="{!quoteType!='Renew'}">
+
+                                                <apex:inputField value="{!quote.Contract_Term__c}"
+                                                        id="contractTerm" required="true" rendered="{!OR(quoteType=='New',quote.Change_Payment_Frequency__c,quote.Change_Contract_Term__c)}" />
+
+                                                <apex:outputField value="{!quote.Contract_Term__c}"
+                                                        id="contractTermOutput" rendered="{!AND(quoteType=='Amend',NOT(quote.Change_Payment_Frequency__c),NOT(quote.Change_Contract_Term__c))}" />
+
+                                                <apex:inputField value="{!quote.zqu__PaymentMethod__c}"
+                                                        id="paymentMethod" required="true" />
+
+                                                <!-- Payment Frequency -->
+                                                <apex:inputField value="{!quote.Payment_Frequency__c}" 
+                                                        id="paymentFrequency" required="true" rendered="{!OR(quoteType=='New',quote.Change_Payment_Frequency__c, quote.Change_Contract_Term__c)}"/>
+                                                
+                                                <apex:outputField value="{!quote.Payment_Frequency__c}"
+                                                        id="paymentFrequencyOutput" 
+                                                        rendered="{!AND(quoteType=='Amend',NOT(quote.Change_Payment_Frequency__c), NOT(quote.Change_Contract_Term__c))}"/>
+
+                                                <!-- Payment Terms -->
+                                                <apex:inputField value="{!quote.zqu__PaymentTerm__c}"
+                                                        id="paymentTerm" required="true" />
+ 
+                                                <apex:outputField value="{!quote.zqu__Currency__c}" 
+                                                		id="currency" /> 											
+   
+                                        </apex:pageBlockSection>
+
+                                        <apex:pageBlockSection title="Subscription Terms" columns="2"
+                                                collapsible="false" id="subTerms2" rendered="{!quoteType=='Renew'}">
+
+                                                <apex:inputField value="{!quote.Contract_Term__c}"
+                                                        id="contractTerm" required="true" rendered="{!OR(quote.Change_Payment_Frequency__c,quote.Change_Contract_Term__c)}" />
+
+                                                <apex:outputField value="{!quote.Contract_Term__c}"
+                                                        id="contractTermOutput" rendered="{!AND(quoteType=='Renew',NOT(quote.Change_Payment_Frequency__c),NOT(quote.Change_Contract_Term__c))}" />
+
+                                                <apex:inputField value="{!quote.zqu__PaymentMethod__c}"
+                                                        id="paymentMethod" required="true" />
+
+                                                <!-- Payment Frequency -->
+                                                <apex:inputField value="{!quote.Payment_Frequency__c}" 
+                                                        id="paymentFrequency" required="true" rendered="{!OR(quote.Change_Payment_Frequency__c, quote.Change_Contract_Term__c)}"/>
+                                                
+                                                <apex:outputField value="{!quote.Payment_Frequency__c}"
+                                                        id="paymentFrequencyOutput" 
+                                                        rendered="{!AND(quoteType=='Renew',NOT(quote.Change_Payment_Frequency__c), NOT(quote.Change_Contract_Term__c))}"/>
+
+                                                <!-- Payment Terms -->
+                                                <apex:inputField value="{!quote.zqu__PaymentTerm__c}"
+                                                        id="paymentTerm" required="true" />
+ 
+                                                <apex:outputField value="{!quote.zqu__Currency__c}" 
+                                                		id="currency" /> 											
+   
+                                        </apex:pageBlockSection>
+ 
+<!--                                      
+                                        <apex:pageBlockSection title="Subscription Terms" columns="2"
+                                                collapsible="false" rendered="{!quoteType=='Renew'}">
+
+                                                <apex:outputField value="{!quote.zqu__PaymentMethod__c}"
+                                                        id="paymentMethod"  />
+
+												<apex:outputField value="{!quote.Payment_Frequency__c}" 
+														id="paymentFrequency"   />
+														
+                                                <apex:outputField value="{!quote.zqu__PaymentTerm__c}"
+                                                        id="paymentTerm"   />
+ 
+                                                <apex:outputField value="{!quote.zqu__Currency__c}" 
+                                                		id="currency"  />
+
+   
+                                        </apex:pageBlockSection> 
+-->
+                               <!-- </apex:actionRegion> -->
+                        </apex:outputPanel>
+                </apex:pageBlock>
+        </apex:form>
+</apex:page>

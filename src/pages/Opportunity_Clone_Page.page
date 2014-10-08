@@ -1,0 +1,7 @@
+<apex:page StandardController="Opportunity" action="{!URLFOR('/' + Opportunity.id + '/e?nooverride=1&clone=1&returl=%2F' +Opportunity.id +
+ '&' + $Setup.Opportunity_Management__c.Opportunity_Cloned_From_Field_IDOpportun__c +'=' + Opportunity.ID +
+  '&' + 'RecordType=' + $Setup.Opportunity_Management__c.Opportunity_Clone_RecordTypeID__c )}" >
+
+<!--  {!URLFOR("/" + Opportunity.id + "/e?clone=1&returl=%2F" +Opportunity.id + "&" + $Setup.Opportunity_Management__c.Opportunity_Cloned_From_Field_IDOpportun__c +"=" + Opportunity.ID )}-->
+
+</apex:page>

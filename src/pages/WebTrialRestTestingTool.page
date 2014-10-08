@@ -1,0 +1,242 @@
+<apex:page controller="WebTrialRestTestingToolController">
+    <head>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"/>     
+    </head>
+    <body>
+        <style>
+            pre {padding: 5px; margin: 5px; width:800px;}
+            .string { color: green; }
+            .number { color: darkorange; }
+            .boolean { color: blue; }
+            .null { color: magenta; }
+            .key { color: red; }        
+        </style>
+        <table style="margin: 40px;">
+            <tr>
+                <td colspan="2" style="font-weight: bold; font-size:24px; text-align: center; padding-bottom: 40px;">
+                    WebTrial REST service Testing Tool
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table id="formTable">
+                        <tr>
+                            <td>
+                                <b>Parameter</b>
+                            </td>
+                            <td>
+                                <b>Value</b>
+                            </td>
+                        </tr>
+                    </table> 
+                    <div style="margin-top: 20px;" id="buttonHole" ></div>              
+                </td>
+                <td style="padding-left: 100px; vertical-align: top; width:500px;">
+                    <div style="margin-top: 20px; display:none;" id="errorMsg">
+                        <div style="font-weight: bold; font-size: 18px; margin-top: 20px; margin-bottom: 20px;">Error Message</div>
+                        <div id="errorMsgHole" style="width: 500px;"></div>
+                    </div>
+                    <div style="margin-top: 20px; display:none;" id="response">
+                        <div style="font-weight: bold; font-size: 18px; margin-top: 20px; margin-bottom: 20px;">Response JSON</div>
+                        <div id="responseHole" style="width: 500px;"></div>
+                    </div>                      
+                </td>
+            </tr>
+        </table>
+
+
+        <script type="text/javascript"> 
+            (function($){ 
+            
+                // Zuora constants
+                ZUORA_SUBSCRIPTION_STATUS_ACTIVE    = 'Active';
+                ZUORA_PAYMENT_METHOD_CREDIT_CARD    = 'CreditCard';
+                ZUORA_LAST_TRANSACTION_APPROVED     = 'Approved';
+                ZUORA_LAST_PAYMENT_PROCESSED        = 'Processed';
+                ZUORA_LAST_PAYMENT_VOIDED           = 'Voided';
+                ZUORA_SUBSCRIPTION_STATUS_CANCELLED = 'Cancelled';
+                ZUORA_SUBSCRIPTION_STATUS_EXPIRED   = 'Expired';
+                ZUORA_BILLING_ANNUAL                = 'Annual';
+                ZUORA_BILLING_MONTHLY               = 'Month';
+            
+                // Other constants
+                OPP_NAME_APPEND          = '-Web Trial Conversion';
+                OPP_NAME_CANCEL_APPEND   = '-Web Trial Conversion(cancelled)';
+                OPP_NAME_DECLINE_APPEND  = '-Web Trial Conversion(cc decline)';
+                OPP_NAME_INACTIVE_APPEND = '-Web Trial Conversion(inactive)';
+                OPP_STAGE_CLOSED_WON     = 'Closed Won';
+                OPP_STAGE_CLOSED_LOST    = 'Closed Lost';
+                OPP_LOST_BIZ_REASON      = 'Lack of Adoption';
+                ENTERPRISE_BLOCK         = 'block';
+                OWNER_QUEUE_PREFIX       = '00G';
+                LEAD_STATUS_DEFAULT      = 'Pending';           
+                
+                var Request = function() {
+                    
+                    var self = this;
+                    self.url = '/services/apexrest/processWebTrial/';
+                    self.loadingImage = $('<img>').attr({src: '/img/loading.gif'}).css({'display': 'none'});
+                    
+                    self.WebTrial = {
+                        readOnly              : false,
+                        email                 : 'test' + parseInt(Math.random() * 100000).toString() + '@box.com',
+                        isDeactivated         : false,
+                        isBlocked             : false,
+                        trialEnd              : '5/10/2013',
+                        enterpriseId          : parseInt(Math.random() * 100000).toString(),
+                        seatsSold             : 100,
+                        gbSold                : 100,
+                        lastPaymentDate       : null,
+                        subscriptionStatus    : ZUORA_SUBSCRIPTION_STATUS_ACTIVE,
+                        arr                   : 100,
+                        paymentMethodType     : ZUORA_PAYMENT_METHOD_CREDIT_CARD,
+                        billingPeriod         : 'Three Years',
+                        lastTransactionStatus : ZUORA_LAST_TRANSACTION_APPROVED,
+                        currencyIsoCode       : 'USD',
+                        lastPaymentStatus     : 'Processed',
+                        isBlocked             : true                        
+                    }                     
+                    
+                    self.init = function() {
+                    
+                        for (var key in self.WebTrial) {
+                            $('#formTable').append(
+                                $('<tr>').append(
+                                    $('<td>').append(key),
+                                    $('<td>').append(
+                                        $('<input>').attr({
+                                            id: key,
+                                            value: self.WebTrial[key]
+                                        })
+                                    )
+                                )
+                            )
+                        }                    
+                    
+                        $('#buttonHole').append(
+                            self.submitButton = $('<input>').attr({
+                                type: 'button',
+                                value: 'Submit WebTrial'
+                            }).click(function() {
+                                self.onclick();
+                            }),
+                            self.loadingImage
+                        );
+                    }
+                    
+                    self.onclick = function() {
+                        self.submitButton.hide();
+                        self.loadingImage.show();
+                        $('#errorMsg').hide();
+                        $('#response').hide();                              
+                        self.doPost();                    
+                    }
+                    
+                    self.syntaxHighlight = function(json) {
+                        if (typeof json != 'string') {
+                             json = JSON.stringify(json, undefined, 2);
+                        }
+                        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                            var cls = 'number';
+                            if (/^"/.test(match)) {
+                                if (/:$/.test(match)) {
+                                    cls = 'key';
+                                } else {
+                                    cls = 'string';
+                                }
+                            } else if (/true|false/.test(match)) {
+                                cls = 'boolean';
+                            } else if (/null/.test(match)) {
+                                cls = 'null';
+                            }
+                            return '<span class="' + cls + '">' + match + '</span>';
+                        });
+                    }                    
+                    
+                    self.callMethod = function() {
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.WebTrialRestTestingToolController.processSingleWebTrialRemote}', 
+                            self.WebTrial,
+                            function (result, event) { self.callBack(result, event); }
+                        );              
+                    }                               
+                    
+                    self.callBack = function(result, event) {
+                        self.submitButton.show();
+                        self.loadingImage.hide();
+                        console.log('Result:', result);
+                        if (result.errorMsg) {
+                            $('#errorMsg').show();
+                            $('#errorMsgHole').empty().append(result.errorMsg);
+                        }     
+                        if (result) {
+                            if (result.errorMsg) delete result["errorMsg"];
+                            $('#response').show();
+                            $('#responseHole').empty().append($('<pre>').html(self.syntaxHighlight(result)));                       
+                        }
+                        self.submitButton.undbind().click(function() {
+                            self.onclick();
+                        });
+                                                                    
+                    }        
+                    
+                    self.parseDate = function(dateString) {
+                        if (dateString != null && dateString != '') {
+                            var dateStringVals = dateString.split('/');
+                            var dateVals = [];
+                            $.each(dateStringVals, function() {
+                                dateVals.push(parseInt(this));
+                            });                 
+                            return new Date(dateVals[2],dateVals[0] - 1,dateVals[1]).toUTCString();                     
+                        }
+                        return null;
+                    }     
+                    
+                    self.doPost = function() {
+                        for (var key in self.WebTrial) {
+                            var formVal = $('#' + key).val();
+                            if (formVal != null) {
+                                if (typeof self.WebTrial[key] === 'boolean') 
+                                {
+                                    self.WebTrial[key] = formVal.toUpperCase() == 'TRUE';   
+                                }  
+                                else if (typeof self.WebTrial[key] === 'number' && self.WebTrial[key] % 1 == 0 ) 
+                                {
+                                    self.WebTrial[key] = parseInt(formVal);
+                                }   
+                                else if (typeof self.WebTrial[key] === 'string' || (self.WebTrial[key] != null && self.WebTrial[key] != undefined))
+                                {
+                                    self.WebTrial[key] = formVal;
+                                }   
+                                else if (formVal == '')
+                                {
+                                    self.WebTrial[key] = null;
+                                }                        
+                            }   
+                            else
+                            {
+                                self.WebTrial[key] = null;
+                            }                    
+                        }
+                        self.WebTrial.trialEnd = self.parseDate($('#trialEnd').val());
+                        self.WebTrial.lastPaymentDate = self.parseDate($('#lastPaymentDate').val());
+                        console.log('Request:', self.WebTrial);                             
+                        self.callMethod();                    
+                    }
+                    
+                    self.init();
+                }
+                
+                $(function() {      
+                        
+                    var r = new Request();
+                    
+                });
+            
+            })(jQuery)  
+            
+            
+        </script>
+    </body>
+</apex:page>

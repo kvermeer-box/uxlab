@@ -1,0 +1,84 @@
+<apex:page controller="B_CI_BoxCustomInfluenceModelConfig" title="Account and Opportunity Contact Role Model Configuration" >
+    <apex:SectionHeader title="Box Custom Influence Model Configuration" >
+        <apex:form >
+            <apex:pageblock mode="edit">
+                <apex:pageblocksection columns="2" title="General configuration">
+                    <apex:inputField value="{!configobject.Enabled__c}"/>
+                    <apex:outputtext value="Enable or disable this campaign influence model" />
+                    <apex:inputfield value="{!timeframeDefaultConfig.Number_of_Days__c}" label="Timeframe Default"/>                    
+                    <apex:outputtext value="Only responses within this many days before opportunity create are considered (depending on date filter). Null for no filter." />
+                    <apex:inputfield value="{!noRoleWeightConfig.Weight__c}" label="Role Weight Default"/>
+                    <apex:outputtext value="Weight given to contact roles that have no label." />                                                                 
+                    <apex:inputfield value="{!configobject.Account_Weight__c}" />
+                    <apex:outputtext value="Weight on each response on a contact." />
+                    <apex:inputfield value="{!configobject.Include_Zero_Amount_Influence__c}" />
+                    <apex:outputtext value="Capture influence detail information even for opportunities with a zero or null amount." />
+                </apex:pageblocksection>      
+                
+                <apex:outputPanel id="timeframeSection">
+                    <apex:pageblocksection title="Timeframe by sales division" >
+                        <apex:pageBlockTable value="{!AvailableSalesDivisions}" rendered="{!AvailableSalesDivisionsSize > 0}" var="sd" >
+                            <apex:column headerValue="Sales Division">
+                                <apex:outputField value="{!TimeframeInfo[sd].Sales_Division__c}" />
+                            </apex:column>
+                            <apex:column headerValue="# of Days In Timeframe">
+                                <apex:inputField value="{!TimeframeInfo[sd].Number_of_Days__c}"/>
+                            </apex:column>                          
+                            <apex:column headerValue="Delete">
+                                <apex:commandButton value="Delete" action="{!deleteTimeframeEntry}" rerender="timeframeSection">
+                                    <apex:param name="sdToDelete" value="{!sd}" assignTo="{!timeframeEntryToDelete}"/>
+                                </apex:commandButton>                               
+                            </apex:column>
+                        </apex:pageBlockTable>
+                        <apex:pageBlockTable value="{!OpenSlotSalesDivisions}" rendered="{!OpenSlotSalesDivisions.size > 0}" var="sdOpen" >
+                            <apex:column headerValue="Custom Sales Division">
+                                <apex:inputField label="{!sdOpen}" value="{!TimeframeSettingByOpenSlotName[sdOpen].Sales_Division__c}"/>
+                            </apex:column>
+                            <apex:column headerValue="# of Days In Timeframe">
+                                <apex:inputField value="{!TimeframeSettingByOpenSlotName[sdOpen].Number_of_Days__c}"/>
+                            </apex:column>                          
+                        </apex:pageBlockTable>                                                                                    
+                    </apex:pageblocksection>                
+                </apex:outputPanel>
+
+                <apex:pageblocksection columns="1" title="Role weights">
+                    <apex:pageBlockTable value="{!AvailableRoles}" var="role" >
+                        <apex:column headerValue="Role">
+                            <apex:outputText value="{!RoleLabels[role]}"  />
+                        </apex:column>
+                        <apex:column headerValue="Weight">
+                            <apex:inputField value="{!WeightInfo[role].Weight__c}"/>
+                        </apex:column>        
+                        <apex:column headerValue="Exclude From Influence">
+                            <apex:inputCheckbox value="{!WeightInfo[role].Exclude_From_Influence__c}"/>
+                        </apex:column>                                            
+                    </apex:pageBlockTable>                                                    
+                </apex:pageblocksection>        
+                
+                <apex:pageblocksection columns="2" title="Exclude Campaigns By Type">
+                    <apex:pageBlockTable value="{!AvailableCampaignTypes2}" var="type" >
+                        <apex:column headerValue="Campaign Type">
+                            <apex:outputText value="{!CampaignTypeLabels[type]}" />
+                        </apex:column>
+                        <apex:column headerValue="Exclude From Influence">
+                            <apex:inputField value="{!CampaignTypeExclude[type].Exclude__c}"/>
+                        </apex:column>                         
+                    </apex:pageBlockTable>                                                        
+                </apex:pageblocksection>
+
+                <apex:pageblocksection columns="2" title="Campaign specific weights">
+                    <apex:repeat value="{!AvailableCampaignTypes}" var="type" >
+                        <apex:outputText value="{!type}" />
+                        <apex:inputField value="{!WeightInfoCampaign[type].Weight__c}"/>
+                    </apex:repeat>                                             
+                </apex:pageblocksection>
+
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="Save and return" action="{!Save}"/>
+                    <apex:commandButton value="Cancel" immediate="true" action="{!Cancel}"/>
+                </apex:pageBlockButtons>
+
+            </apex:pageblock>
+        </apex:form>
+    </apex:SectionHeader>
+</apex:page>

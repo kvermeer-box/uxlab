@@ -1,0 +1,126 @@
+<apex:page >
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.7.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.7.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, 'css/ui-lightness/jquery-ui-1.8.18.custom.css')}"/>
+    <style>
+        .header{
+            font-size: 2em;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            margin: 16px 16px 16px 10px;            
+        }
+        .leadSprite {
+            background-image: url(/img/sprites/master.png);
+            background-position: 0px -1165px;
+            width: 32px;
+            height: 32px;    
+            margin: -5px 10px 0 0;        
+        }
+        .left {
+            float: left;
+        }
+        .debugTable {
+            border: 1px solid black;            
+        }
+        .debugHeader {
+            text-align: center;
+            padding: 5px 10px 5px 10px;
+        }
+        .debugTd {
+            text-align: center;            
+        }
+        .perfect {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .category {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+    <apex:form >
+        <div class="header">
+            <div class="left leadSprite" />
+            <apex:outputText value="Converted Lead"></apex:outputText>
+        </div>
+        <apex:pageBlock title="Congratulations!" tabStyle="Lead" >     
+            <apex:pageBlockSection columns="2" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >
+                        <apex:outputText value="This lead was converted on {!TODAY()}"></apex:outputText>.<br /><br />
+                        <!-- Assignment Information -->
+                        <apex:outputText styleClass="category" value="Assignment Information"></apex:outputText><br />
+                        <apex:outputText value="Routed To: "></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.ownerId}">{!$CurrentPage.parameters.owner}</apex:outputLink><br />
+                        <apex:outputText value="Territory: "></apex:outputText>            
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.territoryId}">{!$CurrentPage.parameters.territory}</apex:outputLink><br />                        
+                        <apex:outputText value="Segment: "></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.segmentId}">{!$CurrentPage.parameters.segment}</apex:outputLink><br /><br />                        
+                        <!-- New Records-->                        
+                        <apex:outputText styleClass="category" value="New Records"></apex:outputText><br />                        
+                        <apex:outputText value="Contact: "></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.contactId}">{!$CurrentPage.parameters.contact}</apex:outputLink><br />
+                        <apex:outputText value="Account: "></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.accountId}">{!$CurrentPage.parameters.account}</apex:outputLink><br />
+                        <apex:outputText value="Opportunity: "></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.opportunityId}">{!$CurrentPage.parameters.opportunity}</apex:outputLink><br /><br />                        
+                        <!-- Sidekicks -->                        
+                        <apex:outputText styleClass="category" value="Sidekicks"></apex:outputText><br />                        
+                        <apex:outputText value="Qual Note: " rendered="{!AND(NOT(ISBLANK($CurrentPage.parameters.qualNoteId)),$CurrentPage.parameters.qualNoteId != 'null')}"></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.qualNoteId}" rendered="{!AND(NOT(ISBLANK($CurrentPage.parameters.qualNoteId)),$CurrentPage.parameters.qualNoteId != 'null')}">{!$CurrentPage.parameters.qualNote}<br /></apex:outputLink>              
+                        <apex:outputText value="Routed Lead Object: " rendered="{!NOT(ISBLANK($CurrentPage.parameters.routedLeadId))}"></apex:outputText>
+                        <apex:outputLink value="{!$CurrentPage.parameters.baseUrl}/{!$CurrentPage.parameters.routedLeadId}" rendered="{!NOT(ISBLANK($CurrentPage.parameters.routedLeadId))}">{!$CurrentPage.parameters.routedLeadId}<br /></apex:outputLink><br />                                
+                        <apex:outputText value="An email notification has been sent to {!$CurrentPage.parameters.owner}."></apex:outputText>
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:image styleClass="boom" value="{!$CurrentPage.parameters.ownerUrl}" onclick="boom()" />                
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <script>        
+        var j$ = jQuery.noConflict(); 
+        var rando;
+        var booms = new Array();
+        booms.push('http://24.media.tumblr.com/tumblr_lpo1ejQ3mD1qg39ewo1_500.gif');
+        booms.push('http://25.media.tumblr.com/tumblr_lzmjj1zYi51qif6h8o1_500.gif');
+        booms.push('http://24.media.tumblr.com/tumblr_ly7mxgqZok1r09dxbo4_400.gif');
+        booms.push('http://25.media.tumblr.com/tumblr_luxknxCWO31qlsiq8o1_500.gif');
+        booms.push('http://25.media.tumblr.com/tumblr_m8q1txxk2I1rrgdweo1_500.gif');
+        booms.push('http://24.media.tumblr.com/tumblr_m0pklfEdv71rnsczco1_500.gif');
+        booms.push('http://25.media.tumblr.com/tumblr_m7tqlh6xOx1qjee29o1_500.gif');
+        booms.push('http://24.media.tumblr.com/tumblr_ly7mxgqZok1r09dxbo4_400.gif');
+        booms.push('http://images3.wikia.nocookie.net/__cb20110708043105/glee/images/8/81/5b71073bd590a33d_nye2007_fireworks_gif.gif');
+        booms.push('http://25.media.tumblr.com/tumblr_m6lw37ejE11ra56fxo1_500.gif');
+        booms.push('http://25.media.tumblr.com/tumblr_m4ojwxroUS1r5g67po1_500.gif');
+        booms.push('http://img.gawkerassets.com/img/17rrzrtr84kytgif/cmt-medium.gif');
+        booms.push('http://img.gawkerassets.com/img/17rqdl6k6wuhpgif/medium.gif');
+        booms.push('http://rack.2.mshcdn.com/media/ZgkyMDEyLzA3LzA0LzE2XzI4XzI2Xzk2MV9maWxlCnAJdGh1bWIJODUweDU5MD4KZQlqcGc/1e3714e0.jpg');
+        booms.push('http://rack.3.mshcdn.com/media/ZgkyMDEyLzA3LzA0LzE2XzI4XzI2XzI1N19maWxlCnAJdGh1bWIJODUweDU5MD4KZQlqcGc/71f897f9.jpg');
+        booms.push('http://24.media.tumblr.com/tumblr_lyvjwiZ2q71r5few5o1_500.gif');    
+        booms.push('http://25.media.tumblr.com/tumblr_m09sxjHEb21r3gup8o1_500.gif');  
+        booms.push('http://images5.fanpop.com/image/photos/30600000/Fireworks-paris-30625371-500-271.gif');
+        booms.push('http://img.pandawhale.com/35012-Katy-Perry-fireworks-boobs-gif-RFn0.gif');
+        booms.push('http://24.media.tumblr.com/tumblr_lws5yarNml1qdn5xno1_500.gif');        
+        booms.push('http://24.media.tumblr.com/tumblr_m6eshd63Pi1qb1idao1_500.gif');        
+        booms.push('http://www.mariowiki.com/images/d/d1/Fireworks.gif');
+        booms.push('http://swimminginthepages.files.wordpress.com/2013/05/fireworks.gif?w=300&h=240');
+        booms.push('http://24.media.tumblr.com/tumblr_ldqlxnyK171qa8ir9o1_500.gif');
+        
+        function boom() {
+            var newRando = random(booms.length);
+            while (newRando == rando) {
+                newRando = random(booms.length);
+            }
+            rando = newRando;
+            var newUrl = "<image class='boom' onclick='boom()' src='" + booms[rando] + "' />";
+            j$(".boom").replaceWith(newUrl);
+        }
+        
+        function random(max) {
+            return Math.floor(Math.random() * (max));
+        }
+
+    </script>
+</apex:page>

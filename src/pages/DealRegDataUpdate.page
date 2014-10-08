@@ -1,0 +1,154 @@
+<apex:page Controller="OpportunityFieldUpdate" tabStyle="Account" showheader="true" sidebar="false" cache="false">
+     <style>
+        .bPageHeader{   display:none;   }   
+        .bPageFooter{   display:none;   }
+    </style>
+    
+    
+    <!-- Script for deal reg extension validation -->
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  
+  <script type="text/javascript">
+  
+    function extDealRegValidate(){
+        if(jQuery('[id$=StageName]').text()=='Closed Won'){
+            alert("This deal registration extension cannot be requested because an order has already been processed against this deal registration opportunity. Please submit a new deal registration if additional seats need to be purchased for this customer.");
+        }
+        else if(jQuery('[id$=approve_status]').text()=='Pending'){
+            alert("This deal registration is still pending approval from the original partner submission.");
+        }
+        else if(jQuery('[id$=approve_status]').text()=='Rejected'){
+            alert("This deal registration cannot be extended since the original deal registration has been rejected.");
+        }
+        else if(jQuery('[id$=approve_status]').text()=='Cancelled'){
+            alert("This deal registration cannot be extended since this deal registration has been cancelled.");
+        }
+        else if(jQuery('[id$=extension_req]').text()=='Yes'){
+            alert("An extension has already been requested for this deal registration and can only be requested once. Please submit a new deal registration."); 
+        }
+        else if(jQuery('[id$=extension_req]').text()!='No'){
+            var expiration = jQuery('[id$=expiration_date]').text(); 
+            var someDate = new Date(); 
+            var dd = someDate.getDate(); 
+            var mm = someDate.getMonth() + 1; 
+            var y = someDate.getFullYear(); 
+            dd = dd+15; 
+            var someFormattedDate = mm + '/'+ dd + '/'+ y;
+            var dt = new Date(someFormattedDate); 
+			var formatedExpirationDate= new Date(expiration);  
+            if(formatedExpirationDate>dt){ 
+                alert("This deal registration extension cannot be requested until 15 days prior to the expiration date."); 
+            }
+            else{
+                extendDealReg();
+            }
+        }
+    }
+    
+  </script>
+    
+   <apex:outputPanel >
+    <apex:sectionHeader title="" subtitle="View/Update Deal Reg"/> 
+    <div style="text-align: right; padding: 0 20px 2px 0;"><apex:outputLink value="/">Return Home</apex:outputLink></div>    
+  </apex:outputPanel>
+ 
+  <apex:form id="SearchForm" >
+    <apex:actionFunction name="extendDealReg" action="{!extendDealReg}"/>
+    <apex:pageBlock mode="edit" id="block">
+      <apex:pageBlockButtons location="both">
+        <apex:commandButton action="{!save}" value="Save Changes" rendered="{!NOT(ISNULL(searchResults))}"/>
+        <apex:commandButton action="{!URLFOR($Page.DealRegDataUpdate)}" value="Cancel" rendered="{!NOT(ISNULL(searchResults))}"/>
+        <apex:commandButton id="editButton" value="Request DealReg Extension" rendered="{!NOT(ISNULL(searchResults))}" onclick="extDealRegValidate(); return false;"/>
+      </apex:pageBlockButtons>
+      <apex:pageMessages />
+      
+<!--      <apex:pageBlockSection >
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel for="searchText">Box deal registration ID</apex:outputLabel>
+          <apex:panelGroup >
+          <apex:inputText id="BoxdealregistrationID" value="{!searchText}" required="true" /> 
+          </apex:panelGroup>
+        </apex:pageBlockSectionItem> -->
+        
+      <apex:pageBlockSection >
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel for="searchText">Box deal registration ID</apex:outputLabel>
+           <apex:outputPanel >
+            <div class="requiredInput">
+                <div class="requiredBlock"></div>
+                <apex:inputText id="BoxdealregistrationID" value="{!searchText}"/>
+            </div>
+            </apex:outputPanel>                         
+        </apex:pageBlockSectionItem>
+      
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel for="searchText2" >ATTUID</apex:outputLabel>
+            <apex:outputPanel >
+            <div class="requiredInput">
+                <div class="requiredBlock"></div>
+                <apex:inputText id="ATTUIDnumber" value="{!searchText2}" maxlength="6"/>
+            </div>
+            </apex:outputPanel>                         
+        </apex:pageBlockSectionItem>
+        <apex:commandButton value="Search" action="{!search}" rerender="block" status="status"/>    
+      </apex:pageBlockSection><br/>
+
+      <apex:actionStatus id="status" startText="Searching... please wait..."/>
+      <apex:pageBlockSection title="Search Results" id="resultsBlock" columns="2" rendered="{!NOT(ISNULL(searchResults))}">
+        <apex:outputField label="Owner" value="{!searchResults.Owner.Alias}"/>
+        <apex:outputField value="{!searchResults.Name}"/> 
+        <apex:outputField value="{!searchResults.Account.Name}" label="Customer Company Name"/>
+        <apex:outputField value="{!searchResults.Box_Partner_Account__c}"/>
+        <apex:outputField value="{!searchResults.Opportunity_Type__c}"/>
+        <apex:outputField value="{!searchResults.closeDate}"/>
+        <apex:outputField value="{!searchResults.StageName}" id="StageName"/>
+        <apex:outputField value="{!searchResults.Account_Type_Sold__c}"/>    
+        <apex:outputField value="{!searchResults.Box_Enterprise_ID__c}"/>
+        <apex:outputField value="{!searchResults.Seats_Sold__c}"/>  
+<!--    <apex:inputfield label="CTN" value="{!searchResults.Partner_External_ID__c}" /> -->
+<!--    <apex:inputText label="AT&T Billing CTN" value="{!CTNValue}" /> -->
+        <apex:pageBlockSectionItem labelStyleClass="ctn" dataStyleClass="dataCtn" helpText="This is the billing CTN that must match the CTN used when placing the service order in Phoenix.  Please ensure the CTN is Accurate! Mismatched CTNs will result in provisioning errors.">
+                    <apex:outputLabel value="AT&T Billing CTN" /> 
+                    <apex:outputPanel >
+                    <div class="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText value="{!CTNValue}" maxlength="10" label="AT&T Billing CTN"/>
+                    </div>
+                    </apex:outputPanel>                         
+        </apex:pageBlockSectionItem>
+         <apex:outputtext value="{!UserName }" label="Channel Rep"/>   
+      </apex:pageBlockSection>
+ 
+        <apex:pageBlockSection title="Deal Registration Approval Info" id="AppSec" columns="2" rendered="{!NOT(ISNULL(searchResults))}">
+            <apex:outputField value="{!searchResults.Deal_Reg_Submission_Date__c}"/> 
+             <apex:outputField value="{!searchResults.Deal_Reg_Extension_Requested__c}" id="extension_req"/> 
+              <apex:outputField value="{!searchResults.Deal_Reg_Approval_Rejection_Date_Time__c}" />            
+             <apex:outputField value="{!searchResults.Deal_Reg_Approval_Status__c}" id="approve_status"/> 
+             <apex:outputField value="{!searchResults.Extension_Requested_Date_Time__c}"/>
+             <apex:outputField value="{!searchResults.Deal_Reg_Expiration_Date__c}" id="expiration_date"/>
+             <apex:outputField value="{!searchResults.Extension_Approval_Rejection_Date_Time__c}"  />
+             <apex:outputField value="{!searchResults.Deal_Reg_Rejection_Reason__c}"/>     
+             <apex:outputField value="{!searchResults.Registration_ID__c}"/>    
+       </apex:pageBlockSection>        
+ 
+         <apex:pageBlockSection title="Deal Registration Submitter Info" id="SubSec" columns="2" rendered="{!NOT(ISNULL(searchResults))}">
+             <apex:outputField value="{!searchResults.Partner_Submitter_Name__c}"/>
+             <apex:outputField value="{!searchResults.Partner_Submitter_Phone__c}"/> 
+             <apex:outputField value="{!searchResults.Partner_Submitter_Email__c}"/>  
+             <apex:outputField value="{!searchResults.Why_Box__c}"/>     
+       </apex:pageBlockSection>     
+        
+        <apex:pageBlockSection title="Customer Admin Contact" id="Email" columns="2" rendered="{!NOT(ISNULL(searchResults))}"> 
+           <apex:inputtext value="{!FirstName }" label="Customer Admin First Name"/>   
+<!--        <apex:inputtext value="{!Cemail}" label="Customer Admin Email"/>   -->
+             <apex:pageBlockSectionItem helpText="This email address will be provisioned as your customer's initial Box Administrator account.  This email will receive the activation instructions.Please confirm with customer that there is no pre-existing demo account with Box using this email.  Duplicate emails are not supported. See Sales M&P for more information.">
+                <apex:outputLabel value="Email to be Designated as Box Admin"/>     
+                <apex:inputtext value="{!Cemail}" />
+            </apex:pageBlockSectionItem>          
+           
+                              
+           <apex:inputtext value="{!LastName}" label="Customer Admin Last Name"/>            
+      </apex:pageBlockSection>
+   </apex:pageBlock>
+  </apex:form>
+</apex:page>

@@ -1,0 +1,60 @@
+<apex:page >
+<style>
+.activeTab {
+    background-color: #236FBD; 
+    color:white;
+    background-image: none;
+    font-size: 13px;    
+    font-family: Tahoma,Arial,Verdana,Helvetica,sans-serif;
+    font-weight: bold;
+    height: 16px;
+}
+.inactiveTab {
+    background-color: lightgrey; 
+    color: black;
+    background-image: none;
+    font-size: 13px;    
+    font-family: Tahoma,Arial,Verdana,Helvetica,sans-serif;    
+    font-weight: normal;
+}
+</style>
+    <apex:tabPanel styleClass="test" height="1000" width="100%" tabClass="activeTab" inactiveTabClass="inactiveTab" headerSpacing="5px">
+        <apex:tab label="Sales Homepage">
+            <!-- Old Version
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=FC597C2611E25BD61F0300802F17E0B0&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI&port=0&share=1&uid=box&pwd=BI" />
+            -->
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=FC597C2611E25BD61F0300802F17E0B0&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI%20(RS%20transition%202)&port=0&share=1&uid=sales&pwd=BI" />
+        </apex:tab>        
+        <apex:tab label="Scored Domains">
+            <!-- Old Version
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=4001&src=mstrWeb.4001&reportID=D6AB2CB411E25BDF509700802F079750&visMode=0&reportViewMode=1&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI&port=0&share=1&uid=box&pwd=BI&valuePromptAnswers={!$User.Id}^{!$User.Id}" />
+            -->
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=4001&src=mstrWeb.4001&reportID=D6AB2CB411E25BDF509700802F079750&visMode=0&reportViewMode=1&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI%20(RS%20transition%202)&port=0&share=1&uid=sales&pwd=BI&valuePromptAnswers={!$User.Id}^{!$User.Id}" />
+        </apex:tab>
+        <apex:tab label="Your Accounts">
+            <!-- Old Version
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=4E929A8111E2340F469700802FB70DAF&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI&port=0&share=1&uid=box&pwd=BI&elementsPromptAnswers=BB7941224A3904FE590CE8B254612274;BB7941224A3904FE590CE8B254612274:{!$User.Id}" />
+            -->
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=4E929A8111E2340F469700802FB70DAF&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI%20(RS%20transition%202)&port=0&share=1&uid=sales&pwd=BI&elementsPromptAnswers=BB7941224A3904FE590CE8B254612274;BB7941224A3904FE590CE8B254612274:{!$User.Id}" />
+        </apex:tab>
+    
+        <apex:tab label="CSM Dashboard">
+            <!-- Old Version
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=8268CBD411E171DE181A00802F4750DE&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI&port=0&share=1&uid=box&pwd=BI" />
+            -->
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=8268CBD411E171DE181A00802F4750DE&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI%20(RS%20transition%202)&port=0&share=1&uid=sales&pwd=BI" />
+        </apex:tab>
+        <apex:tab label="Sales Manager Dashboard">
+            <!-- Old Version
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=D116B66E11E1AE61C18200802F973DEC&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI&port=0&share=1&uid=box&pwd=BI" />
+            -->
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=D116B66E11E1AE61C18200802F973DEC&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI%20(RS%20transition%202)&port=0&share=1&uid=sales&pwd=BI" />
+        </apex:tab>    
+        <apex:tab label="CA Team Dashboard">
+            <!-- Old Version
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=56963A4011E35B8000000080EF554B94&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI&port=0&share=1&uid=sales&pwd=BI"/>
+            -->
+            <apex:iframe height="1000" width="100%" scrolling="true" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=56963A4011E35B8000000080EF554B94&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI%20(RS%20transition%202)&port=0&share=1&uid=sales&pwd=BI"/>
+        </apex:tab>  
+    </apex:tabPanel>
+</apex:page>

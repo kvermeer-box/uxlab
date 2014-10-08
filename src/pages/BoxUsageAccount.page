@@ -1,0 +1,6 @@
+<apex:page standardController="Account">
+    <!-- Old Version
+    <apex:iframe id="endID3" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=2120281011E27D4DD66000802F97A21C&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI&port=0&share=1&uid=sales&pwd=BI&valuePromptAnswers={!Account.Box_Enterprise_ID__c}&hiddensections=header,path,dockTop,dockLeft,footer" />
+    -->
+    <apex:iframe id="endID3" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=8EEDF85A11E3CB3400000080EF659649&server=DWH-BIDATA1001.VE.BOX.NET&Project=Exec&port=0&share=1&uid=sales&pwd=BI&hiddensections=header,path,dockTop,dockLeft,footer&valuePromptAnswers={!Account.Box_Enterprise_ID__c}" />
+</apex:page>

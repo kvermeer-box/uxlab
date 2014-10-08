@@ -1,0 +1,227 @@
+<apex:page sidebar="false">
+    <!-- Begin Default Content REMOVE THIS -->
+
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic|Varela+Round' rel='stylesheet' type='text/css'/>
+    <script src="{!$Resource.JQuery2}"></script>
+    <style>
+
+        /* Page attributes */
+        /* FIGHTING SALESFORCE */
+
+        .noSidebarCell {
+            padding: 0px !important;
+        }
+
+        .outerNoSidebar {
+            padding: 0px !important;
+        }
+
+        /* Header */
+
+        #main-content {
+            width: 100%;
+            min-height: 600px;
+            min-width: 1300px;
+        }
+
+        #header {
+            width: 100%;
+            height: 76px;
+            background: #00AEEF;
+            display: inline-block;
+            padding-bottom: 15px;
+            position: relative;
+        }
+
+        .title {
+            margin-left: 100px;
+            font-family: 'Varela Round', sans-serif;
+            margin-top: 29px;
+            display: inline-block;
+        }
+
+        #graph {
+            position: absolute;
+            right: 245px;
+            bottom: -10px;
+        }
+
+        .main-title {
+            font-size: 24px;
+            color: #FFFFFF;
+            line-height: 20px;
+            letter-spacing: 3px;
+            margin-bottom: 3px;
+        }
+
+        .subtitle {
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            color: #FFFFFF;
+            line-height: 14px;
+            letter-spacing: 1px;
+            font-weight: 100;
+        }
+
+        #reports-panel {
+            background: #FFFFFF;
+            padding-left: 100px;
+            padding-right: 245px;
+        }
+
+        /* Tab Bar */
+
+        .reports-tab-bar {
+            margin-top: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #E4E5E9;
+        }
+
+        .reports-tab-list {
+            margin: 0px;
+            padding-left: 0px;
+        }
+
+        .reports-tab-list > li {
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 45px;
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            color: #636776;
+            line-height: 15px;
+            letter-spacing: 1px;
+            font-weight: 400;
+            margin-left: 0px;
+        }
+
+        .reports-tab-list > li.selected {
+            color: #000000;
+            font-weight: 700;
+        }
+
+        .reports-tab-list > li:hover {
+            color: #171718;
+            cursor: pointer;
+        }
+
+
+        /* Report List */
+
+        .reports-detail {
+            margin-top: 25px;
+            overflow: scroll;
+            scroll-bar-base-color: #D2D3DB;
+        }
+
+        .report-entry {
+            margin-bottom: 40px;
+        }
+
+        .report-name {
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            color: #41434B;
+            line-height: 17px;
+            letter-spacing: 1px;
+            font-weight: 400;
+            text-decoration: underline;
+            display: inline-block;
+            width: 15%;
+            margin-right: 5%;
+            vertical-align: top;
+        }
+
+        .report-description {
+            font-family: 'Lato';
+            font-size: 12px;
+            color: #382E2E;
+            line-height: 20px;
+            font-weight: 400;
+            display: inline-block;
+            width: 75%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    </style>
+
+    <div id="main-content">
+
+        <header id="header">
+            <div class="title">
+                <div class="main-title">
+                    ADMIN LINKS
+                </div>
+                <div class="subtitle">
+                    links to important admin pages
+                </div>
+            </div>
+        </header>
+        <div id="reports-panel">
+            <div class="reports-tab-bar">
+                <ul class="reports-tab-list">
+                    <li class="tab" tab="A">Sales Requests</li>
+                </ul>
+            </div>
+
+            <div class="reports-detail">
+                <div class="report-entry hidden" tab='A'>
+                    <a href='/a78'><span class="report-name">Sales Ops &amp; Revenue Ops</span></a>
+                    <span class="report-description">Sales Requests for Sales Ops &amp; Revenue Ops</span>
+                </div>
+                <div class="report-entry hidden" tab='A'>
+                    <a href='/a77'><span class="report-name">Salesforce Technical Issues</span></a>
+                    <span class="report-description">Sales Requests for Enterprise Systems</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function() {
+            selectInitialTab();
+            $('.tab').click(function() {
+                handleTabSelected(this);
+            });
+        });
+
+        /**
+         * This function handles a tab being selected
+         *
+         * @param {HTMLElement|JQuery Object} tabSelected - the tab that was selected
+         */
+        function handleTabSelected(tabSelected) {
+            if( tabSelected == null ) {
+                return;
+            }
+            // Handle both HTMLElements and JQuery Objets
+            var tabJQueryObject = null;
+            if( tabSelected.jquery ) {
+                tabJQueryObject = tabSelected;
+            }
+            else {
+                tabJQueryObject = $(tabSelected);
+            }
+            // Switch 'selected' to the newly clicked tab
+            $('.tab').removeClass('selected');
+            tabJQueryObject.addClass('selected');
+            // Swap out reports to the correct reports for this tab
+            var tabId = tabJQueryObject.attr('tab');
+            $('.report-entry').addClass('hidden');
+            $('.report-entry[tab~=' + tabId + ']').removeClass('hidden');
+        }
+
+        function selectInitialTab() {
+            var tabId = "A";
+            if (tabId != null) {
+                var tab = $('.tab[tab~=' + tabId + ']');
+                handleTabSelected(tab);
+            }
+        }
+    </script>
+
+</apex:page>

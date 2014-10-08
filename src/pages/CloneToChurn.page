@@ -1,0 +1,111 @@
+<apex:page showHeader="true" sidebar="true" controller="CloneToChurnController">
+<style>
+
+    #status {
+        font-family: AvenirNext-Medium, 'Montserrat', sans-serif;
+        text-align: center;
+        font-size: 25px;
+        padding-top: 20px;
+    }
+
+    #messagesDiv {
+        width: 600px;
+        font-family: AvenirNext-Medium, 'Montserrat', sans-serif;
+        margin:auto;
+        text-align: center;
+        font-size: 20px;
+        padding-top: 20px;
+    }
+
+    #messagesList {
+        text-align: left;
+    }
+
+    #centerImage {
+        text-align: center;
+        margin:auto;
+    }
+
+</style>
+
+<div id="status">Creating your churn opp<span id="ellipse"></span></div>
+<div id="messagesDiv">
+  <ul id="messagesList">
+  </ul>
+</div>
+<div id="centerImage">
+<img src="http://www.businessinsider.com/image/500443a6ecad048c4900001c/linswag.gif" alt=""/>
+</div>
+
+<script type="text/javascript" src="{!$Resource.JQuery2}">
+</script>
+<script>
+$(document).ready(function() {
+    var interval = setInterval(function() {elipseStatusUpdate('ellipse')},1000);
+    var id = getURLParameter('id');
+    CloneToChurnController.cloneAndChurnOpp(id, function(result,event) {
+        clearInterval(interval);
+        if (event.type == 'exception') {
+            $('#error-placeholder').text('Error: Something went very wrong.  Talk to Sales Systems!');
+        } else {
+            console.log('Event: ');
+            console.log(event);
+            console.log('Result: ');
+            console.log(result);
+            var responseJSON = $('<div/>').html(result).text()
+            console.log(responseJSON);
+            var response = JSON.parse(responseJSON);
+            if (response.success) {
+                // If successful, redirect
+                $('#status').html('Success! Rerouting to churn opp...')
+                window.open('/' + response.churnedOppId, '_top', false);
+            }
+            else {
+                // If not a success, display errors
+                $('#status').html('There were some issues:')
+                var messagesList = $('#messagesList');
+                var errors = response.errors;
+                var errorsLength = errors.length;
+                for (var i = 0; i < errorsLength; i++) {
+                    var currentError = errors[i];
+                    messagesList.append('<li>' + currentError + '</li>');
+                }
+                var messagesDiv = $('#messagesDiv');
+                messagesDiv.append('<a href="/' + response.originalOppId + '">Click here to return to opp!</a>');
+            }
+        }
+                
+    });
+});
+
+function elipseStatusUpdate(spanId) {
+    var currentText = $('#' + spanId).text();
+    var count = currentText.length;
+    count = count + 1;
+    if (count > 3) {
+        count = 0;
+    }
+    var elipseElement = '.';
+    var textToInsert = '';
+    for (var i = 0; i < count; i++) {
+        textToInsert += elipseElement;
+    }
+    $('#' + spanId).html(textToInsert);
+}
+
+function getURLParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}
+</script>
+	
+</apex:page>

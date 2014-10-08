@@ -1,0 +1,48 @@
+<apex:page Controller="TreasuryController" action="{!doGetCatDetails}" showHeader="false"  standardStylesheets="false">
+
+  <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <c:boxtreasury_scripts_V2 />
+        <title>Box Treasury - Listings </title>  
+                  
+        <script>    
+            
+       
+        </script>
+    </head>
+    <body>
+        <c:boxtreasury_header_V2 />
+        <!-- breadcrumbs -->
+        <div class="container breadcrumb" style="padding:0px;">
+            <ol class="breadcrumb breadcrumb-boxblue">
+                <li><a href="https://c.na15.visual.force.com/apex/home">Home</a></li>
+                <li class="active::before"><apex:outputText value="{!demoCat.Name}"/></li>
+            </ol>
+        </div>
+        
+        
+        <main id="content" class="container treasury-main" role="main"><!-- main page container -->
+            <h1><apex:outputText value="{!demoCat.Name} Listings"/></h1>
+            <p> Select a template below to view available listings </p>
+            <div class="row treasury-tile-container"> <!-- div to hold all the treasury tiles -->
+            
+                      <apex:repeat value="{!demoTemplatesASE}" var="temp"><!-- repeat for all categories -->             
+                  
+                       <a href="https://box.my.salesforce.com/apex/showcaseproduct?listing={!demoCat.Name}&product={!temp.Name}" id="{!temp.Name}" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 treasury-tile"> 
+                             <div id="{!temp.Name}-icon-box" class="tile-icon-box">
+                                 <apex:image url="{!temp.Icon_Image_Location__c}" styleClass="img-rounded"/>
+                             </div>
+                             <p id="{!temp.Name}-name">{!temp.Name}</p>
+                         </a>
+                    </apex:repeat>     
+                 
+            </div><!--./row treasury tile container-->
+        </main><!--./main page container-->
+        
+        
+        
+            
+            
+    </body>
+  </html>    
+</apex:page>

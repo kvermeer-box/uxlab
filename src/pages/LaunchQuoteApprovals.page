@@ -1,0 +1,179 @@
+<apex:page sidebar="false" controller="ParallelQuoteApprovalController">
+  <style>
+    #status {
+        font-family: AvenirNext-Medium, 'Montserrat', sans-serif;
+        text-align: center;
+        font-size: 25px;
+        padding-top: 20px;
+    }
+
+    #ellipse {
+        font-size: 25px;
+    }
+
+    #messagesDiv {
+        width: 600px;
+        font-family: AvenirNext-Medium, 'Montserrat', sans-serif;
+        margin:auto;
+        text-align: center;
+        font-size: 20px;
+        padding-top: 20px;
+    }
+
+    #messagesList {
+        text-align: left;
+    }
+
+    #centerImage {
+        text-align: center;
+        margin:auto;
+        border-radius: 5px;
+    }
+
+</style>
+
+<div id="status"> </div>
+
+<div id="messagesDiv">
+  <ul id="messagesList">
+  </ul>
+</div>
+<div id="centerImage">
+<img src="http://cdn3.sbnation.com/imported_assets/1492623/deandreohmy_medium.gif" alt=""/>
+</div>
+
+<script type="text/javascript" src="{!$Resource.JQuery2}">
+</script>
+<script>
+    $(document).ready(function() {
+        interval = setInterval(function() {elipseStatusUpdate('ellipse')},500);
+        var id = getURLParameter('id');
+        var datasourceType = getURLParameter('datasourceType');
+        var action = getURLParameter('action');
+        if (action == 'launch') {
+            $('#status').html('Submitting quote for approval <span id="ellipse"></span>');
+            launchApprovals(id, datasourceType, interval);
+        }
+        else if (action == 'recall') {
+            $('#status').html('Recalling Approvals <span id="ellipse"></span>');
+            recallApprovals(id, datasourceType, interval);
+        }
+        else if (action == 'unlock') {
+            $('#status').html('Unlocking Quote <span id="ellipse"></span>');
+            unlockQuote(id, datasourceType, interval);
+        }
+    });
+
+    function launchApprovals(datasourceId, datasourceType, interval) {
+        ParallelQuoteApprovalController.launchQuoteApprovals(datasourceId, datasourceType, function(result,event) {
+            handleResponse(result, event);
+        });
+    }
+
+    function recallApprovals(datasourceId, datasourceType, interval) {
+        ParallelQuoteApprovalController.recallQuoteApprovals(datasourceId, datasourceType, function(result,event) {
+            handleResponse(result, event);
+        });
+    }
+
+    function unlockQuote(datasourceId, datasourceType, interval) {
+        ParallelQuoteApprovalController.unlockQuote(datasourceId, datasourceType, function(result,event) {
+            handleResponse(result, event);
+        });
+    }
+
+    function handleResponse(result, event) {
+        clearInterval(interval);
+        if (event.type == 'exception') {
+            $('#error-placeholder').text('Error: Something went very wrong.  Talk to Sales Systems!');
+        } else {
+            console.log('Event: ');
+            console.log(event);
+            console.log('Result: ');
+            console.log(result);
+            var responseJSON = $('<div/>').html(result).text()
+            console.log(responseJSON);
+            var response = JSON.parse(responseJSON);
+            
+            $('#status').text(createMessage(response));
+            if (response.success) {
+                // If successful, redirect
+                var redirectFunction = function() {
+                    window.open('/' + response.dataSourceId, '_top', false);
+                };
+                setTimeout(redirectFunction, 3000);
+            }
+            else {
+                // If not a success, display errors
+                var messagesList = $('#messagesList');
+                var errors = response.errors;
+                var errorsLength = errors.length;
+                for (var i = 0; i < errorsLength; i++) {
+                    var currentError = errors[i];
+                    messagesList.append('<li>' + currentError + '</li>');
+                }
+                var messagesDiv = $('#messagesDiv');
+                messagesDiv.append('<a href="/' + response.dataSourceId + '">Click here to return to the quote!</a>');
+            }
+        }  
+    }
+
+    function createMessage(responseObject) {
+        var message = '';
+        if (responseObject.success) {
+            var numberOfApprovals = responseObject.numQuoteApprovals;
+            if (responseObject.action == 'launch') { // Launch response
+                if (numberOfApprovals > 0) { // Some approvals required
+                    message = 'Success!  This quote will require ' + numberOfApprovals + ' approvals!';
+                }
+                else { // No approvals required, auto-approved
+                    message = 'Success! This quote required no approvals and was auto-approved!';
+                }
+            }
+            else if (responseObject.action == 'recall') { // Recall response
+                message = 'Successfully recalled ' + numberOfApprovals + ' approval(s)!';
+            }
+            else if (responseObject.action == 'unlock') {
+                message = 'Successfully unlocked quote!';
+            }
+            
+        }
+        else {
+            message = 'There were some errors: ';
+        }
+        return message;
+    }
+
+    function elipseStatusUpdate(spanId) {
+        var currentText = $('#' + spanId).text();
+        console.log('Current Text: ' + currentText);
+        var count = currentText.length;
+        console.log('Count: ' + count);
+        count = count + 1;
+        if (count > 3) {
+            count = 0;
+        }
+        var elipseElement = '.';
+        var textToInsert = '';
+        for (var i = 0; i < count; i++) {
+            textToInsert += elipseElement;
+        }
+        console.log('Text to insert: ' + textToInsert);
+        $('#' + spanId).text(textToInsert);
+    }
+
+    function getURLParameter(sParam)
+    {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) 
+        {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) 
+            {
+                return sParameterName[1];
+            }
+        }
+    }
+</script>
+</apex:page>

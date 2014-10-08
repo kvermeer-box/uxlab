@@ -1,0 +1,6 @@
+<apex:page standardController="QuoteLineItem">
+  <br />
+  <h1>This functionality has been disabled.</h1>
+  To customize the properties of this item, delete the record and add a new one.<br /><br />
+  <apex:outputLink value="/{!QuoteLineItem.QuoteId}">Return to Quote</apex:outputLink>
+</apex:page>

@@ -1,0 +1,226 @@
+<apex:page standardController="Sales_Request__c">
+    <style>
+        .typeLink {
+            padding-left: 10px;
+            font-size: 25px;
+            color: #555555;
+            font-family: helvetica;
+            padding-left: 20px;
+        }
+        .typeTable td.red:hover {            
+            text-shadow: 0px 0px 2px #F6CECE;
+        }
+        .typeTable td.blue:hover {
+            text-shadow: 0px 0px 2px #A9D0F5;
+        }
+        .typeLink:hover {
+            cursor: hand;
+            cursor: pointer;
+        }
+        .typeDesc {
+            font-size: 15px;
+            color: #888;
+            text-shadow: none;
+        }
+        .typeButton {
+            height: 80px;
+            width: 80px;
+            float: left;
+            margin: 5px 0 5px 0;
+        }
+        .typeButton:hover {
+            cursor: hand;
+            cursor: pointer;
+        }
+        .typeTable {
+            margin-top: 25px;
+        }
+        .flip-container {
+            -webkit-perspective: 80;
+            -moz-perspective: 80;
+            -o-perspective: 80;
+            perspective: 80;
+        }
+        .flip-container, .front, .back {
+            width: 80px;
+            height: 80px;
+        }
+        .flipper {
+            -moz-transform: perspective(80px);
+            -moz-transform-style: preserve-3d;
+            position: relative;
+        }
+        .front, .back {
+            -webkit-backface-visibility: hidden;
+            -moz-backface-visibility: hidden;
+            -o-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -webkit-transition: 0.4s;
+            -webkit-transform-style: preserve-3d;
+            -moz-transition: 0.4s;
+            -moz-transform-style: preserve-3d;
+            -o-transition: 0.4s;
+            -o-transform-style: preserve-3d;
+            -ms-transition: 0.4s;
+            -ms-transform-style: preserve-3d;
+            transition: 0.4s;
+            transform-style: preserve-3d;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .back {
+            -webkit-transform: rotateY(-180deg);
+            -moz-transform: rotateY(-180deg);
+            -o-transform: rotateY(-180deg);
+            -ms-transform: rotateY(-180deg);
+            transform: rotateY(-180deg);
+        }
+        .flip-container:hover .back, .flip-container.hover .back {
+            -webkit-transform: rotateY(0deg);
+            -moz-transform: rotateY(0deg);
+            -o-transform: rotateY(0deg);
+            -ms-transform: rotateY(0deg);
+            transform: rotateY(0deg);
+        }
+        .bacon {
+            position: absolute;
+            margin-left: 700px;
+            opacity: 0;
+        }
+        .flip-container:hover .front, .flip-container.hover .front {
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+            -o-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+        }
+    </style>
+    <apex:sectionHeader title="Create New Sales Request" subtitle="Select an EER Type" />
+    <table class="typeTable">    
+        <tr onclick="document.location = '/a1H/e?RecordType=012600000009YMd&retURL=apex/SalesRequests_EccTab';" onmouseover="document.getElementById('intro').classList.toggle('hover');" onmouseout="document.getElementById('intro').classList.toggle('hover');">
+            <td>
+                <div id="intro" class="flip-container" ontouchstart="this.classList.toggle('hover');">
+                    <div class="flipper typeButton">
+                        <div class="front">
+                            <img class="typeButton" src="http://b.dryicons.com/images/icon_sets/stylistica_icons_set/png/128x128/coffee.png" />
+                        </div>
+                        <div class="back">
+                            <img class="typeButton" src="http://a.dryicons.com/images/icon_sets/valentine_love/png/128x128/heart.png" />
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="typeLink red" style="vertical-align: middle;">
+                Executive Outreach<br />
+                <span class="typeDesc">Ask an executive, board member, or VC firm to reach out to a customer for you in order to speed up the sales cycle or endorse box in the sales process.</span>
+            </td>
+        </tr>
+        <tr onclick="document.location = '/a1H/e?RecordType=012600000009YOK&retURL=apex/SalesRequests_EccTab';" onmouseover="document.getElementById('sponsor').classList.toggle('hover');" onmouseout="document.getElementById('sponsor').classList.toggle('hover');">
+            <td>
+                <div id="sponsor" class="flip-container" ontouchstart="this.classList.toggle('hover');">
+                    <div class="flipper typeButton">
+                        <div class="front">
+                            <img class="typeButton" src="http://b.dryicons.com/images/icon_sets/stylistica_icons_set/png/128x128/chess.png" />
+                        </div>
+                        <div class="back">
+                            <img class="typeButton" src="http://a.dryicons.com/images/icon_sets/valentine_love/png/128x128/heart.png" />
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="typeLink red" style="vertical-align: middle;">
+                Executive Sponsor<br />
+                <span class="typeDesc">Request for executive sponsorship of an account.</span>
+            </td>
+        </tr>
+        <tr onclick="document.location = '/a1H/e?RecordType=012600000009YMn&retURL=apex/SalesRequests_EccTab';" onmouseover="document.getElementById('trip').classList.toggle('hover');" onmouseout="document.getElementById('trip').classList.toggle('hover');">
+            <td>
+                <div id="trip" class="flip-container" ontouchstart="this.classList.toggle('hover');">
+                    <div class="flipper typeButton">
+                        <div class="front">
+                            <img class="typeButton" src="http://b.dryicons.com/images/icon_sets/stylistica_icons_set/png/128x128/tag.png" />
+                        </div>
+                        <div class="back">
+                            <img class="typeButton" src="http://a.dryicons.com/images/icon_sets/valentine_love/png/128x128/heart.png" />
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="typeLink red" style="vertical-align: middle;">
+                Executive Trip<br />
+                <span class="typeDesc">Request for a meeting with an executive, while he/she is on a trip.</span>
+            </td>
+        </tr>       
+        <tr onclick="document.location = '/a1H/e?RecordType=012600000009Wnt&retURL=apex/SalesRequests_EccTab';" onmouseover="document.getElementById('ecc').classList.toggle('hover');" onmouseout="document.getElementById('ecc').classList.toggle('hover');">
+            <td>
+                <div id="ecc" class="flip-container" ontouchstart="this.classList.toggle('hover');">
+                    <div class="flipper typeButton">
+                        <div class="front">
+                            <img class="typeButton" src="http://a.dryicons.com/images/icon_sets/stylistica_icons_set/png/128x128/magic_wand.png" />
+                        </div>
+                        <div class="back">
+                            <img class="typeButton" src="http://b.dryicons.com/images/icon_sets/minimalistica_part_2_icons/png/128x128/magic_wand.png" />
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="typeLink blue" style="vertical-align: middle;">
+                ECC Request<br />
+                <span class="typeDesc">Executive Collaboration Center meeting at Box HQ, Box EMEA, or Box SF.</span>
+            </td>
+        </tr>                   
+        <tr onclick="document.location = '/a1H/e?RecordType=012600000009YMs&retURL=apex/SalesRequests_EccTab';" onmouseover="document.getElementById('cio').classList.toggle('hover');" onmouseout="document.getElementById('cio').classList.toggle('hover');">
+            <td>
+                <div id="cio" class="flip-container" ontouchstart="this.classList.toggle('hover');">
+                    <div class="flipper typeButton">
+                        <div class="front">
+                            <img class="typeButton" src="http://c.dryicons.com/images/icon_sets/stylistica_icons_set/png/128x128/database.png" />
+                        </div>
+                        <div class="back">
+                            <img class="typeButton" src="http://a.dryicons.com/images/icon_sets/valentine_love/png/128x128/heart.png" />
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="typeLink red" style="vertical-align: middle;">
+                CIO Think Tank<br />
+                <span class="typeDesc">Background information on CIO Think Tank attendees.</span>
+            </td>
+        </tr>
+        <tr onclick="document.location = '/a1H/e?RecordType=012600000009YMi&retURL=apex/SalesRequests_EccTab';" onmouseover="document.getElementById('engage').classList.toggle('hover');" onmouseout="document.getElementById('engage').classList.toggle('hover');">
+            <td>
+                <div id="engage" class="flip-container" ontouchstart="this.classList.toggle('hover');">
+                    <div class="flipper typeButton">
+                        <div class="front">
+                            <img class="typeButton" src="http://c.dryicons.com/images/icon_sets/stylistica_icons_set/png/128x128/email.png" />
+                        </div>
+                        <div class="back">
+                            <img class="typeButton" src="http://a.dryicons.com/images/icon_sets/valentine_love/png/128x128/heart.png" />
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="typeLink red" style="vertical-align: middle;">
+                Event Executive Engagement<br />
+                <span class="typeDesc">Request for a meeting with an executive while he/she is at an event, including BoxWorks or Dreamforce.</span>
+            </td>
+        </tr>      
+        <div class="bacon" id="bacon" onclick="toggleBacon()">
+            <img src="http://24.media.tumblr.com/59066a1c9b2ad46925d04cc8b7d4e1bd/tumblr_mmwixtusf41rj3pkjo1_500.gif" />
+        </div>
+    </table>
+    <script>
+        var bacon = false;
+        
+        function toggleBacon() {
+            var b = document.getElementById('bacon');
+            if (bacon) {
+                b.style.opacity = '0';
+                bacon = false;
+            } else {
+                b.style.opacity = '1';
+                bacon = true;   
+            }
+        }
+    </script>
+</apex:page>

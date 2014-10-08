@@ -1,0 +1,64 @@
+<apex:page standardController="Weekly_Forecast__c"
+	extensions="WeeklyForecastController" sidebar="true" showHeader="true">
+
+	<apex:form id="weeklyForecastForm">
+		<apex:sectionHeader title="Weekly Forecast Edit" subtitle="New Weekly Forecast"
+			id="weeklyForecastTitle" />
+
+		<apex:pageBlock title="Weekly Forecast Edit" id="weekklyforecastblock">
+
+			<apex:pageBlockButtons >
+				<apex:commandButton value="Save" action="{!save}"
+					reRender="weekklyforecastblock" />
+				<apex:commandButton value="Cancel" action="{!cancel}" />
+			</apex:pageBlockButtons>
+
+			<apex:outputPanel id="viewbasicinfo">
+
+				<apex:actionRegion >
+					<apex:pageBlockSection title="Information" columns="1"
+						collapsible="false">
+						<apex:outputField value="{!Weekly_Forecast__c.Forecast_Submission_Week__c}"
+							id="forecastSubmissionWeek" />
+						<apex:outputField value="{!Weekly_Forecast__c.CurrencyIsoCode}" 
+							id="currency" />
+						<apex:inputField value="{!Weekly_Forecast__c.Next_Quarter_Best_Case__c}" id="nextQtrBestCase"
+							required="true" />
+						<apex:inputField value="{!Weekly_Forecast__c.Next_Quarter_Commit__c}" id="nextQtrCommit"
+							required="true" />
+						<apex:inputField value="{!Weekly_Forecast__c.Next_Quarter_Floor__c}" id="nextQtrFloor"
+							required="true" />
+
+					</apex:pageBlockSection>
+
+					<apex:pageBlockSection title="Monthly" columns="1"
+						collapsible="false">
+
+						<apex:inputField value="{!Weekly_Forecast__c.Monthly_Best_Case__c}" id="monthlyBestCase"
+							required="true" />
+						<apex:inputField value="{!Weekly_Forecast__c.Monthly_Commit__c}" id="monthlyCommit"
+							required="true" />
+						<apex:inputField value="{!Weekly_Forecast__c.Monthly_Floor__c}" id="monthlyFloor"
+							required="true" />
+							
+					</apex:pageBlockSection>
+
+					<apex:pageBlockSection title="In Quarter" columns="1"
+						collapsible="false">
+
+						<apex:inputField value="{!Weekly_Forecast__c.In_Quarter_Best_Case__c}" id="quarterlyBestCase"
+							required="true" />
+						<apex:inputField value="{!Weekly_Forecast__c.In_Quarter_Commit__c}" id="quarterlyCommit"
+							required="true" />
+						<apex:inputField value="{!Weekly_Forecast__c.In_Quarter_Floor__c}" id="quarterlyFloor"
+							required="true" />
+
+					</apex:pageBlockSection>
+
+				</apex:actionRegion>
+
+			</apex:outputPanel>
+
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

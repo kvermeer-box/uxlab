@@ -1,0 +1,59 @@
+<apex:page standardController="Lead"
+           extensions="ReferralleadExtension" standardStylesheets="true">
+<script type="text/javascript">
+ var redir ='{!redirect}';
+ function Redirect() 
+ {  
+ window.location.href='/home/home.jsp';  
+ }
+  
+ if(redir == 'true'){
+ setTimeout('Redirect()', 5000);   
+ }
+</script> 
+  <apex:define name="body">
+   <apex:form >
+<apex:messages style="color:red" />      <apex:pageBlock title="" mode="edit" rendered="{!Lead.id == null}">
+        <apex:pageBlockButtons >
+           <apex:commandButton value="Save"
+                               action="{!saveLead}"/>
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection title="Partner Sales Rep Information"
+                               collapsible="false"
+                               columns="2">
+                 <apex:inputField value="{!Lead.Referrer_First_Name__c}" label="Sales Rep First Name" required="true" taborderhint="1" />
+                 
+                 <apex:inputField value="{!Lead.Referrer_Partner_Email__c}" label="Sales Rep Email" required="true" taborderhint="3"/>
+                 <apex:inputField value="{!Lead.Referrer_Last_Name__c}" label="Sales Rep Last Name" required="true" taborderhint="2"/>
+                 <apex:inputField value="{!Lead.Referrer_Partner_Phone__c}" label="Sales Rep Phone" required="true" taborderhint="4"/>              
+                </apex:pageBlockSection>
+                               
+        <apex:pageBlockSection title="Referral lead"
+                               collapsible="false"
+                               columns="2">
+         <apex:inputField value="{!Lead.FirstName}"  label="Contact First Name" required="true" taborderhint="5"/>
+         <apex:inputField value="{!Lead.Company}"  label="Customer Company Name" required="true" taborderhint="12"/>
+         <apex:inputField value="{!Lead.LastName}" label="Contact Last Name" required="true" taborderhint="6"/>
+         <apex:inputField value="{!Lead.Website}" label="Company Web Address" required="true" taborderhint="13"/>
+         <apex:inputField value="{!Lead.Title}"  label="Contact Title" required="true" taborderhint="7"/>
+         <apex:inputField value="{!Lead.Deal_Timing__c}" required="true" taborderhint="14"/>
+         <apex:inputField value="{!Lead.Email}"  label="Contact Email" required="true" taborderhint="8"/>
+         <apex:inputField value="{!Lead.Why_Box__c}" label="Why Box?/Additional Comments" required="true" taborderhint="15"/>
+         <apex:inputField value="{!Lead.Phone}" label="Contact Work Phone" required="true" taborderhint="9"/>
+         <apex:inputField value="{!Lead.X3rd_Party_Pre_Qual_Notes__c}" required="true" taborderhint="16"/>
+         <apex:inputField value="{!Lead.Customer_Region__c}" label="Contact Region" required="true" taborderhint="10"/>
+         <apex:inputField value="{!Lead.Previously_Worked_With__c}" label="Have you previously worked with a box Sales Representative on this particular deal?" required="true" taborderhint="17"/>
+         <apex:inputField value="{!Lead.Preference_on_Contact__c}" label="Would you prefer us to contact you or the lead directly? " required="true" taborderhint="11"/>
+         <apex:inputText value="{!repName}" label="If so, who was that representative?"  />
+        </apex:pageBlockSection>
+        
+     </apex:pageBlock>
+       <apex:pageBLock title="Referral lead Submitted" rendered="{!Lead.id != null}">
+        
+            <apex:pageMessage severity="Confirm" summary="Thank you for submitting Referral lead to Box! " strength="3"/>
+        
+        </apex:pageBLock>
+   </apex:form>
+
+  </apex:define> 
+</apex:page>

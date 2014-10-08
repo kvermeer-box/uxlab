@@ -1,0 +1,6 @@
+<apex:page standardController="Lead">
+    <!-- Old Version
+    <apex:iframe id="endID2" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=DAAA7A1F11E27475966F00802F27806C&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI&port=0&share=1&uid=sales&pwd=BI&valuePromptAnswers={!Lead.Email}&hiddensections=header,path,dockTop,dockLeft,footer" /> 
+    -->
+    <apex:iframe id="endID2" src="https://mstr.inside-box.net/MicroStrategy/servlet/mstrWeb?evt=2048001&src=mstrWeb.2048001&visMode=0&currentViewMedia=2&documentID=DAAA7A1F11E27475966F00802F27806C&server=DWH-BIDATA1001.VE.BOX.NET&Project=Box%20BI%20(RS%20transition%202)&port=0&share=1&hiddensections=header,path,dockTop,dockLeft,footer&uid=sales&pwd=BI&valuePromptAnswers={!Lead.Email}" />
+</apex:page>

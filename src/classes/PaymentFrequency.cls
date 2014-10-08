@@ -1,0 +1,10 @@
+public enum PaymentFrequency {
+
+	MONTHLY,
+	QUARTERLY,
+	SEMI_ANNUAL,
+	ANNUAL,		
+	TWO_YEAR_DEAL,
+	THREE_YEAR_DEAL
+
+}

@@ -1,0 +1,17 @@
+<apex:page >
+    <apex:outputPanel layout="none">
+        <apex:insert name="Header"/>
+        <apex:pageMessages />
+    </apex:outputPanel>
+    <apex:panelGrid Columns="3">
+        <apex:outputPanel >
+            <apex:insert name="Column1"/>
+        </apex:outputPanel>
+        <apex:outputPanel >
+            <apex:insert name="Column2"/>
+        </apex:outputPanel>
+        <apex:outputPanel >
+            <apex:insert name="Column3"/>
+        </apex:outputPanel>
+    </apex:panelGrid>
+</apex:page>

@@ -1,0 +1,186 @@
+<apex:page controller="DealRegController" tabStyle="Account" showheader="true" sidebar="false" cache="false">
+
+    <!-- Suppress header & footer - need it on the page to display help text hovers  -->
+    <style>
+        .bPageHeader{   display:none;   }   
+        .bPageFooter{   display:none;   }
+    </style>
+
+    <apex:sectionHeader title="Submit Deal Registration" subtitle="Step 2: Customer Identification"/>
+    <div style="text-align: right; padding: 0 20px 2px 0;"><apex:outputLink value="/">Return Home</apex:outputLink></div>
+    <apex:outputPanel rendered="{!CurrentStep != 2}">
+        <apex:pageMessage strength="3" severity="fatal" summary="Please start at step 1">
+            <apex:outputLink value="{!$Page.DealRegStep1}">Step 1</apex:outputLink>                 
+        </apex:pageMessage>     
+    </apex:outputPanel> 
+        
+    <apex:form rendered="{!CurrentStep == 2}"  id="theForm">
+
+        <apex:pageMessages id="messages"/>
+    
+        <apex:pageBLock title="Customer Identification">
+           
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Previous" action="{!Step1}" immediate="true"/>
+                <apex:commandButton value="Next" action="{!Step3}" />
+            </apex:pageBlockButtons>                    
+            
+            <apex:pageBlockSection title="Customer Contact Information" collapsible="false" id="pbCCI">     
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Customer Contact First Name" />        
+                    <apex:inputField value="{!c.FirstName}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Customer Contact Last Name"/>     
+                    <apex:inputField value="{!c.LastName}" required="true"/>
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Customer Contact Title"/>     
+                    <apex:inputField value="{!c.Title}" required="true"/>
+                </apex:pageBlockSectionItem>                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Customer Contact Work Phone"/>        
+                    <apex:inputField styleclass="phone" value="{!c.Phone}" onchange="setPhoneValidation()"/>
+                </apex:pageBlockSectionItem>    
+                <apex:pageBlockSectionItem helpText="This email address will be provisioned as your customer's initial Box Administrator account.  This email will receive the activation instructions.Please confirm with customer that there is no pre-existing demo account with Box using this email.  Duplicate emails are not supported. See Sales M&P for more information.">
+                    <apex:outputLabel value="Email to be Designated as Box Admin"/>     
+                    <apex:inputField value="{!c.Email}" required="true"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Customer Company Profile Information" collapsible="false"> 
+                <apex:pageBlockSectionItem helpText="Is this registration for an existing AT&T Wireless customer?">
+	                <apex:outputLabel value="Does this customer have a valid AT&T Billing CTN?" />
+	                <apex:inputField styleclass="attCust" value="{!a.Current_AT_T_Customer__c}" required="true" onchange="showCTN();"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Customer Company Name"/>       
+                    <apex:inputField value="{!a.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem datastyleclass="msg">       
+                	<apex:outputPanel style="color:red">
+                	Please be sure to provide a valid billing CTN before provisioning Box seats in Phoenix. To do so, please e-mail 
+                	<a href="mailto:g20363@att.com">g20363@att.com</a>
+                	 and 
+                	<a href="mailto:attinfo@box.com">attinfo@box.com</a>
+                	.
+                	</apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem labelStyleClass="ctn" dataStyleClass="dataCtn" helpText="This is the billing CTN that must match the CTN used when placing the service order in Phoenix.  Please ensure the CTN is Accurate! Mismatched CTNs will result in provisioning errors.">
+                    <apex:outputLabel value="AT&T Billing CTN" /> 
+                    <apex:outputPanel >
+                    <div class="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <apex:inputText value="{!InputKeyValue}" maxlength="10" label="AT&T Billing CTN"/>
+                    </div>
+                	</apex:outputPanel>                         
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Market Segment"/>       
+                    <apex:inputField styleclass="segment" value="{!opp.Market_Segment__c}" required="true" onchange="showOSEG();">
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem labelStyleClass="oseg" dataStyleClass="dataoseg">
+                    <apex:outputLabel value="Market Segment Other"/>       
+                    <apex:inputField value="{!opp.Market_Segment_Other__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Number of Employees"/>       
+                    <apex:inputField value="{!a.No_Employees__c}"/>
+                </apex:pageBlockSectionItem>         
+           </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Customer Billing Address Information" collapsible="false">      
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Company Address" />
+                    <apex:inputField value="{!a.BillingStreet}" required="true"/>
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >                
+                    <apex:outputLabel value="City" />                
+                    <apex:inputField value="{!a.BillingCity}" required="true"/>
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >     
+                    <apex:outputLabel value="State/Province" />                            
+                    <apex:inputField value="{!a.BillingState}" required="true"/>
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >      
+                    <apex:outputLabel value="Zip/Postal Code" />                           
+                    <apex:inputField value="{!a.BillingPostalCode}" required="true"/>
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >                 
+                    <apex:outputLabel value="Country" />                
+                    <apex:inputField value="{!a.BillingCountry}" required="true"/>                
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >                 
+                    <apex:outputLabel value="Region" />                
+                    <apex:inputField value="{!a.Customer_Region__c}" required="true"/>                
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Hide Me" style="visibility:hidden" />
+                    <apex:inputField value="{!a.isATT__c}" style="visibility:hidden" />
+                </apex:pageBlockSectionItem>             
+            </apex:pageBlockSection>
+                        
+        </apex:pageBLock>
+        
+        <script type="text/javascript">
+         function setPhoneValidation() {
+         	var raw_number = document.getElementsByClassName('phone')[0].value;
+         	var regex1 =  /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+            if(raw_number!=''&&!raw_number.match(regex1)) {
+                alert('Invalid Phone Number');
+            }
+        }
+        
+        window.onload = pageOnload();
+        
+        function pageOnload(){
+        	showOSEG();
+        	showCTN();
+        	
+        }
+        
+        function showCTN(){
+        	if( document.getElementsByClassName('attCust')[0].value == "Yes"){
+	        	document.getElementsByClassName('ctn')[0].style.display='';
+	        	document.getElementsByClassName('dataCtn')[0].style.display='';
+	        	document.getElementsByClassName('msg')[0].style.display='none';
+	        	document.getElementsByClassName('helptext')[0].style.display='none';
+        	}else if(document.getElementsByClassName('attCust')[0].value == "No"){
+        		document.getElementsByClassName('ctn')[0].style.display='none';
+        		document.getElementsByClassName('dataCtn')[0].style.display='none';
+	        	document.getElementsByClassName('msg')[0].style.display='';
+	        	document.getElementsByClassName('helptext')[0].style.display='none';
+        	}
+        	else{
+        		document.getElementsByClassName('ctn')[0].style.display='none';
+	        	document.getElementsByClassName('dataCtn')[0].style.display='none';
+	        	document.getElementsByClassName('msg')[0].style.display='none';
+	        	document.getElementsByClassName('helptext')[0].style.display='none';
+        	}
+        }
+        
+        function showOSEG(){
+        	if( document.getElementsByClassName('segment')[0].value == "Other"){
+	        	document.getElementsByClassName('oseg')[0].style.display='';
+	        	document.getElementsByClassName('dataoseg')[0].style.display='';
+        	}else{
+        		document.getElementsByClassName('oseg')[0].style.display='none';
+	        	document.getElementsByClassName('dataoseg')[0].style.display='none';
+        	}
+        }
+    </script>
+
+    
+    </apex:form>
+
+
+</apex:page>

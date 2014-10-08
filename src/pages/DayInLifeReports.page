@@ -1,0 +1,156 @@
+<apex:page >
+  <!-- Change Styles here -->
+  <style>
+  
+    #main-content
+    {
+      font-family: Helvetica, sans serif;
+      max-width:1100px;
+    }
+    .header 
+    {
+      text-align: center;
+      font-size: 30px;
+      margin: 50px 0px;
+      color: #26466D;
+    }
+    
+    .report-link
+    {
+      float:left;
+      width: 300px;
+      height: 125px;
+      //border: 1px solid black;
+      margin-left: 30px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+    
+    .report-link:hover
+    {
+      box-shadow:0px 0px 10px #888888;
+    }
+    
+    .report-link
+    {
+      padding: 10px;
+    }
+    
+    .report-name
+    {
+      font-size: 28px;
+      color: #26466D;
+      text-decoration: underline;
+      font-weight: normal;
+    }
+    
+    .report-description
+    {
+      padding-top: 10px;
+      display: block;
+    }
+    
+    .page-title
+    {
+      margin-left: 10px;
+      display: inline-block;
+      vertical-align:50%;
+    }
+  </style>
+  
+  <div id="main-content">
+    <div class="header">
+      <apex:image url="{!$Resource.keyreportsicon}" width="50" height="60"/>
+      <div class="page-title">
+        Key Salesforce Reports
+      </div>
+    </div>
+    <div class="report-links-container">
+        <!-- Report 1, Change href to change url of link -->
+        <a href="/00O60000003ixK4">
+          <div class="report-link">
+            <h2 class="report-name">My Opportunities</h2>
+            <p class="report-description"> This report shows a three month rolling view 
+            of your opportunities sorted by sales stage.</p>
+          </div>
+        </a>
+        <!-- Report 2, Change href to change url of link -->
+        <a href="/00O60000003ixKO">
+          <div class="report-link">
+            <h2 class="report-name">My Accounts</h2>
+            <p class="report-description"> This report is used to show all of the accounts in your territory. 
+            It organizes the accounts by the Priority field, sorted by Total Account Value.</p>
+          </div>
+        </a>
+        <!-- Report 3, Change href to change url of link -->
+        <a href="/00O60000003ixLM">
+          <div class="report-link">
+            <h2 class="report-name">My Channel Opportunities</h2>
+            <p class="report-description"> This report allows you to manage all of your approvals for channel opportunities.</p>
+          </div>
+        </a>
+        <!-- Report 4, Change href to change url of link -->
+        <a href="/00O60000003CRld">
+          <div class="report-link">
+            <h2 class="report-name">My Expansion Accounts</h2>
+            <p class="report-description">This report shows you the accounts to target for expansion 
+            opportunities and current penetration of Box licenses.</p>
+          </div>
+        </a>
+        <!-- Report 5, Change href to change url of link -->
+        <a href="/00O60000003j34g">
+          <div class="report-link">
+            <h2 class="report-name">My InApp Expansion Requests</h2>
+            <p class="report-description"> This report will show you all of the accounts that 
+            have chosen to be contacted about an overage.</p>
+          </div>
+        </a>
+        <!-- Report 6, Change href to change url of link -->
+        <a href="/00O60000003j33s">
+          <div class="report-link">
+            <h2 class="report-name">My NRT Web Trials</h2>
+            <p class="report-description"> This report shows all of the webtrials that have 
+            converted to paying accounts without sales involvement (Non-Rep Touched).</p>
+          </div>
+        </a>
+        
+        <!-- Report 7, Change href to change url of link -->
+        <a href="/00O60000003jM17">
+          <div class="report-link">
+            <h2 class="report-name">My Closed-Lost Opps</h2>
+            <p class="report-description"> This report will show you the opportunities that have been marked as Closed/Lost 
+            or Cancelled-Churn in the current and previous Fiscal Years.</p>
+          </div>
+        </a>
+        
+        <!-- Report 8, Change href to change url of link -->
+        <a href="/00O60000003jH1q">
+          <div class="report-link">
+            <h2 class="report-name">My Pipeline at Risk</h2>
+            <p class="report-description">This report will show you the pipeline you have that is at risk.  A deal is considered 
+            at risk if either: 1) Close date is in current month with deal still in disco/trial, 2) Deal has pushed more than 3 
+            times, 3) Your deal has no next steps, 4) No activity logged on opp for over 30 days, 5) $1 dollar opps. 6) Deal is in SDR Qualify stage</p>
+          </div>
+        </a>
+        
+        <!-- Report 9, Change href to change url of link -->
+        <a href="/00O60000003juht">
+          <div class="report-link">
+            <h2 class="report-name">Open Web Trial Upsells</h2>
+            <p class="report-description">Web Trials upsells you're currently working. Organized by Starter and Business.</p>
+          </div>
+        </a>
+        
+        <!-- Report 10, Change href to change url of link -->
+        <a href="/00O60000003juh5">
+          <div class="report-link">
+            <h2 class="report-name">Open Web Trial (No Upsells)</h2>
+            <p class="report-description">Web Trials assigned to you in which "Trial Upsell" has not been clicked. Organized by Starter and Business.</p>
+          </div>
+        </a>
+        
+        <!-- To Add Another Report, just copy an old report from the opening <a> tag to the closing </a> -->
+        <!-- Then just change the appropriate information -->
+    </div>
+  </div>
+</apex:page>

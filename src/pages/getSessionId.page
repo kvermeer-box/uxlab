@@ -1,0 +1,7 @@
+<apex:page >
+  <br />
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Here is your Session ID: </h1>
+  {!getSessionId()}
+  <!-- End Default Content REMOVE THIS -->  
+</apex:page>

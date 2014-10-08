@@ -1,0 +1,48 @@
+<apex:page standardController="zqu__ZProduct__c"  >
+       
+<apex:sectionHeader title="Zuora Links"   />
+
+    <apex:form >
+        <apex:pageBlock >
+ 
+            <apex:pageBlockSection title="Product Catalog" columns="1">
+                <apex:outputLink value="/a0f" target="_blank" >Products</apex:outputLink>
+                <apex:outputLink value="/a0Y" target="_blank" >Product Rate Plans</apex:outputLink>
+                <apex:outputLink value="/a0X" target="_blank" >Product Rate Plan Charges</apex:outputLink>
+                <apex:outputLink value="/a6z" target="_blank" >Product Groups</apex:outputLink>
+                <apex:outputLink value="/a73" target="_blank" >Rate Plan Groups</apex:outputLink>
+            </apex:pageBlockSection>
+ 
+        
+            <apex:pageBlockSection title="Product Relationships" columns="1">
+             <apex:outputLink value="/a6v" target="_blank" >Pricing Rules</apex:outputLink>
+             <apex:outputLink value="/a6w" target="_blank" >Product Conflicts</apex:outputLink>
+             <apex:outputLink value="/a6x" target="_blank" >Product Dependencies</apex:outputLink>
+             <apex:outputLink value="/a70" target="_blank" >Product Pairings</apex:outputLink>
+             <apex:outputLink value="/a71" target="_blank" >Product Rules</apex:outputLink>                                       
+                 
+            </apex:pageBlockSection>
+ 
+
+        </apex:pageBlock>
+
+        <apex:pageBlock >
+
+        <apex:pageBlockSection title="Approvals" columns="1">
+
+            <apex:outputLink value="/a21" target="_blank" >Product Discount Matrix Entries</apex:outputLink>
+            <apex:outputLink value="/a23" target="_blank" >Sales Approver Matrix Entries</apex:outputLink>
+        </apex:pageBlockSection>
+ 
+        <apex:pageBlockSection title="Z-Quote" columns="1">
+            <apex:outputLink value="/a0e" target="_blank" >Quotes</apex:outputLink>
+            <apex:outputLink value="/a22" target="_blank" >Quote Approvals</apex:outputLink> 
+        </apex:pageBlockSection>
+ 
+         
+ 
+
+        </apex:pageBlock>
+        
+    </apex:form>
+</apex:page>

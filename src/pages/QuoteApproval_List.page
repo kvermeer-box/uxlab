@@ -1,0 +1,69 @@
+<apex:page standardController="zqu__Quote__c" extensions="QuoteApproval_ListExtension">
+
+    <style>
+        .cell {
+          display: inline-block;
+          margin-right:20px;
+        }
+        
+        .long {
+          width: 150px;
+        }
+        
+        .short {
+          width: 50px;
+        }
+        
+        .header {
+          font-weight: bold;
+        }
+        
+        .approval-link, .approval-link:hover {
+          text-decoration: none;
+        }
+        
+        .highlight:hover {
+            background-color: #AFEEEE;
+        }
+        
+        .row {
+          display: inline-block;
+          clear:both;
+          float:left;
+          padding: 4px;
+        }
+    </style>
+
+  <apex:form >
+      <!-- Removing button
+      <apex:actionRegion >
+          <apex:commandButton action="{!toggleShowActive}" value="{!buttonText}"/>
+      </apex:actionRegion>
+      -->
+  <div class="outer-table">
+      <div class="row">
+          <div class="cell header long"> Type </div>
+          <div class="cell header long"> Payment Frequency </div>
+          <div class="cell header long"> Status </div>
+          <div class="cell header short"> Active? </div>
+          <div class="cell header long"> Current Approver </div>
+      </div>
+      <apex:repeat var="approvalDisplay" value="{!approvals}">
+        <a class="approval-link" href="/{!approvalDisplay.approval.Id}" target="_top">
+          <div class="row highlight" style="color:{!approvalDisplay.color}">
+              <div class="cell long"> {!approvalDisplay.approval.Type__c} </div>
+              <div class="cell long"> <apex:outputField value="{!approvalDisplay.approval.Payment_Frequency__c}" /> </div>
+              <div class="cell long"> {!approvalDisplay.approval.Status__c} </div>
+              <div class="cell short"> <apex:inputCheckbox value="{!approvalDisplay.approval.Active__c}" disabled="true"/> </div>
+              <div class="cell long"> {!approvalDisplay.approval.Current_Approver__c} </div>
+          </div>
+        </a>
+      </apex:repeat>
+      <apex:outputPanel rendered="{!approvalsEmpty}">
+          <div class="row">
+              <p>There are no approvals for this Quote!</p>
+          </div>
+      </apex:outputPanel>
+  </div>
+  </apex:form>
+</apex:page>

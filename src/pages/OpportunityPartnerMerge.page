@@ -1,0 +1,54 @@
+<!--  
+    Page:           OpportunityPartnerMerge    
+    
+    Description:    UI for selecting and merging opportunities
+    
+    Author:         Lior Gotesman                  
+     
+    Revision Hist:  Lior Gotesman, 04/29/2013,       Initial Version
+-->
+
+<apex:page standardController="Opportunity" extensions="OpportunityPartnerMergeExtension">
+<apex:form >
+    <apex:pageBlock title="Opportunities to Merge">
+        <apex:messages />
+        <apex:outputText value="No opportunities available to merge." rendered="{!oppList.size = 0}"/>
+        <apex:actionStatus startText="Merging..." id="merging" />
+        <apex:pageBlockTable value="{!oppList}" var="o" id="oppListTable" rendered="{!oppList.size > 0}">
+            <apex:column headerValue="Select Opportunity">        
+                <input type="radio" name="group1" >
+                    <apex:actionSupport event="onclick" action="{!selectOpp}" rerender="null">
+                        <apex:param assignTo="{!oppSelectedId}" value="{!o.Id}" name="selectedId"/>                                  
+                    </apex:actionSupport>               
+                </input>
+            </apex:column>
+            <apex:column value="{!o.Name}"/>
+        </apex:pageBlockTable>
+        <apex:pageBlockSection title="Opportunity Merge Settings" collapsible="false" rendered="{!oppList.size > 0}">
+        	<apex:pageBlockSectionItem > 
+        		<apex:outputLabel value="Merge Rule Mapping"/>    
+	            <apex:inputField value="{!oppMergeSetting.Merge_Rule_Mapping__c}" required="true"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+            	<apex:outputLabel value="Source Flag"/>     
+	            <apex:inputField value="{!oppMergeSetting.Source_Flag__c}" required="true"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >     
+	            <apex:outputLabel value="Destination Flag"/>
+	            <apex:inputField value="{!oppMergeSetting.Destination_Flag__c}" required="true"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >     
+	            <apex:outputLabel value="Concat Flag"/>
+	            <apex:inputField value="{!oppMergeSetting.Concat_Flag__c}" required="true"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >     
+	            <apex:outputLabel value="Default Rule"/>
+	            <apex:inputField value="{!oppMergeSetting.Default_Rule__c}" required="true"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <div style="margin-top: 5px;">
+            <center><apex:commandButton value="Merge" action="{!doMerge}" status="merging" rendered="{!oppList.size > 0}"/></center>        
+        </div>
+    </apex:pageBlock>
+</apex:form>
+</apex:page>

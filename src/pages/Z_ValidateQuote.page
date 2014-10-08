@@ -1,0 +1,18 @@
+<apex:page standardController="zqu__Quote__c" extensions="Z_ValidateQuoteExtension" action="{!processQuote}">
+
+<apex:sectionHeader title="Quote" subtitle="{!zqu__Quote__c.Name}" />
+
+    <apex:pageMessages />
+    <apex:outputPanel rendered="false">
+    
+        {!zqu__Quote__c.Payment_Frequency__c}
+
+   </apex:outputPanel>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">               
+                <apex:commandButton value="Return to Quote" action="{!cancel}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

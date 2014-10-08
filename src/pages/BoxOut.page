@@ -1,0 +1,302 @@
+<apex:page sidebar="false" controller="BoxOutV2Controller">
+    <!-- Begin Default Content REMOVE THIS -->
+
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'/>
+    <style>
+
+        /* Page attributes */
+        /* FIGHTING SALESFORCE */
+
+        .noSidebarCell {
+            padding: 0px !important;
+        }
+
+        .outerNoSidebar {
+            padding: 0px !important;
+        }
+
+        /* Header */
+
+        .title-line {
+            border: 2px solid #FF3F57;
+            float: left;
+        }
+
+        #header {
+            margin-left : 20px; 
+            margin-right : 20px;
+            margin-top : 30px; 
+            margin-bottom: 30px;
+        }
+
+        .boxOutGlove {
+            height: 70px;
+        }
+
+        #title {
+            text-align: center;
+            overflow: hidden;
+        }
+
+        #title .title-banner {
+            display: inline-block;
+            position: relative;  
+            vertical-align: text-top;
+        }
+
+        #title .title-banner:before,
+        #title .title-banner:after {
+            content: "";
+            position: absolute;
+            height: 0px;
+            border-bottom: 1px solid #FF3F57;
+            border-top: 1px solid #FF3F57;
+            top: 50%;
+            width: 600px;
+        }
+
+        #title .title-banner:before {
+            right: 100%;
+            margin-right: 15px;
+        }
+
+        #title .title-banner:after {
+            left: 100%;
+            margin-left: 15px;
+        }
+
+        .title-text {
+            font-family: AvenirNext-Medium, 'Montserrat', sans-serif;
+            font-size: 50px;
+            color: #FF3F57;
+            letter-spacing: 15px;
+            display: inline-block;
+            top: 50%;
+            vertical-align: 25%;
+        }
+
+        /* Footer */
+
+        #footer {
+            background-color: #D4D4D4;
+            font-family: Avenir, 'Montserrat', sans-serif;
+        }
+
+        #footer-header {
+            text-align: center;
+            margin: 0px; 
+            padding: 0px;
+            padding-top: 10px;
+            font-size: 15px;
+            color: #FF3F57;
+            font-family: AvenirNext-Medium, 'Montserrat', sans-serif;
+        }
+
+        .row {
+            margin: auto;
+            margin-top: 20px;
+            text-align: center;
+            padding-bottom: 40px;
+        }
+
+        .info-box {
+            display:inline-block;
+            width: 33%;
+            vertical-align: top;
+        }
+
+        .info-box-title {
+            font-size: 15px;
+            font-family: AvenirNext-Bold, 'Montserrat', sans-serif;
+            font-weight: bold;
+        }
+
+        .info-box-content {
+            margin-top: 20px;
+        }
+
+        .opp-amount-box {
+            background-color: #FF3F57;
+            display: inline-block;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+
+        .opp-amount-text {
+            margin: 0px;
+            color: #FFFFFF;
+            font-size: 15px;
+        }
+
+        .amount {
+            padding-bottom: 30px;
+        }
+
+        .competitor {
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        /* Main Area */
+
+        #selector-area {
+            margin-top: 40px;
+        }
+
+        .selector-box-label {
+            font-size: 15px;
+            color: #FF3F57;
+            font-family: AvenirNext-Medium, 'Montserrat', sans-serif;
+            text-align: center;
+        }
+
+        .box-holder {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .submit-button {
+            border-radius: 40px;
+            background: #FF3F57;
+            -moz-box-shadow:    0px 5px 0px 0px #D0021B;
+            -webkit-box-shadow: 0px 5px 0px 0px #D0021B;
+            box-shadow:         0px 5px 0px 0px #D0021B;
+            width: 200px;
+            height: 50px;
+            margin: auto;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .submit-button:hover {
+            cursor: pointer;
+        }
+
+        .button-text {
+            color: #FFFFFF;
+            font-size: 25px;
+            letter-spacing: 7px;
+            display: inline-block;
+            margin: 0px;
+            margin-top: 10px;
+            
+        }
+
+        #selected-value-holder {
+            display: none;
+        }
+
+        #error-placeholder {
+            text-align: center;
+            font-size: 20px;
+            color: #AA0000;
+            font-family: AvenirNext-Medium, 'Montserrat', sans-serif;
+            text-align: center;
+        }
+
+
+    </style>
+
+    <div id="header">
+        
+        <div id="title">
+            <span class="title-banner">
+                <img class="boxOutGlove" src="{!URLFOR($Resource.BoxOutImages,'gloveLeft.png')}"/>
+                <span class="title-text">BOXOUT</span>
+                <img class="boxOutGlove" src="{!URLFOR($Resource.BoxOutImages,'gloveRight.png')}"/>
+            </span>
+        </div>
+    </div>
+
+    <div id="selector-area">
+        <p class="selector-box-label">Your opportunities that qualify for BoxOut are shown below</p>
+        <p class="selector-box-label">Please select one and click "Submit"</p>
+        <div class="box-holder">
+            <c:SelectorBox id="cat" selectedValueId="selected-value-holder"/>
+        </div>
+        <div class="submit-button" onclick="submitButtonClicked()">
+            <p class="button-text">SUBMIT</p>
+        </div>
+        <p id="error-placeholder"></p>
+    </div>
+    <p id="selected-value-holder"></p>
+    
+    <div id="footer">
+        <div id="footer-header">
+            To qualify for help from the BoxOut Team, please make sure your opportunity has the following
+        </div>
+
+        <div class="row">
+            <div class="info-box">
+                <p class="info-box-title">Opportunity Amount</p>
+                <div class="info-box-content">
+                    <div class="opp-amount-box">
+                        <p class="opp-amount-text amount">+ $6k</p>
+                        <p class="opp-amount-text">ESB</p>
+                        <p class="opp-amount-text">CORP</p>
+                    </div>
+                     <div class="opp-amount-box">
+                        <p class="opp-amount-text amount">+ $10k</p>
+                        <p class="opp-amount-text">MID</p>
+                    </div>
+                    <div class="opp-amount-box">
+                        <p class="opp-amount-text amount">+ $25k</p>
+                        <p class="opp-amount-text">MAJOR</p>
+                        <p class="opp-amount-text">NATIONAL</p>
+                        <p class="opp-amount-text">RENEWAL</p>
+                    </div>
+                </div>          
+            </div>
+            <div class="info-box">
+                <p class="info-box-title">One of the following listed as Primary Comptetitor</p>
+                <div class="info-box-content">
+                    <p class="competitor">GDrive</p>
+                    <p class="competitor">Dropbox (consumer)</p>
+                    <p class="competitor">Dropbox for Business</p>
+                    <p class="competitor">O365 / OneDrive</p>
+                    <p class="competitor">Sharepoint on Prem</p>
+                </div>
+            </div>
+            <div class="info-box">
+                <p class="info-box-title">Stage</p>
+                <div class="info-box-content">
+                    <p>Validating Biz Case &amp; Confirming Plan</p>
+                    <p>or further</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function submitButtonClicked() {
+            // Clear errors
+            $('#error-placeholder').text('');
+            // Grab selected opp Id
+            var selectedValueElement = $('#selected-value-holder');
+            // Send request to get URL, the go to provided url
+            BoxOutV2Controller.submitRequest(selectedValueElement.text(), function(result,event) {
+                if (event.type == 'exception') {
+                    $('#error-placeholder').text('Error: Something went very wrong.  Talk to Sales Systems!');
+                } else {
+                    console.log('Event: ');
+                    console.log(event);
+                    console.log('Result: ');
+                    console.log(result);
+                    var responseJSON = $('<div/>').html(result).text()
+                    console.log(responseJSON);
+                    var response = JSON.parse(responseJSON);
+                    if (response.success) {
+                        window.open(response.url,'_top',false);
+                    } else {
+                        $('#error-placeholder').text('Error: ' + response.error);
+                    }
+                }
+                
+            })
+        }
+
+    </script>
+</apex:page>

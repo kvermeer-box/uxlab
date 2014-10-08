@@ -1,0 +1,19 @@
+<apex:page controller="TreasuryAutomateTokenRefresh" action="{!scheduleRefresh}" showHeader="false" sidebar="false" standardStylesheets="false" doctype="html-5.0" applyHtmlTag="false">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+        <head>
+            <c:boxtreasury_scripts_V2 />
+            <title>Box Treasury</title>
+            <script>
+
+            </script>
+        </head>
+        <body>
+            <c:boxtreasury_header_V2 />
+            <main id="content" class="container treasury-main" role="main"><!-- main page container -->
+                
+               <apex:outputText value="{!getDebugText}"></apex:outputText>
+                
+            </main><!--./main page container-->
+        </body>
+    </html>    
+</apex:page>
