@@ -175,6 +175,7 @@ global class WebTrialRest {
             if( !opp.isClosed )
             {
                 opp.StageName = OPP_STAGE_CLOSED_LOST;
+                opp.OwnerId = OnlineSales_Constants.getBoxOnlineSalesUserId();
                 update opp;
                 return;
             }
@@ -978,6 +979,7 @@ global class WebTrialRest {
     private static void saveToSalesforce() {
         if (wt.readOnly == null || !wt.readOnly) {
             System.debug('ooooooooo man this is the real deal. saving to db in 3.. 2.. 1...');
+            opp.OwnerId = OnlineSales_Constants.getBoxOnlineSalesUserId();
             update opp;
             System.debug('Record saved.');
         } else {

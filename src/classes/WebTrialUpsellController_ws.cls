@@ -126,7 +126,7 @@ global without sharing class WebTrialUpsellController_ws {
     for (String field_to_query : fields_to_query)
       query += field_to_query + ', ';
     query += 'Id, OwnerId, Name, StageName, CloseDate, Originating_Opportunity__c, Upsell_Opportunity__c, ';
-    query += 'FCRM__FCR_Response_ID__c, SDR__c, AccountId, RecordTypeId, Account.OwnerId';
+    query += 'FCRM__FCR_Response_ID__c, SDR__c, AccountId, RecordTypeId, Account.OwnerId, Account.Owner.IsActive';
     query += ', (Select ContactId, IsPrimary, Role FROM OpportunityContactRoles)';
     query += ' FROM Opportunity WHERE Id = \'' + opp_id + '\' LIMIT 1';
     Opportunity opp_to_clone = null;
@@ -152,8 +152,17 @@ global without sharing class WebTrialUpsellController_ws {
                                           StageName= web_trial_settings.Web_Trial_Upsell_Opp_Stage__c,
                                           CloseDate=Date.today().addDays((Integer)web_trial_settings.Web_trial_upsell_days_to_close__c),
                                           Originating_Opportunity__c=base_opp.Id,
-                                          OwnerId=UserInfo.getUserId(),
                                           RecordTypeId=web_trial_settings.Web_Trial_Upsell_Record_Type_Id__c);
+    // Step 1.1: Set Owner
+    if (base_opp.Account.Owner.IsActive) { // If account owner is active, use that
+      new_opp.OwnerId = base_opp.Account.OwnerId;
+    } 
+    else { // If account owner is not active
+      error_string = 'Account owner is inactive, please change account owner to an active user then re-try!';
+      System.debug(error_string);
+      error_occured = true;
+      return null;
+    }
     // STEP 2: Sync specified fields
     List<String> sync_fields = getFieldsToSync();
     if (sync_fields == null) return null;
