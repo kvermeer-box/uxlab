@@ -1,0 +1,8 @@
+# Untracked files #
+###################
+uxlab.sublime-project
+uxlab.sublime-settings
+uxlab.sublime-workspace
+# Directorys #
+##############
+config/
