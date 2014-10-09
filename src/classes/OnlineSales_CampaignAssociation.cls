@@ -5,7 +5,15 @@
  */
 public class OnlineSales_CampaignAssociation {
     
-    public ErrorTracker et;
+    public ErrorTracker et {
+        get {
+            if (et == null) {
+                et = new ErrorTracker();
+            }
+            return et;
+        }
+        set;
+    }
 
     public OnlineSales_CampaignAssociation(ErrorTracker et) {
         this.et = et;

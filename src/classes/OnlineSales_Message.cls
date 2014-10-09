@@ -96,7 +96,7 @@ public class OnlineSales_Message {
 
     public Date getTransactionDateAsDate() {
         if( this.transactionDate == null ) {
-            return null;
+            return Date.today();
         }
         DateTime transactionDateTime = DateTime.newInstance(this.transactionDate);
         Date transactionDate = Date.newInstance(transactionDateTime.year(), transactionDateTime.month(), transactionDateTime.day());

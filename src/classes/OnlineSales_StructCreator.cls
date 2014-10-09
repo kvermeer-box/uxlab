@@ -112,11 +112,11 @@ public class OnlineSales_StructCreator {
         OnlineSalesStruct struct = null;
         OnlineSales_CampaignAssociation campaignAssociation = new OnlineSales_CampaignAssociation(this.et);
         CampaignMember activeResponse = campaignAssociation.getActiveResponseLead(matchingLead);
-        if( activeResponse != null ) {
+        if( activeResponse != null ) { // If we have an active response
             campaignAssociation.associateDefaultCampaignWithLead(matchingLead.Id, defaultCampaignId);
             struct = convertLead(matchingLead, activeResponse);
         }
-        else {
+        else { // No active response
             struct = convertLead(matchingLead, activeResponse);
             campaignAssociation.associateCampaignNoActiveResponse(struct.contactId, struct.opportunityId, defaultCampaignId);
         }

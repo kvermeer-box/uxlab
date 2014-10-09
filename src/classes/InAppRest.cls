@@ -80,7 +80,7 @@ global class InAppRest {
 						
 						// We always do this to help Dary
 						opp.Name = opp.Name + IN_APP_OPP_NAME_APPEND;
-						update opp;
+						opp.OwnerId = OnlineSales_Constants.getBoxOnlineSalesUserId();
 														
 						// Step 2: Validate data in Opportunity fields
 						confirmOpportunityData(opp, inAppRecord);
@@ -97,11 +97,6 @@ global class InAppRest {
 						// Db.execute
 						if (inAppRecord.readOnly == null || !inAppRecord.readOnly) {
 							update opp;
-							
-							// update Account
-							Account a = new Account(Id = opp.AccountId);
-							a.Box_Enterprise_ID__c = inAppRecord.enterpriseId;
-							update a;
 							
 							inAppRecord.readOnly = false;
 							System.debug('Opportunity has been saved to the database!.');
@@ -223,30 +218,11 @@ global class InAppRest {
 	public static Opportunity createOpportunityFromContact(InApp inAppRecord, Contact contact) {
 		System.debug('Creating opportunity from contact...');
 		
-		// Step 0: Associate contact to campaign
-		associateCampaign(null, contact); 
-		
-		// Step 1: Create opp
-		Opportunity opp = new Opportunity();
-		opp.Name = contact.Account.Name;
-		opp.AccountId = contact.Account.Id;
-		opp.CloseDate = Date.today();
-		opp.StageName = CONVERTED_CONTACT_OPP_STAGE;
-		insert opp;
-		System.debug('Opportunity created. Creating opportunity contact role...');
-		
-		// Step 2: Associate contact
-		if (contact != null) {
-			OpportunityContactRole ocr = new OpportunityContactRole();
-			ocr.ContactId = contact.Id;
-			ocr.IsPrimary = true;
-			ocr.OpportunityId = opp.Id; 
-			insert ocr;
-			System.debug('Opportunity contact role inserted.');
-		}
+		OnlineSales_StructCreator structCreator = new OnlineSales_StructCreator(new OnlineSales_Message(),new ErrorTracker());
+		OnlineSales_StructCreator.OnlineSalesStruct struct =  structCreator.createStructFromContact(contact, ASSOCIATE_CAMPAIGN_ID);
 		
 		// Step 3: Query opp fields
-		opp = queryOpportunityFields(opp.Id);
+		Opportunity opp = queryOpportunityFields(struct.opportunityId);
 		
 		// Step 4: Set opportunity return variables
 		setOpportunityReturnVariables(opp, inAppRecord);
@@ -268,12 +244,11 @@ global class InAppRest {
 		} else {
 			lead = confirmLeadFields(lead, inAppRecord);
 		}
-		
-		// Step 1.5: Associate lead to campaign
-		associateCampaign(lead, null);
+		OnlineSales_StructCreator structCreator = new OnlineSales_StructCreator(new OnlineSales_Message(),new ErrorTracker());
+		OnlineSales_StructCreator.OnlineSalesStruct struct =  structCreator.createStructFromLead(lead, ASSOCIATE_CAMPAIGN_ID);
 		
 		// Step 2: Convert lead
-		Id oppId = convertLead(lead);
+		Id oppId = struct.opportunityId;
 
 		// Step 3: Query opp fields
 		Opportunity opp = queryOpportunityFields(oppId);
@@ -616,6 +591,7 @@ global class InAppRest {
 		}	
 	}
 	
+	/*
 	public static void addOpportunityLineItems(Opportunity opp, InApp inAppRecord) {
 		System.debug('Adding opportunity line items...');
 		if (opp != null && inAppRecord != null ) {
@@ -693,6 +669,7 @@ global class InAppRest {
 			}
 		}
 	}
+	*/
 	
 	public static void determineOpportunityCloseDate(Opportunity opp, InApp inAppRecord) {
 		System.debug('Determining the close date for the opp...');
